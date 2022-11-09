@@ -13,7 +13,7 @@ import { LastnameValidator } from '../helpers/LastnameValidator'
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux'
 import DeviceInfo from 'react-native-device-info';
-import { register } from '../redux/actions/registerAction';
+import { clearRegister, register } from '../redux/actions/registerAction';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
@@ -70,10 +70,12 @@ export default function RegisterScreen({ navigation }) {
       console.log("registerResponse", registerResponse)
       if (Object.keys(registerResponse).length != 0 && registerResponse.statusCode != 200) {
         alert(registerResponse.Messages)
+        dispatch(clearRegister())
       }
       if (Object.keys(registerResponse).length != 0 && registerResponse.statusCode == 200) {
         console.log("response", registerResponse.data)
         saveData(registerResponse.data)
+        dispatch(clearRegister())
       }
     }
 

@@ -11,7 +11,7 @@ import { passwordValidator } from '../helpers/passwordValidator'
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux'
 import DeviceInfo from 'react-native-device-info';
-import { login } from '../redux/actions/loginAction';
+import { clearLogin, login } from '../redux/actions/loginAction';
 import { useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -69,12 +69,14 @@ export default function LoginScreen({ navigation }) {
   useEffect(() => {
     if (loginResponse != null) {
       console.log("loginResponse", loginResponse)
-      if (Object.keys(loginResponse).length != 0 && loginResponse.OK == false) {
+      if (Object.keys(loginResponse).length != 0 && loginResponse.statusCode != 200) {
         alert(loginResponse.Messages)
+        dispatch(clearLogin())
       }
-      if (Object.keys(loginResponse).length != 0 && loginResponse.OK == true) {
+      if (Object.keys(loginResponse).length != 0 && loginResponse.statusCode == 200) {
         console.log("response", loginResponse)
         saveData(loginResponse.data)
+        dispatch(clearLogin())
       }
     }
 
