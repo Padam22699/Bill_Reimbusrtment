@@ -2,8 +2,6 @@ import React, { useEffect } from 'react';
 import { View, Text, StyleSheet, StatusBar, Image, TouchableOpacity } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Imagepath from '../Assets/Images/Imagepath';
-import Background from '../components/Background';
-import Button from '../components/Button';
 import { theme } from '../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
 

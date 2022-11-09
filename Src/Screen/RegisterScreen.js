@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { View, StyleSheet, StatusBar, TouchableOpacity, ScrollView, KeyboardAvoidingView, } from 'react-native'
+import { View, StyleSheet, StatusBar, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, } from 'react-native'
 import { Text } from 'react-native-paper'
 import Logo from '../components/Logo'
-import Header from '../components/Header'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
@@ -12,35 +11,87 @@ import { nameValidator } from '../helpers/nameValidator'
 import { OrganizationValidator } from '../helpers/OrganizationValidator'
 import { LastnameValidator } from '../helpers/LastnameValidator'
 import LinearGradient from 'react-native-linear-gradient';
+import { useDispatch, useSelector } from 'react-redux'
+import DeviceInfo from 'react-native-device-info';
+import { register } from '../redux/actions/registerAction';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 export default function RegisterScreen({ navigation }) {
+
+  const dispatch = useDispatch()
+
   const [name, setName] = useState({ value: '', error: '' })
   const [Lastname, setLastname] = useState({ value: '', error: '' })
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
-  const [Organization, setOrganization] = useState({ value: '', error: '' })
+  const [Organization, setOrganization] = useState({ value: 'Wedig335431', error: '' })
 
+  const registerResponse = useSelector(state => state.registerReducer.data);
+  const loading = useSelector(state => state.registerReducer.loading);
 
   const onSignUpPressed = () => {
     const nameError = nameValidator(name.value)
     const lastnameError = LastnameValidator(Lastname.value)
     const emailError = emailValidator(email.value)
     const passwordError = passwordValidator(password.value)
-    const OrganizationError = OrganizationValidator(Organization.value)
+    // const OrganizationError = OrganizationValidator(Organization.value)
 
-    if (emailError || passwordError || nameError || lastnameError || OrganizationError) {
+    if (emailError || passwordError || nameError || lastnameError) {
       setName({ ...name, error: nameError })
       setLastname({ ...Lastname, error: lastnameError })
       setEmail({ ...email, error: emailError })
       setPassword({ ...password, error: passwordError })
-      setOrganization({ ...Organization, error: OrganizationError })
+      // setOrganization({ ...Organization, error: OrganizationError })
       return
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Dashboard' }],
-    })
+    signup()
+  }
+
+  const signup = () => {
+    let request = {
+      "first_name": name.value,
+      "last_name": Lastname.value,
+      "email": email.value,
+      "password": password.value,
+      "confirm_password": password.value,
+      "organization_code": "Wedig335431",
+      "role": "employee",
+      "device_type": Platform.OS,
+      "device_token": "123456",
+      "device_id": DeviceInfo.getDeviceId()
+    }
+
+    dispatch(register(request))
+  }
+
+  useEffect(() => {
+    if (registerResponse != null) {
+      console.log("registerResponse", registerResponse)
+      if (Object.keys(registerResponse).length != 0 && registerResponse.statusCode != 200) {
+        alert(registerResponse.Messages)
+      }
+      if (Object.keys(registerResponse).length != 0 && registerResponse.statusCode == 200) {
+        console.log("response", registerResponse.data)
+        saveData(registerResponse.data)
+      }
+    }
+
+  }, [registerResponse])
+
+  const saveData = async (data) => {
+    let userData = data;
+    userData = { ...userData, ...{ loggedin: true } }
+    try {
+      const jsonValue = JSON.stringify(userData)
+      await AsyncStorage.setItem('@user_data', jsonValue)
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Drawer' }],
+      })
+    } catch (e) {
+      console.log("error in saving data", e)
+    }
   }
 
 

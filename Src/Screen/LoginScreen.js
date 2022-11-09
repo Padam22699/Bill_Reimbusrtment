@@ -1,19 +1,29 @@
 import React, { useState } from 'react'
-import { TouchableOpacity, StatusBar, StyleSheet, View, KeyboardAvoidingView, ScrollView } from 'react-native'
+import { TouchableOpacity, StatusBar, StyleSheet, View, KeyboardAvoidingView, ScrollView, Platform } from 'react-native'
 import { Text } from 'react-native-paper'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
-import Button from '../components/Button'
 import TextInput from '../components/TextInput'
 import BackButton from '../components/BackButton'
 import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import LinearGradient from 'react-native-linear-gradient';
+import { useDispatch, useSelector } from 'react-redux'
+import DeviceInfo from 'react-native-device-info';
+import { login } from '../redux/actions/loginAction';
+import { useEffect } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 export default function LoginScreen({ navigation }) {
+
+  const dispatch = useDispatch();
   const [email, setEmail] = useState({ value: '', error: '' })
   const [password, setPassword] = useState({ value: '', error: '' })
+
+
+  const loginResponse = useSelector(state => state.loginReducer.data);
+  const loading = useSelector(state => state.loginReducer.loading);
 
   const onLoginPressed = () => {
     const emailError = emailValidator(email.value)
@@ -23,11 +33,52 @@ export default function LoginScreen({ navigation }) {
       setPassword({ ...password, error: passwordError })
       return
     }
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'Dashboard' }],
-    })
+    loginAPI()
+    // saveData()
   }
+
+  const saveData = async (newData) => {
+    let data = {
+      loggedin: true,
+      token: newData.token
+    }
+    try {
+      const jsonValue = JSON.stringify(data)
+      await AsyncStorage.mergeItem('@user_data', jsonValue)
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Drawer' }],
+      })
+    } catch (e) {
+      console.log("error in saving data", e)
+    }
+  }
+
+  const loginAPI = () => {
+    const request = {
+      'email': email.value,
+      'password': password.value,
+      'role': "employee",
+      "device_type": Platform.OS,
+      "device_token": "123456",
+      "device_id": DeviceInfo.getDeviceId()
+    }
+    dispatch(login(request));
+  }
+
+  useEffect(() => {
+    if (loginResponse != null) {
+      console.log("loginResponse", loginResponse)
+      if (Object.keys(loginResponse).length != 0 && loginResponse.OK == false) {
+        alert(loginResponse.Messages)
+      }
+      if (Object.keys(loginResponse).length != 0 && loginResponse.OK == true) {
+        console.log("response", loginResponse)
+        saveData(loginResponse.data)
+      }
+    }
+
+  }, [loginResponse])
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.colors.surface, }}>
