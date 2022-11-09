@@ -1,17 +1,18 @@
 import * as React from 'react';
-<<<<<<< HEAD
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-=======
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { createDrawerNavigator } from '@react-navigation/drawer';
->>>>>>> fb61d1a8bc73a7d54b610f596e9dec8c446d0cad
 import SplashScreen from '../Screen/SplashScreen';
 import LandingScreen from '../Screen/LandingScreen';
+import LoginScreen from '../Screen/LoginScreen';
+import Dashboard from '../Screen/Dashboard';
+import ToptabBar from '../Common/ToptabBar';
+import RegisterScreen from '../Screen/RegisterScreen';
 import SideMenu from '../Common/SideMenu';
 import BottomTab from '../Common/BottomTab';
-import AuthStack from './Auth';
+import DetailScreen from '../Screen/DetailScreen';
+import OrganizationLoginScreen from '../Screen/OrganizationLoginScreen';
+import OrganizationSignUpScreen from '../Screen/OrganizationSignUpScreen';
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -29,7 +30,6 @@ const MyDrawer = () => {
       />
     </Drawer.Navigator>
   );
-<<<<<<< HEAD
 };
 function Routes() {
   console.disableYellowBox = true;
@@ -83,15 +83,6 @@ function Routes() {
         />
       </Stack.Navigator>
     </NavigationContainer>
-=======
-}
-function Routes({ loggedin }) {
-  return (
-    <Stack.Navigator initialRouteName={loggedin ? 'Drawer' : 'AuthStack'}>
-      <Stack.Screen name="AuthStack" component={AuthStack} options={{ headerShown: false }} />
-      <Stack.Screen name="Drawer" component={MyDrawer} options={{ headerShown: false }} />
-    </Stack.Navigator>
->>>>>>> fb61d1a8bc73a7d54b610f596e9dec8c446d0cad
   );
 }
 export default Routes;

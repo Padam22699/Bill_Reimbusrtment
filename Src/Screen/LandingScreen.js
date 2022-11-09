@@ -9,9 +9,13 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Imagepath from '../Assets/Images/Imagepath';
+<<<<<<< HEAD
 import Background from '../components/Background';
 import Button from '../components/Button';
 import {theme} from '../core/theme';
+=======
+import { theme } from '../core/theme';
+>>>>>>> fb61d1a8bc73a7d54b610f596e9dec8c446d0cad
 import LinearGradient from 'react-native-linear-gradient';
 
 const LandingScreen = ({navigation}) => {
