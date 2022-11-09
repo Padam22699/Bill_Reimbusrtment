@@ -9,7 +9,11 @@ export const register = async (requestJson) => {
     console.log('RESPONSE=> ', response.data);
     return response.data;
   } catch (err) {
-    return alert("There is an issue in response, please try again later")
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return alert("There is an issue in response, please try again later")
+    }
   }
 };
 
@@ -20,7 +24,11 @@ export const login = async (requestJson) => {
     console.log('RESPONSE=> ', response.data);
     return response.data;
   } catch (err) {
-    return alert("There is an issue in response, please try again later")
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return alert("There is an issue in response, please try again later")
+    }
   }
 };
 
@@ -31,6 +39,10 @@ export const getNotification = async (requestJson) => {
     console.log('RESPONSE=> ', response.data);
     return response.data;
   } catch (err) {
-    return alert("There is an issue in response, please try again later")
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return alert("There is an issue in response, please try again later")
+    }
   }
 };

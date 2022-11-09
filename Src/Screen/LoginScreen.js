@@ -38,13 +38,11 @@ export default function LoginScreen({ navigation }) {
   }
 
   const saveData = async (newData) => {
-    let data = {
-      loggedin: true,
-      token: newData.token
-    }
+    let userData = newData;
+    userData = { ...userData, ...{ loggedin: true } }
     try {
-      const jsonValue = JSON.stringify(data)
-      await AsyncStorage.mergeItem('@user_data', jsonValue)
+      const jsonValue = JSON.stringify(userData)
+      await AsyncStorage.setItem('@user_data', jsonValue)
       navigation.reset({
         index: 0,
         routes: [{ name: 'Drawer' }],
