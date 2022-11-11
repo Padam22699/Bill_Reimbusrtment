@@ -15,6 +15,7 @@ import DeviceInfo from 'react-native-device-info';
 import { clearRegister, register } from '../redux/actions/registerAction';
 import {setToken} from '../redux/actions/tokenAction';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import messaging from '@react-native-firebase/messaging'
 
 
 export default function RegisterScreen({ navigation }) {
@@ -45,10 +46,16 @@ export default function RegisterScreen({ navigation }) {
       // setOrganization({ ...Organization, error: OrganizationError })
       return
     }
-    signup()
+    getFirebaseToken()
   }
 
-  const signup = () => {
+  const getFirebaseToken = async () => {
+    await messaging().getToken().then((token) => {
+      signup(token)
+    })
+  }
+
+  const signup = (firebase_token) => {
     let request = {
       "first_name": name.value,
       "last_name": Lastname.value,
@@ -58,7 +65,7 @@ export default function RegisterScreen({ navigation }) {
       "organization_code": "Wedig335431",
       "role": "employee",
       "device_type": Platform.OS,
-      "device_token": "123456",
+      "device_token": firebase_token,
       "device_id": DeviceInfo.getDeviceId()
     }
 

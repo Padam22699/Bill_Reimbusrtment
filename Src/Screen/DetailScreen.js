@@ -77,6 +77,7 @@ export default function DetailScreen({ navigation }) {
             if (Object.keys(getBillDetailResponse).length != 0 && getBillDetailResponse.statusCode == 200) {
                 console.log("response", getBillDetailResponse)
                 setBillDetail(getBillDetailResponse.data[0])
+                setcheckbook(getBillDetailResponse.data[0].is_physically_submitted)
                 dispatch(clearGetBillDetail())
             }
         }

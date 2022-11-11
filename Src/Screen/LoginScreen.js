@@ -16,6 +16,7 @@ import { clearForgotPassword, forgotPassword } from '../redux/actions/forgotPass
 import {setToken} from '../redux/actions/tokenAction';
 import { useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import messaging from '@react-native-firebase/messaging'
 
 export default function LoginScreen({ navigation }) {
 
@@ -36,8 +37,14 @@ export default function LoginScreen({ navigation }) {
       setPassword({ ...password, error: passwordError })
       return
     }
-    loginAPI()
+    getFirebaseToken()
     // saveData()
+  }
+
+  const getFirebaseToken = async () => {
+    await messaging().getToken().then((token) => {
+      loginAPI(token)
+    })
   }
 
   const saveData = async (newData) => {
@@ -55,13 +62,13 @@ export default function LoginScreen({ navigation }) {
     }
   }
 
-  const loginAPI = () => {
+  const loginAPI = (firebase_token) => {
     const request = {
       'email': email.value,
       'password': password.value,
       'role': "employee",
       "device_type": Platform.OS,
-      "device_token": "123456",
+      "device_token": firebase_token,
       "device_id": DeviceInfo.getDeviceId()
     }
     dispatch(login(request));
@@ -139,7 +146,6 @@ export default function LoginScreen({ navigation }) {
         />
         <TextInput
           label="Password"
-          keyboardType="numeric"
           returnKeyType="done"
           value={password.value}
           onChangeText={(text) => setPassword({ value: text, error: '' })}
