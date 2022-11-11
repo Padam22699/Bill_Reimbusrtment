@@ -35,7 +35,7 @@ const Notification = () => {
     if (notificationResponse != null) {
       console.log("notificationResponse", notificationResponse)
       if (Object.keys(notificationResponse).length != 0 && notificationResponse.statusCode != 200) {
-        alert(notificationResponse.Messages)
+        alert(notificationResponse.message)
       }
       if (Object.keys(notificationResponse).length != 0 && notificationResponse.statusCode == 200) {
         setNotifications(notificationResponse.data)

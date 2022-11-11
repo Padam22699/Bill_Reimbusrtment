@@ -7,8 +7,20 @@ import Current from '../Screen/Current';
 import { theme } from '../core/theme';
 import ToptabBar from './ToptabBar';
 import Reimbursement from '../Screen/Reimbursement';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import DetailScreen from '../Screen/DetailScreen';
 
 const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
+
+function HomeStack() {
+    return(
+        <Stack.Navigator initialRouteName='ToptabBar'>
+            <Stack.Screen name='ToptabBar' component={ToptabBar} options={{ headerShown: false }}/>
+            <Stack.Screen name='DetailScreen' component={DetailScreen} options={{ headerShown: false }} />
+        </Stack.Navigator>
+    )
+}
 
 function BottomTab(props) {
     return (
@@ -27,7 +39,7 @@ function BottomTab(props) {
                 },
 
             }} >
-            <Tab.Screen name='ToptabBar' component={ToptabBar}
+            <Tab.Screen name='HomeStack' component={HomeStack}
                 options={{
                     headerShown: false,
                     tabBarLabel: '',

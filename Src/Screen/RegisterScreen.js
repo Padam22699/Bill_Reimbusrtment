@@ -8,12 +8,12 @@ import { theme } from '../core/theme'
 import { emailValidator } from '../helpers/emailValidator'
 import { passwordValidator } from '../helpers/passwordValidator'
 import { nameValidator } from '../helpers/nameValidator'
-import { OrganizationValidator } from '../helpers/OrganizationValidator'
 import { LastnameValidator } from '../helpers/LastnameValidator'
 import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux'
 import DeviceInfo from 'react-native-device-info';
 import { clearRegister, register } from '../redux/actions/registerAction';
+import {setToken} from '../redux/actions/tokenAction';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
@@ -69,12 +69,13 @@ export default function RegisterScreen({ navigation }) {
     if (registerResponse != null) {
       console.log("registerResponse", registerResponse)
       if (Object.keys(registerResponse).length != 0 && registerResponse.statusCode != 200) {
-        alert(registerResponse.Messages)
+        alert(registerResponse.message)
         dispatch(clearRegister())
       }
       if (Object.keys(registerResponse).length != 0 && registerResponse.statusCode == 200) {
         console.log("response", registerResponse.data)
         saveData(registerResponse.data)
+        dispatch(setToken(registerResponse.data.token))
         dispatch(clearRegister())
       }
     }

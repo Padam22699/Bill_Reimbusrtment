@@ -12,6 +12,8 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useDispatch, useSelector } from 'react-redux'
 import DeviceInfo from 'react-native-device-info';
 import { clearLogin, login } from '../redux/actions/loginAction';
+import { clearForgotPassword, forgotPassword } from '../redux/actions/forgotPasswordAction';
+import {setToken} from '../redux/actions/tokenAction';
 import { useEffect } from 'react'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
@@ -24,6 +26,7 @@ export default function LoginScreen({ navigation }) {
 
   const loginResponse = useSelector(state => state.loginReducer.data);
   const loading = useSelector(state => state.loginReducer.loading);
+  const forgotPasswordResponse = useSelector(state => state.forgotPasswordReducer.data);
 
   const onLoginPressed = () => {
     const emailError = emailValidator(email.value)
@@ -68,17 +71,50 @@ export default function LoginScreen({ navigation }) {
     if (loginResponse != null) {
       console.log("loginResponse", loginResponse)
       if (Object.keys(loginResponse).length != 0 && loginResponse.statusCode != 200) {
-        alert(loginResponse.Messages)
+        alert(loginResponse.message)
         dispatch(clearLogin())
       }
       if (Object.keys(loginResponse).length != 0 && loginResponse.statusCode == 200) {
         console.log("response", loginResponse)
         saveData(loginResponse.data)
+        dispatch(setToken(loginResponse.data.token))
         dispatch(clearLogin())
       }
     }
-
   }, [loginResponse])
+
+  const forgotPasswordPress = () => {
+    const emailError = emailValidator(email.value)
+    if (emailError) {
+      setEmail({ ...email, error: emailError })
+      return
+    }
+    forgotPasswordAPI()
+  }
+
+  const forgotPasswordAPI = () => {
+    let request = {
+      "email": email.value,
+      "role": "employee"
+    }
+    dispatch(forgotPassword(request))
+  }
+
+  useEffect(() => {
+    if (forgotPasswordResponse != null) {
+      console.log("forgotPasswordResponse", forgotPasswordResponse)
+      if (Object.keys(forgotPasswordResponse).length != 0 && forgotPasswordResponse.statusCode != 200) {
+        alert(forgotPasswordResponse.message)
+        dispatch(clearForgotPassword())
+      }
+      if (Object.keys(forgotPasswordResponse).length != 0 && forgotPasswordResponse.statusCode == 200) {
+        console.log("response", forgotPasswordResponse)
+        alert(forgotPasswordResponse.message)
+        dispatch(clearForgotPassword())
+      }
+    }
+
+  }, [forgotPasswordResponse])
 
   return (
     <ScrollView style={{ flex: 1, backgroundColor: theme.colors.surface, }}>
@@ -112,7 +148,7 @@ export default function LoginScreen({ navigation }) {
           secureTextEntry
         />
         <View style={styles.forgotPassword}>
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity activeOpacity={0.8} onPress={forgotPasswordPress}>
             <Text style={styles.forgot}>Forgot your password?</Text>
           </TouchableOpacity>
         </View>
