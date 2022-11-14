@@ -37,8 +37,20 @@ export default function LoginScreen({ navigation }) {
       setPassword({ ...password, error: passwordError })
       return
     }
-    getFirebaseToken()
+    requestUserPermission()
     // saveData()
+  }
+
+  const requestUserPermission = async() => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      getFirebaseToken()
+    }
   }
 
   const getFirebaseToken = async () => {

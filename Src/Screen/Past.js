@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearGetAllBills, getAllBills } from '../redux/actions/getAllBillsAction';
 import Imagepath from '../Assets/Images/Imagepath';
 import moment from 'moment';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Past({ navigation }) {
 
@@ -154,7 +155,7 @@ export default function Past({ navigation }) {
     )
   }
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -208,7 +209,7 @@ export default function Past({ navigation }) {
         renderItem={renderItem}
         showsVerticalScrollIndicator={false} />
 
-    </View>
+    </SafeAreaView>
   )
 }
 

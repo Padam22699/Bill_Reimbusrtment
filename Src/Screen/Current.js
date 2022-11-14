@@ -9,6 +9,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearGetAllBills, getAllBills } from '../redux/actions/getAllBillsAction';
 import moment from 'moment';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 
 export default function Current({ navigation }) {
@@ -158,7 +159,7 @@ export default function Current({ navigation }) {
     )
   }
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Modal
         animationType="slide"
         transparent={true}
@@ -213,7 +214,7 @@ export default function Current({ navigation }) {
         renderItem={renderItem}
         showsVerticalScrollIndicator={false} />
 
-    </View >
+    </SafeAreaView>
   )
 }
 

@@ -12,6 +12,7 @@ import { theme } from '../core/theme';
 import { clearGetBillDetail, getBillDetail } from '../redux/actions/getBillDetailAction'
 import {clearReminder, reminder} from '../redux/actions/reminderAction'
 import { clearIsPhysicallySubmitted, isPhysicallySubmitted } from '../redux/actions/isPhysicallySubmittedAction'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DetailScreen({ navigation }) {
 
@@ -159,7 +160,7 @@ export default function DetailScreen({ navigation }) {
 
     return (
 
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Animatable.View animation="zoomInDown" style={{ transform: "scale" }}>
                 <StatusBar
                     backgroundColor={theme.colors.primary}
@@ -224,7 +225,7 @@ export default function DetailScreen({ navigation }) {
                 </View>
 
             </Animatable.View >
-        </View >
+        </SafeAreaView>
     );
 }
 const styles = StyleSheet.create({

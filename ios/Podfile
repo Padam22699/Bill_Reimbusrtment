@@ -5,6 +5,7 @@ platform :ios, '11.0'
 install! 'cocoapods', :deterministic_uuids => false
 
 target 'reimbursement' do
+  pod 'FirebaseCore', :modular_headers => true
   config = use_native_modules!
 
   # Flags change depending on the env values.
