@@ -1,30 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-<<<<<<< HEAD
-import { NavigationContainer } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
-import { View, } from 'react-native';
-import { useDispatch } from 'react-redux';
-import Routes from './Src/Navigation/Routes';
-import { setToken } from './Src/redux/actions/tokenAction';
-
-const App = () => {
-
-  const dispatch = useDispatch()
-
-  const [ready, setReady] = useState(false)
-  const [loggedin, setLoggedin] = useState(false)
-=======
 import {NavigationContainer} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import Routes from './Src/Navigation/Routes';
+import { useDispatch } from 'react-redux';
+import { setToken } from './Src/redux/actions/tokenAction';
 import {Organization} from './Src/Navigation/Auth';
 import DetailScreen from './Src/Screen/DetailScreen';
+
 const App = () => {
   const [ready, setReady] = useState(false);
   const [loggedin, setLoggedin] = useState(false);
   const [loggedintype, setLoggedintype] = useState('');
->>>>>>> 51922f0a85637289835db01db5d876ca869e4efc
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     initializeApp();
@@ -66,11 +55,5 @@ const App = () => {
   } else {
     return <View></View>;
   }
-
-  // return (
-  //   <NavigationContainer>
-  //     <Organization />
-  //   </NavigationContainer>
-  // );
 };
 export default App;

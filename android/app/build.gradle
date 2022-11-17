@@ -1,10 +1,7 @@
 apply plugin: "com.android.application"
-<<<<<<< HEAD
 apply plugin: "com.google.gms.google-services"
 
-=======
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
->>>>>>> 51922f0a85637289835db01db5d876ca869e4efc
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
