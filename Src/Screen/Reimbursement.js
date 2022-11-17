@@ -7,8 +7,8 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import TextInput from '../components/TextInput';
 import Imagepath from '../Assets/Images/Imagepath';
 import ImagePicker from 'react-native-image-crop-picker';
-import { Iconlist } from '../Common/VerticalData';
-import { theme } from '../core/theme';
+import {Iconlist} from '../Common/VerticalData';
+import {theme} from '../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
 import { amountValidator } from '../helpers/amountValidator';
 import { descriptionValidator } from '../helpers/descriptionValidator';
@@ -67,34 +67,30 @@ export default function Reimbursement({ navigation }) {
   const hideDatePicker = () => {
     setDatePickerVisibility(false);
   };
-  const handleConfirm = (date) => {
-    setDate(moment(date).format('DD MMM yyyy'))
+  const handleConfirm = date => {
+    setDate(moment(date).format('DD MMM yyyy'));
     // console.warn("A date has been picked: ", date);
     hideDatePicker();
   };
   const imageCrop = () => {
-    Alert.alert(
-      "Attach your Select bill",
-      "",
-      [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel"
-        },
-        { text: "Gallery", onPress: () => OpenGallery() },
-        { text: "Camera", onPress: () => OpenCamera() }
-      ]
-    );
+    Alert.alert('Attach your Select bill', '', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Gallery', onPress: () => OpenGallery()},
+      {text: 'Camera', onPress: () => OpenCamera()},
+    ]);
     const OpenGallery = () => {
       ImagePicker.openPicker({
         width: 300,
         height: 400,
-        cropping: true
+        cropping: true,
       }).then(image => {
         setupload(image.path);
       });
-    }
+    };
     const OpenCamera = () => {
       ImagePicker.openCamera({
         width: 300,
@@ -103,7 +99,7 @@ export default function Reimbursement({ navigation }) {
       }).then(image => {
         setupload(image.path);
       });
-    }
+    };
   };
 
   const onSubmitPress = () => {
@@ -161,25 +157,32 @@ export default function Reimbursement({ navigation }) {
     }
   }, [addBillResponse])
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     return (
       <View style={styles.antDesign}>
-        <TouchableOpacity style={styles.touchabl} activeOpacity={0.8}
-          onPress={() => { setSelect(item) }} >
-          <View style={item === select ? styles.IconlistContainerSelected : styles.IconlistContainer}>
+        <TouchableOpacity
+          style={styles.touchabl}
+          activeOpacity={0.8}
+          onPress={() => {
+            setSelect(item);
+          }}>
+          <View
+            style={
+              item === select
+                ? styles.IconlistContainerSelected
+                : styles.IconlistContainer
+            }>
             <Image source={item.image} style={styles.image} />
             <Text style={styles.text}>{item.text}</Text>
           </View>
         </TouchableOpacity>
       </View>
-    )
-  }
+    );
+  };
 
   return (
     <ScrollView style={styles.container}>
-      <StatusBar
-        backgroundColor={theme.colors.white}
-        barStyle="dark-content" />
+      <StatusBar backgroundColor={theme.colors.white} barStyle="dark-content" />
       <View style={styles.mainview}>
         <Text style={{ textAlign: 'center', fontSize: 18, fontWeight: "700", bottom: 10 }}>
           Bill Type
@@ -189,13 +192,21 @@ export default function Reimbursement({ navigation }) {
             isVisible={isDatePickerVisible}
             mode="date"
             onConfirm={handleConfirm}
-            onCancel={hideDatePicker} />
-          <TouchableOpacity onPress={() => { showDatePicker() }}
+            onCancel={hideDatePicker}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              showDatePicker();
+            }}
             activeOpacity={0.8}>
             <Text style={styles.textdate}>{Date}</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => { showDatePicker() }} activeOpacity={0.8}>
-            <Entypo name='calendar' size={25} color={theme.colors.primary} />
+          <TouchableOpacity
+            onPress={() => {
+              showDatePicker();
+            }}
+            activeOpacity={0.8}>
+            <Entypo name="calendar" size={25} color={theme.colors.primary} />
           </TouchableOpacity>
         </View>
         <View>
@@ -225,28 +236,38 @@ export default function Reimbursement({ navigation }) {
             errorText={participants.error} />
           <View style={styles.attachview}>
             <Text style={styles.textbill}>Attach your bill</Text>
-            <TouchableOpacity style={styles.touchacrop}
-              onPress={() => { imageCrop() }}>
+            <TouchableOpacity
+              style={styles.touchacrop}
+              onPress={() => {
+                imageCrop();
+              }}>
               <Image source={Imagepath.Medical} style={styles.imagecrop} />
             </TouchableOpacity>
           </View>
           {upload &&
             <View style={styles.imageflex}>
-              <TouchableOpacity style={styles.touchablicon} activeOpacity={0.9}
-                onPress={() => { ('') }} >
-                <Image source={upload ? { uri: upload } : Imagepath.file}
-                  style={styles.imagestyle} />
+              <TouchableOpacity
+                style={styles.touchablicon}
+                activeOpacity={0.9}
+                onPress={() => {
+                  ('');
+                }}>
+                <Image
+                  source={upload ? {uri: upload} : Imagepath.file}
+                  style={styles.imagestyle}
+                />
               </TouchableOpacity>
             </View>
           }
           <Text style={styles.textbill}>Select your bill type</Text>
-          <View style={{ flex: 1 }}>
+          <View style={{flex: 1}}>
             <FlatList
               data={Iconlist}
               horizontal
               keyExtractor={item => item.id}
               renderItem={renderItem}
-              showsHorizontalScrollIndicator={false} />
+              showsHorizontalScrollIndicator={false}
+            />
           </View>
           <View style={{ marginTop: 30, marginHorizontal: 30 }}>
             <TouchableOpacity mode="contained" onPress={onSubmitPress} activeOpacity={0.9}>
@@ -265,23 +286,36 @@ export default function Reimbursement({ navigation }) {
         </View>
       </View>
     </ScrollView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, backgroundColor: theme.colors.violet
+    flex: 1,
+    backgroundColor: theme.colors.violet,
   },
   datetimestyle: {
-    flexDirection: 'row', alignItems: 'center', borderWidth: 1, padding: 15, justifyContent: 'space-between', borderRadius: 7,
-    borderColor: theme.colors.secondary
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    padding: 15,
+    justifyContent: 'space-between',
+    borderRadius: 7,
+    borderColor: theme.colors.secondary,
   },
   mainview: {
-    paddingVertical: 30, paddingHorizontal: 24, backgroundColor: '#fff', elevation: 2, marginHorizontal: 16, marginVertical: 20,
-    borderRadius: 7
+    paddingVertical: 30,
+    paddingHorizontal: 24,
+    backgroundColor: '#fff',
+    elevation: 2,
+    marginHorizontal: 16,
+    marginVertical: 20,
+    borderRadius: 7,
   },
   attachview: {
-    flexDirection: 'row', alignItems: 'center', marginVertical: 5
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 5,
   },
   touchacrop: {
     borderWidth: 2, borderRadius: 20, alignItems: "center", justifyContent: 'center', borderColor: theme.colors.primary,
@@ -291,57 +325,105 @@ const styles = StyleSheet.create({
     height: 10, width: 10, tintColor: theme.colors.primary,
   },
   textdate: {
-    fontSize: 16, fontWeight: "normal", color: theme.colors.text
+    fontSize: 16,
+    fontWeight: 'normal',
+    color: theme.colors.text,
   },
   amounttext: {
-    fontSize: 18
+    fontSize: 18,
   },
   rnpicker: {
-    borderWidth: 1, height: 55, justifyContent: 'center', marginTop: 15, borderColor: "silver"
+    borderWidth: 1,
+    height: 55,
+    justifyContent: 'center',
+    marginTop: 15,
+    borderColor: 'silver',
   },
   antDesign: {
-    marginTop: 20
+    marginTop: 20,
   },
   touchaicon: {
-    borderWidth: 1, height: 90, width: 90, alignItems: 'center', justifyContent: 'center', borderStyle: 'dashed', borderRadius: 7
-
+    borderWidth: 1,
+    height: 90,
+    width: 90,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderStyle: 'dashed',
+    borderRadius: 7,
   },
   touchablicon: {
-    borderWidth: 1, height: 70, width: 70, alignItems: 'center', justifyContent: 'center', borderStyle: 'dashed', borderRadius: 7
+    borderWidth: 1,
+    height: 70,
+    width: 70,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderStyle: 'dashed',
+    borderRadius: 7,
   },
   touchabl: {
-    borderWidth: 1, alignItems: 'center', justifyContent: 'center', borderStyle: 'dashed', borderRadius: 7, marginRight: 14
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderStyle: 'dashed',
+    borderRadius: 7,
+    marginRight: 14,
   },
   text: {
-    color: '#891fe0', fontWeight: "bold"
+    color: '#891fe0',
+    fontWeight: 'bold',
   },
   textbill: {
-    fontSize: 16, color: "#000"
+    fontSize: 16,
+    color: '#000',
   },
   camerastyle: {
-    marginVertical: 20, flexDirection: "row", alignItems: "center", justifyContent: 'center',
+    marginVertical: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   imagestyle: {
-    height: 50, width: 50, borderRadius: 7, resizeMode: 'contain', marginHorizontal: 20,
+    height: 50,
+    width: 50,
+    borderRadius: 7,
+    resizeMode: 'contain',
+    marginHorizontal: 20,
   },
   IconlistContainer: {
-    height: 70, width: 70, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fff', borderRadius: 7
+    height: 70,
+    width: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderRadius: 7,
   },
   IconlistContainerSelected: {
-    height: 70, width: 70, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.colors.violet, borderRadius: 7,
+    height: 70,
+    width: 70,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: theme.colors.violet,
+    borderRadius: 7,
   },
   image: {
-    height: 25, width: 25, resizeMode: "contain", tintColor: '#891fe0'
+    height: 25,
+    width: 25,
+    resizeMode: 'contain',
+    tintColor: '#891fe0',
   },
   imageflex: {
-    marginVertical: 7
+    marginVertical: 7,
   },
   touchabltext: {
-    height: 45, justifyContent: 'center', borderRadius: 7, alignItems: 'center', justifyContent: 'center'
+    height: 45,
+    justifyContent: 'center',
+    borderRadius: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textstyle: {
-    fontSize: 18, color: "#fff"
+    fontSize: 18,
+    color: '#fff',
   },
-
-})
+});

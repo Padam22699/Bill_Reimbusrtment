@@ -1,6 +1,10 @@
 apply plugin: "com.android.application"
+<<<<<<< HEAD
 apply plugin: "com.google.gms.google-services"
 
+=======
+apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+>>>>>>> 51922f0a85637289835db01db5d876ca869e4efc
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -269,7 +273,7 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
-    
+    implementation "com.facebook.react:react-native:0.68.2"
    
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
@@ -315,7 +319,7 @@ task copyDownloadableDepsToLibs(type: Copy) {
     into 'libs'
 }
 
-apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)
+
 
 def isNewArchitectureEnabled() {
     // To opt-in for the New Architecture, you can either:

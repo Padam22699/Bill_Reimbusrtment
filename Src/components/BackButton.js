@@ -22,6 +22,6 @@ const styles = StyleSheet.create({
   image: {
     width: 30,
     height: 30,
-    tintColor:theme.colors.primary
+    tintColor:theme.colors.PRIMARY
   },
 })

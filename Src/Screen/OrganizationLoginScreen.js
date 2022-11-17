@@ -92,9 +92,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row', marginTop: 4,
   },
   forgot: {
-    fontSize: 13, color: theme.colors.primary, fontWeight: 'bold'
+    fontSize: 13, color: theme.colors.PRIMARY, fontWeight: 'bold'
   },
   link: {
-    fontWeight: 'bold', color: theme.colors.primary,
+    fontWeight: 'bold', color: theme.colors.PRIMARY,
   },
 })

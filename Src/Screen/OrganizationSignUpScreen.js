@@ -138,7 +138,7 @@ const styles = StyleSheet.create({
     },
     link: {
         fontWeight: 'bold',
-        color: theme.colors.primary,
+        color: theme.colors.PRIMARY,
     },
     keyboarstyle: {
         flex: 1, padding: 20, width: '100%', maxWidth: "100%", alignSelf: 'center', alignItems: 'center',

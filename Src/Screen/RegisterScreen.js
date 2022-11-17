@@ -17,7 +17,6 @@ import {setToken} from '../redux/actions/tokenAction';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import messaging from '@react-native-firebase/messaging'
 
-
 export default function RegisterScreen({ navigation }) {
 
   const dispatch = useDispatch()
@@ -106,21 +105,19 @@ export default function RegisterScreen({ navigation }) {
 
 
   return (
-
     <View style={styles.container}>
       <StatusBar
         backgroundColor={theme.colors.surface}
-        barStyle="dark-content" />
+        barStyle="dark-content"
+      />
       <BackButton goBack={navigation.goBack} />
-      <View style={{ alignItems: 'center' }}>
+      <View style={{alignItems: 'center'}}>
         <Logo />
-        <Text style={styles.textcreate}>
-          Create Account
-        </Text>
+        <Text style={styles.textcreate}>Create Account</Text>
       </View>
-      <KeyboardAvoidingView behavior="padding"
-        style={styles.keyboarstyle}>
-        <ScrollView nestedScrollEnabled={true}
+      <KeyboardAvoidingView behavior="padding" style={styles.keyboarstyle}>
+        <ScrollView
+          nestedScrollEnabled={true}
           //scrollEnabled={this.state.openCountryDropwdown ? false : true}
           keyboardShouldPersistTaps={'handled'}
           style={styles.innerContainer}>
@@ -128,7 +125,7 @@ export default function RegisterScreen({ navigation }) {
             label="First Name"
             returnKeyType="next"
             value={name.value}
-            onChangeText={(text) => setName({ value: text, error: '' })}
+            onChangeText={text => setName({value: text, error: ''})}
             error={!!name.error}
             errorText={name.error}
           />
@@ -136,7 +133,7 @@ export default function RegisterScreen({ navigation }) {
             label="Last Name"
             returnKeyType="next"
             value={Lastname.value}
-            onChangeText={(text) => setLastname({ value: text, error: '' })}
+            onChangeText={text => setLastname({value: text, error: ''})}
             error={!!Lastname.error}
             errorText={Lastname.error}
           />
@@ -144,7 +141,7 @@ export default function RegisterScreen({ navigation }) {
             label="Email"
             returnKeyType="next"
             value={email.value}
-            onChangeText={(text) => setEmail({ value: text, error: '' })}
+            onChangeText={text => setEmail({value: text, error: ''})}
             error={!!email.error}
             errorText={email.error}
             autoCapitalize="none"
@@ -156,7 +153,7 @@ export default function RegisterScreen({ navigation }) {
             label="Password"
             returnKeyType="done"
             value={password.value}
-            onChangeText={(text) => setPassword({ value: text, error: '' })}
+            onChangeText={text => setPassword({value: text, error: ''})}
             error={!!password.error}
             errorText={password.error}
             secureTextEntry
@@ -165,21 +162,25 @@ export default function RegisterScreen({ navigation }) {
             label="Organization id"
             returnKeyType="done"
             value={Organization.value}
-            onChangeText={(text) => setOrganization({ value: text, error: '' })}
+            onChangeText={text => setOrganization({value: text, error: ''})}
             error={!!Organization.error}
             errorText={Organization.error}
           />
           <View style={styles.signview}>
-            <TouchableOpacity mode="contained" onPress={onSignUpPressed} activeOpacity={0.9}>
-              <LinearGradient colors={["#7426f2", '#3d0891']} style={styles.touchabltext}>
-                <Text style={styles.textstyle}>
-                  Sign Up
-                </Text>
+            <TouchableOpacity
+              mode="contained"
+              onPress={onSignUpPressed}
+              activeOpacity={0.9}>
+              <LinearGradient
+                colors={['#7426f2', '#3d0891']}
+                style={styles.touchabltext}>
+                <Text style={styles.textstyle}>Sign Up</Text>
               </LinearGradient>
             </TouchableOpacity>
             <View style={styles.row}>
               <Text>Already have an account? </Text>
-              <TouchableOpacity onPress={() => navigation.replace('LoginScreen')}>
+              <TouchableOpacity
+                onPress={() => navigation.replace('LoginScreen')}>
                 <Text style={styles.link}>Login</Text>
               </TouchableOpacity>
             </View>
@@ -187,37 +188,49 @@ export default function RegisterScreen({ navigation }) {
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
-
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, backgroundColor: theme.colors.surface, paddingVertical: 10
+    flex: 1,
+    backgroundColor: theme.colors.surface,
+    paddingVertical: 10,
   },
   textcreate: {
-    fontSize: 18, color: theme.colors.primary, fontWeight: '700'
+    fontSize: 18,
+    color: theme.colors.PRIMARY,
+    fontWeight: '700',
   },
   row: {
     flexDirection: 'row',
-    marginVertical: 10, justifyContent: "center"
+    marginVertical: 10,
+    justifyContent: 'center',
   },
   link: {
     fontWeight: 'bold',
-    color: theme.colors.primary,
+    color: theme.colors.PRIMARY,
   },
   keyboarstyle: {
-    flex: 1, width: '100%',
+    flex: 1,
+    width: '100%',
   },
   touchabltext: {
-    height: 45, justifyContent: 'center', borderRadius: 7, alignItems: 'center', justifyContent: 'center',
-    marginTop: 20
+    height: 45,
+    justifyContent: 'center',
+    borderRadius: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
   },
   textstyle: {
-    fontSize: 18, color: "#fff"
+    fontSize: 18,
+    color: '#fff',
   },
   signview: {
-    paddingHorizontal: 20, width: '100%', maxWidth: "100%"
+    paddingHorizontal: 20,
+    width: '100%',
+    maxWidth: '100%',
   },
   innerContainer: {
     flex: 1,
@@ -227,3 +240,4 @@ const styles = StyleSheet.create({
     width: '100%',
   },
 })
+
