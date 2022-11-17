@@ -16,13 +16,6 @@ import DeviceInfo from 'react-native-device-info';
 import { clearRegister, register } from '../redux/actions/registerAction';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export default function RegisterScreen({navigation}) {
-  const [name, setName] = useState({value: '', error: ''});
-  const [Lastname, setLastname] = useState({value: '', error: ''});
-  const [email, setEmail] = useState({value: '', error: ''});
-  const [password, setPassword] = useState({value: '', error: ''});
-  const [Organization, setOrganization] = useState({value: '', error: ''});}
-
 export default function RegisterScreen({ navigation }) {
 
   const dispatch = useDispatch()
@@ -198,7 +191,7 @@ const styles = StyleSheet.create({
   },
   textcreate: {
     fontSize: 18,
-    color: theme.colors.primary,
+    color: theme.colors.PRIMARY,
     fontWeight: '700',
   },
   row: {
@@ -208,7 +201,7 @@ const styles = StyleSheet.create({
   },
   link: {
     fontWeight: 'bold',
-    color: theme.colors.primary,
+    color: theme.colors.PRIMARY,
   },
   keyboarstyle: {
     flex: 1,

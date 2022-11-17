@@ -9,13 +9,9 @@ import {
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import Imagepath from '../Assets/Images/Imagepath';
-<<<<<<< HEAD
 import Background from '../components/Background';
 import Button from '../components/Button';
 import {theme} from '../core/theme';
-=======
-import { theme } from '../core/theme';
->>>>>>> fb61d1a8bc73a7d54b610f596e9dec8c446d0cad
 import LinearGradient from 'react-native-linear-gradient';
 
 const LandingScreen = ({navigation}) => {
@@ -44,8 +40,8 @@ const LandingScreen = ({navigation}) => {
             colors={['#7426f2', '#3d0891']}
             style={styles.touchabltext}>
             <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => navigation.navigate('LoginScreen')}>
+              onPress={() => navigation.navigate('Organization')}
+              activeOpacity={0.9}>
               <Text style={styles.textstyle}>Organization</Text>
             </TouchableOpacity>
           </LinearGradient>

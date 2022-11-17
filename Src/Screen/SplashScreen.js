@@ -32,7 +32,7 @@ const SplashScreen = ({ navigation }) => {
         return <Animatable.View animation={animationType}>
             <StatusBar
                 animated={true}
-                backgroundColor={theme.colors.primary}
+                backgroundColor={theme.colors.PRIMARY}
                 barStyle="default" />
             <View style={styles.textview}>
                 <Text style={styles.text}>Wedigtech</Text>
@@ -44,7 +44,7 @@ export default SplashScreen;
 export const styles = StyleSheet.create({
     container: {
         flex: 1, alignItems: "center", justifyContent: "center",
-        backgroundColor: theme.colors.primary
+        backgroundColor: theme.colors.PRIMARY
     },
     textview: {
         elevation: 5
