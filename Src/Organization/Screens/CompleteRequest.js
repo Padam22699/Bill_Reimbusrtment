@@ -76,7 +76,7 @@ const CompleteRequest = ({navigation}) => {
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
-              Categry Name
+              Category Name
             </Text>
           </View>
           <View style={{marginRight: 20}}>

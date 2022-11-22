@@ -9,6 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import {Text} from 'react-native-paper';
+import DeviceInfo from 'react-native-device-info';
 import Logo from '../../components/Logo';
 import OrgtextInput from '../Componets/OrgtextInput';
 import {GREY, PRIMARY, WHITE} from '../Colors/Color';
@@ -19,12 +20,10 @@ import {
   emailValidatorV,
   passwordValidatorV,
 } from '../Validation/OrgnizationValidation';
-import {LastnameValidator} from '../../helpers/LastnameValidator';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
-import DeviceInfo from 'react-native-device-info';
-import {clearRegister, register} from '../../redux/actions/registerAction';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearRegister, register } from '../../redux/actions/registerAction';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import Backbtn from '../Componets/Backbtn';
 
 export default function OrgSignup({navigation}) {
@@ -65,10 +64,11 @@ export default function OrgSignup({navigation}) {
     value: '',
     error: '',
   });
-  const [OrganizationAddress, setOrganizationAddress] = useState({
+  const [OrganizationAddres, setOrganizationAddres] = useState({
     value: '',
     error: '',
   });
+
   const [email, setEmail] = useState({value: '', error: ''});
   const [password, setPassword] = useState({value: '', error: ''});
 
@@ -77,9 +77,7 @@ export default function OrgSignup({navigation}) {
 
   const onSignUpPressed = () => {
     const OrganizationNameError = OrganizationNameV(OrganizationName.value);
-    const OrganizationAddError = OrganizationAddressV(
-      OrganizationAddress.value,
-    );
+    const OrganizationAddError = OrganizationAddressV(OrganizationAddres.value);
     const emailError = emailValidatorV(email.value);
     const passwordError = passwordValidatorV(password.value);
     // const OrganizationError = OrganizationValidator(Organization.value)
@@ -91,8 +89,8 @@ export default function OrgSignup({navigation}) {
       OrganizationAddError
     ) {
       setOrganizationName({...OrganizationName, error: OrganizationNameError});
-      setOrganizationAddress({
-        ...OrganizationAddress,
+      setOrganizationAddres({
+        ...OrganizationAddres,
         error: OrganizationAddError,
       });
       setEmail({...email, error: emailError});
@@ -105,14 +103,53 @@ export default function OrgSignup({navigation}) {
 
   const signup = () => {
     let request = {
-     OrganizationName: OrganizationName.value,
-     OrganizationAddress: OrganizationAddress.value,
-      email: email.value,
-      password: password.value,
-      logo:logo
+      'first_name': OrganizationName.value,
+      'last_name': OrganizationAddres.value,
+      'email': email.value,
+      'password': password.value,
+      'confirm_password': password.value,
+      'role': 'organization',
+      'device_type': Platform.OS,
+      'device_token': '123456',
+      'device_id': DeviceInfo.getDeviceId(),
     };
+    dispatch(register(request));
   };
+  useEffect(() => {
+    if (registerResponse != null) {
+      console.log('registerResponse', registerResponse);
+      if (
+        Object.keys(registerResponse).length != 0 &&
+        registerResponse.statusCode != 200
+      ) {
+        alert(registerResponse.Messages);
+        dispatch(clearRegister());
+      }
+      if (
+        Object.keys(registerResponse).length != 0 &&
+        registerResponse.statusCode == 200
+      ) {
+        console.log('response', registerResponse.data);
+        saveData(registerResponse.data);
+        dispatch(clearRegister());
+      }
+    }
+  }, [registerResponse]);
 
+  const saveData = async data => {
+    let Organizationdata = data;
+    Organizationdata = {...Organizationdata, ...{loggedin: true}};
+    try {
+      const jsonValue = JSON.stringify(Organizationdata);
+      await AsyncStorage.setItem('@Organization_data', jsonValue);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'MyTabs'}],
+      });
+    } catch (e) {
+      console.log('error in saving data', e);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -138,10 +175,12 @@ export default function OrgSignup({navigation}) {
           <OrgtextInput
             label="Address of organization"
             returnKeyType="next"
-            value={OrganizationAddress.value}
-            onChangeText={text => OrganizationAddress({value: text, error: ''})}
-            error={!!OrganizationAddress.error}
-            errorText={OrganizationAddress.error}
+            value={OrganizationAddres.value}
+            onChangeText={text =>
+              setOrganizationAddres({value: text, error: ''})
+            }
+            error={!!OrganizationAddres.error}
+            errorText={OrganizationAddres.error}
           />
           <OrgtextInput
             label="Email"
@@ -164,7 +203,7 @@ export default function OrgSignup({navigation}) {
             errorText={password.error}
             secureTextEntry
           />
-
+          {/* <Text style={{color:GREY}}>Optional</Text> */}
           <TouchableOpacity
             style={styles.logoConatiner}
             onPress={() => imageCrop()}>
@@ -175,7 +214,10 @@ export default function OrgSignup({navigation}) {
             <TouchableOpacity
               mode="contained"
               // onPress={onSignUpPressed}
-              onPress={() => navigation.navigate('OrgSignin')}
+              onPress={() =>
+                //  navigation.navigate('OrgSignin')
+                onSignUpPressed()
+              }
               activeOpacity={0.9}>
               <LinearGradient
                 colors={[PRIMARY, PRIMARY]}

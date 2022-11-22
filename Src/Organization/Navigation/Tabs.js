@@ -40,7 +40,7 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Complete"
+        name="Completed"
         component={CompleteRequest}
         options={{
           headerShown: false,
@@ -59,7 +59,7 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Forworded"
+        name="Forwarded"
         component={ForwordedRequest}
         options={{
           headerShown: false,
@@ -78,7 +78,7 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="Pendding"
+        name="Pending"
         component={PenddingRequsest}
         options={{
           headerShown: false,

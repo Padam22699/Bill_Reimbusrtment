@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   TouchableOpacity,
   StatusBar,
@@ -34,7 +34,56 @@ export default function OrgSignin({navigation}) {
       setPassword({...password, error: passwordError});
       return;
     }
+    loginAPI();
   };
+  const loginAPI = () => {
+    const request = {
+      email: email.value,
+      password: password.value,
+      role: 'organization',
+      device_type: Platform.OS,
+      device_token: '123456',
+      device_id: DeviceInfo.getDeviceId(),
+    };
+    dispatch(login(request));
+  };
+  const saveData = async newData => {
+    let Organizationdata = newData;
+    Organizationdata = {
+      ...Organizationdata,
+      ...{loggedin: true, loggedIntype: 'Org'},
+    };
+    try {
+      const jsonValue = JSON.stringify(Organizationdata);
+      await AsyncStorage.setItem('@Organization_data', jsonValue);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'MyTabs'}],
+      });
+    } catch (e) {
+      console.log('error in saving data', e);
+    }
+  };
+  useEffect(() => {
+    if (loginResponse != null) {
+      console.log('loginResponse', loginResponse);
+      if (
+        Object.keys(loginResponse).length != 0 &&
+        loginResponse.statusCode != 200
+      ) {
+        alert(loginResponse.Messages);
+        dispatch(clearLogin());
+      }
+      if (
+        Object.keys(loginResponse).length != 0 &&
+        loginResponse.statusCode == 200
+      ) {
+        console.log('response', loginResponse);
+        saveData(loginResponse.data);
+        dispatch(clearLogin());
+      }
+    }
+  }, [loginResponse]);
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: theme.colors.surface}}>
@@ -81,7 +130,10 @@ export default function OrgSignin({navigation}) {
         <TouchableOpacity
           mode="contained"
           // onPress={onLoginPressed}
-          onPress={() => navigation.navigate('MyTabs')}
+          onPress={() =>
+            // navigation.navigate('MyTabs')
+            onLoginPressed()
+          }
           activeOpacity={0.9}>
           <LinearGradient
             colors={[PRIMARY, PRIMARY]}

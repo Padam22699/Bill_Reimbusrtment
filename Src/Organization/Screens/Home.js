@@ -50,7 +50,13 @@ const Deshboard = ({navigation}) => {
       iconName: 'gas-pump',
     },
   ];
-  const MiddleContent = ({money, heading, backGround, onpress = () => {}}) => {
+  const MiddleContent = ({
+    money,
+    heading,
+    month,
+    backGround,
+    onpress = () => {},
+  }) => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={onpress}>
         <View style={styles.Container}>
@@ -73,6 +79,7 @@ const Deshboard = ({navigation}) => {
                 marginLeft: 5,
                 color: WHITE,
                 alignContent: 'center',
+                alignSelf: 'center',
                 fontWeight: 'bold',
               }}>
               {money}
@@ -81,7 +88,7 @@ const Deshboard = ({navigation}) => {
 
           <View
             style={{
-              paddingBottom: 7,
+              marginBottom: 10,
               alignItems: 'center',
               justifyContent: 'center',
               flex: 1,
@@ -95,8 +102,21 @@ const Deshboard = ({navigation}) => {
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
                 textAlign: 'center',
+                justifyContent: 'center',
+                marginTop: 10,
               }}>
               {heading}
+            </Text>
+            <Text
+              style={{
+                fontSize: 17,
+                alignSelf: 'center',
+                color: DARK,
+                fontWeight: 'bold',
+                textAlignVertical: 'center',
+                textAlign: 'center',
+              }}>
+              {month}
             </Text>
           </View>
         </View>
@@ -137,7 +157,7 @@ const Deshboard = ({navigation}) => {
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
-              Categry Name
+               Category Name
             </Text>
           </View>
           <View style={{marginRight: 20}}>
@@ -173,7 +193,7 @@ const Deshboard = ({navigation}) => {
                 textAlignVertical: 'center',
                 marginTop: 3,
               }}>
-              Stutes
+              Status 
             </Text>
           </View>
         </View>
@@ -182,8 +202,8 @@ const Deshboard = ({navigation}) => {
   };
 
   return (
-    <ScrollView style={{flex: 1, backgroundColor: WHITE}}>
-      <SafeAreaView style={{flex: 1, marginHorizontal: 12}}>
+    <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
+      <View style={{marginHorizontal: 12}}>
         <View style={styles.header}>
           <View>
             <Text style={styles.heading}>WEDIGTECH</Text>
@@ -213,7 +233,8 @@ const Deshboard = ({navigation}) => {
           <MiddleContent money={60} heading="This Month" backGround={A} />
           <MiddleContent
             money={200}
-            heading="  Last                6 Months"
+            heading="Last"
+            month="6 Month"
             backGround={B}
           />
           <MiddleContent money={600} heading="This Year" backGround={C} />
@@ -238,8 +259,8 @@ const Deshboard = ({navigation}) => {
             )}
           />
         </View>
-      </SafeAreaView>
-    </ScrollView>
+      </View>
+    </SafeAreaView>
   );
 };
 

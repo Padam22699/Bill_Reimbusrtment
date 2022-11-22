@@ -26,6 +26,17 @@ import LinearGradient from 'react-native-linear-gradient';
 export default function Reimbursement({navigation}) {
   const [Date, setDate] = useState('Select a Date');
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [select, setSelect] = useState('A');
+  const [Price, setPrice] = useState('');
+  const [description, setdescription] = useState('');
+  const [email, setEmail] = useState('');
+
+  const submit = () => {
+    navigation.navigate('Current');
+    setDate('');
+    setPrice('');
+    setdescription('');
+  };
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -68,8 +79,6 @@ export default function Reimbursement({navigation}) {
       });
     };
   };
-
-  const [select, setSelect] = useState('A');
 
   const renderItem = ({item}) => {
     return (
@@ -131,22 +140,33 @@ export default function Reimbursement({navigation}) {
         </View>
         <View>
           <View style={{}}>
-            <TextInput
-              label="Amount"
-              style={{
-                paddingHorizontal: 12,
-                backgroundColor: theme.colors.surface,
-              }}
-            />
             <FontAwesome
               name="rupee"
               size={18}
               color={theme.colors.text}
-              style={{position: 'absolute', top: 37, marginHorizontal: 15}}
+              style={{position: 'absolute', top: 37, marginLeft: 10}}
+            />
+            <TextInput
+              keyboardType="numeric"
+              value={Price}
+              onChangeText={text => setPrice(text)}
+              style={{
+                paddingHorizontal: 10,
+                backgroundColor: theme.colors.surface,
+              }}
             />
           </View>
-          <TextInput label="Description" />
-          <TextInput label="sher@gmail.com" />
+          <TextInput
+            label="Description"
+            value={description}
+            onChangeText={text => setdescription(text)}
+          />
+          <TextInput
+            label="Email"
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
+
           <View style={styles.attachview}>
             <Text style={styles.textbill}>Attach your bill</Text>
             <TouchableOpacity
@@ -185,7 +205,7 @@ export default function Reimbursement({navigation}) {
           <View style={{marginTop: 30, marginHorizontal: 30}}>
             <TouchableOpacity
               mode="contained"
-              onPress={() => navigation.navigate('Current')}
+              onPress={() => submit()}
               activeOpacity={0.9}>
               <LinearGradient
                 colors={['#7426f2', '#3d0891']}

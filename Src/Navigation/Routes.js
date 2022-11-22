@@ -44,6 +44,7 @@ function Routes({loggedin, loggedintype}) {
         component={MyDrawer}
         options={{headerShown: false}}
       />
+
       <Stack.Screen
         name="Organization"
         component={Organization}

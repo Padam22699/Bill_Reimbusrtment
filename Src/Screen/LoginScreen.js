@@ -1,90 +1,156 @@
-import React, { useState } from 'react'
-import { TouchableOpacity, StatusBar, StyleSheet, View, KeyboardAvoidingView, ScrollView, Platform } from 'react-native'
-import { Text } from 'react-native-paper'
-import Logo from '../components/Logo'
-import Header from '../components/Header'
-import TextInput from '../components/TextInput'
-import BackButton from '../components/BackButton'
-import { theme } from '../core/theme'
-import { emailValidator } from '../helpers/emailValidator'
-import { passwordValidator } from '../helpers/passwordValidator'
+import React, {useState} from 'react';
+import {
+  TouchableOpacity,
+  StatusBar,
+  StyleSheet,
+  View,
+  KeyboardAvoidingView,
+  ScrollView,
+  Platform,
+} from 'react-native';
+import {Text} from 'react-native-paper';
+import Logo from '../components/Logo';
+import Header from '../components/Header';
+import TextInput from '../components/TextInput';
+import BackButton from '../components/BackButton';
+import {theme} from '../core/theme';
+import {emailValidator} from '../helpers/emailValidator';
+import {passwordValidator} from '../helpers/passwordValidator';
 import LinearGradient from 'react-native-linear-gradient';
-import { useDispatch, useSelector } from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
-import { clearLogin, login } from '../redux/actions/loginAction';
-import { useEffect } from 'react'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-
-export default function LoginScreen({ navigation }) {
-
+import {clearLogin, login} from '../redux/actions/loginAction';
+import {useEffect} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {setToken} from '../redux/actions/tokenAction';
+import { clearForgotPassword, forgotPassword } from '../redux/actions/forgotPasswordAction';
+import messaging from '@react-native-firebase/messaging'
+export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState({ value: '', error: '' })
-  const [password, setPassword] = useState({ value: '', error: '' })
-
+  const [email, setEmail] = useState({value: '', error: ''});
+  const [password, setPassword] = useState({value: '', error: ''});
 
   const loginResponse = useSelector(state => state.loginReducer.data);
   const loading = useSelector(state => state.loginReducer.loading);
+  const forgotPasswordResponse = useSelector(state => state.forgotPasswordReducer.data);
+
 
   const onLoginPressed = () => {
-    const emailError = emailValidator(email.value)
-    const passwordError = passwordValidator(password.value)
+    const emailError = emailValidator(email.value);
+    const passwordError = passwordValidator(password.value);
     if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError })
-      setPassword({ ...password, error: passwordError })
-      return
+      setEmail({...email, error: emailError});
+      setPassword({...password, error: passwordError});
+      return;
     }
-    loginAPI()
+    requestUserPermission()
     // saveData()
-  }
+  };
+  const requestUserPermission = async() => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
-  const saveData = async (newData) => {
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      getFirebaseToken()
+    }
+  }
+  const getFirebaseToken = async () => {
+    await messaging().getToken().then((token) => {
+      loginAPI(token)
+    })
+  }
+  const saveData = async newData => {
     let userData = newData;
-    userData = { ...userData, ...{ loggedin: true ,loggedIntype:"Emp"} }
+    userData = {...userData, ...{loggedin: true, loggedIntype: 'Emp'}};
     try {
-      const jsonValue = JSON.stringify(userData)
-      await AsyncStorage.setItem('@user_data', jsonValue)
+      const jsonValue = JSON.stringify(userData);
+      await AsyncStorage.setItem('@user_data', jsonValue);
       navigation.reset({
         index: 0,
-        routes: [{ name: 'Drawer' }],
-      })
+        routes: [{name: 'Drawer'}],
+      });
     } catch (e) {
-      console.log("error in saving data", e)
+      console.log('error in saving data', e);
     }
-  }
+  };
 
   const loginAPI = () => {
     const request = {
       'email': email.value,
       'password': password.value,
-      'role': "employee",
-      "device_type": Platform.OS,
-      "device_token": "123456",
-      "device_id": DeviceInfo.getDeviceId()
-    }
+      'role': 'employee',
+      'device_type': Platform.OS,
+      'device_token': '123456',
+      'device_id': DeviceInfo.getDeviceId(),
+    };
     dispatch(login(request));
+  };
+
+  useEffect(() => {
+
+    
+    if (loginResponse != null) {
+      console.log('loginResponse', loginResponse);
+      if (
+        Object.keys(loginResponse).length != 0 &&
+        loginResponse.statusCode != 200
+      ) {
+        alert(loginResponse.Messages);
+        dispatch(clearLogin());
+      }
+      if (
+        Object.keys(loginResponse).length != 0 &&
+        loginResponse.statusCode == 200
+      ) {
+        console.log('response', loginResponse);
+        saveData(loginResponse.data);
+        dispatch(setToken(loginResponse.data.token))
+        dispatch(clearLogin());
+      }
+    }
+  }, [loginResponse]);
+
+  const forgotPasswordPress = () => {
+    const emailError = emailValidator(email.value)
+    if (emailError) {
+      setEmail({ ...email, error: emailError })
+      return
+    }
+    forgotPasswordAPI()
+  }
+
+  const forgotPasswordAPI = () => {
+    let request = {
+      "email": email.value,
+      "role": "employee"
+    }
+    dispatch(forgotPassword(request))
   }
 
   useEffect(() => {
-    if (loginResponse != null) {
-      console.log("loginResponse", loginResponse)
-      if (Object.keys(loginResponse).length != 0 && loginResponse.statusCode != 200) {
-        alert(loginResponse.Messages)
-        dispatch(clearLogin())
+    if (forgotPasswordResponse != null) {
+      console.log("forgotPasswordResponse", forgotPasswordResponse)
+      if (Object.keys(forgotPasswordResponse).length != 0 && forgotPasswordResponse.statusCode != 200) {
+        alert(forgotPasswordResponse.message)
+        dispatch(clearForgotPassword())
       }
-      if (Object.keys(loginResponse).length != 0 && loginResponse.statusCode == 200) {
-        console.log("response", loginResponse)
-        saveData(loginResponse.data)
-        dispatch(clearLogin())
+      if (Object.keys(forgotPasswordResponse).length != 0 && forgotPasswordResponse.statusCode == 200) {
+        console.log("response", forgotPasswordResponse)
+        alert(forgotPasswordResponse.message)
+        dispatch(clearForgotPassword())
       }
     }
 
-  }, [loginResponse])
-
+  }, [forgotPasswordResponse])
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: theme.colors.surface, }}>
+    <ScrollView style={{flex: 1, backgroundColor: theme.colors.surface}}>
       <StatusBar
         backgroundColor={theme.colors.surface}
-        barStyle="dark-content" />
+        barStyle="dark-content"
+      />
       <BackButton goBack={navigation.goBack} />
       <KeyboardAvoidingView style={styles.keyboar}>
         <Logo />
@@ -93,7 +159,7 @@ export default function LoginScreen({ navigation }) {
           label="Email id"
           returnKeyType="next"
           value={email.value}
-          onChangeText={(text) => setEmail({ value: text, error: '' })}
+          onChangeText={text => setEmail({value: text, error: ''})}
           error={!!email.error}
           errorText={email.error}
           autoCapitalize="none"
@@ -103,60 +169,81 @@ export default function LoginScreen({ navigation }) {
         />
         <TextInput
           label="Password"
-          keyboardType="numeric"
+          // keyboardType="numeric"
           returnKeyType="done"
           value={password.value}
-          onChangeText={(text) => setPassword({ value: text, error: '' })}
+          onChangeText={text => setPassword({value: text, error: ''})}
           error={!!password.error}
           errorText={password.error}
-          secureTextEntry
+          password={true}
         />
         <View style={styles.forgotPassword}>
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity activeOpacity={0.8} onPress= {forgotPasswordPress}>
             <Text style={styles.forgot}>Forgot your password?</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
-      <View style={{ paddingHorizontal: 20, width: '100%', maxWidth: "100%", }}>
-        <TouchableOpacity mode="contained" onPress={onLoginPressed} activeOpacity={0.9}>
-          <LinearGradient colors={["#7426f2", '#3d0891']} style={styles.touchabltext}>
-            <Text style={styles.textstyle}>
-              Login
-            </Text>
+      <View style={{paddingHorizontal: 20, width: '100%', maxWidth: '100%'}}>
+        <TouchableOpacity
+          mode="contained"
+          onPress={onLoginPressed}
+          activeOpacity={0.9}>
+          <LinearGradient
+            colors={['#7426f2', '#3d0891']}
+            style={styles.touchabltext}>
+            <Text style={styles.textstyle}>Login</Text>
           </LinearGradient>
         </TouchableOpacity>
         <View style={styles.row}>
           <Text>Don’t have an account? </Text>
-          <TouchableOpacity onPress={() => navigation.replace('RegisterScreen')}>
+          <TouchableOpacity
+            onPress={() => navigation.replace('RegisterScreen')}>
             <Text style={styles.link}>Sign Up</Text>
           </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   keyboar: {
-    flex: 1, padding: 20, width: '100%', maxWidth: "100%",
-    alignSelf: 'center', alignItems: 'center', justifyContent: 'center',
+    flex: 1,
+    padding: 20,
+    width: '100%',
+    maxWidth: '100%',
+    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   forgotPassword: {
-    width: '100%', alignItems: 'flex-end', marginBottom: 18,
+    width: '100%',
+    alignItems: 'flex-end',
+    marginBottom: 18,
   },
   row: {
-    flexDirection: 'row', marginTop: 12, justifyContent: "center"
+    flexDirection: 'row',
+    marginTop: 12,
+    justifyContent: 'center',
   },
   forgot: {
-    fontSize: 13, color: theme.colors.PRIMARY, fontWeight: 'bold'
+    fontSize: 13,
+    color: theme.colors.PRIMARY,
+    fontWeight: 'bold',
   },
   link: {
-    fontWeight: 'bold', color: theme.colors.PRIMARY,
+    fontWeight: 'bold',
+    color: theme.colors.PRIMARY,
   },
   touchabltext: {
-    height: 45, justifyContent: 'center', borderRadius: 7, alignItems: 'center', justifyContent: 'center'
+    height: 45,
+    justifyContent: 'center',
+    borderRadius: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textstyle: {
-    fontSize: 18, color: "#fff"
+    fontSize: 18,
+    color: '#fff',
   },
-})
+});

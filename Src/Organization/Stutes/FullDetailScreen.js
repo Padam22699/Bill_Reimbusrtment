@@ -16,7 +16,6 @@ import Imagepath from '../../Assets/Images/Imagepath';
 export default function FullDetailScreen({navigation}) {
   const [checkbook, setcheckbook] = useState(true);
   const [stutes, setstutes] = useState('Pendding');
-
   return (
     <View style={styles.container}>
       <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
@@ -90,16 +89,16 @@ export default function FullDetailScreen({navigation}) {
                     style={styles.picker}
                     selectedValue={stutes}
                     onValueChange={itemvalue => setstutes(itemvalue)}>
+                    <Picker.Item label="Pending" value="Pending" color={DARK} />
                     <Picker.Item
-                      label="Pendding"
-                      value="Pendding"
+                      label="Approved"
+                      value="Approved"
                       color={DARK}
                     />
-                    <Picker.Item label="Aproved" value="Aproved" color={DARK} />
                     <Picker.Item label="Decline" value="Decline" color={DARK} />
                     <Picker.Item
-                      label="Forworded"
-                      value="Forworded"
+                      label="Forwarded"
+                      value="Forwarded"
                       color={DARK}
                     />
                   </Picker>
@@ -110,7 +109,7 @@ export default function FullDetailScreen({navigation}) {
             <View
               style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={[styles.subtotal, {marginBottom: 10}]}>
-                Status BY
+                Status by
               </Text>
               <Text style={[styles.subtotal, {fontSize: 16}]}>Name</Text>
             </View>

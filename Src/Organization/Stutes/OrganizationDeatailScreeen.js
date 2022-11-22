@@ -30,15 +30,12 @@ const OrganizationDeatailScreeen = ({navigation, route}) => {
             paddingBottom: 20,
           }}>
           <View style={styles.cardData}>
-            <Text style={styles.userInfo}>
-              {list[index].id}
-              {/* {data != null && index != null ? list[index].id : null} */}
-            </Text>
+            <Text style={styles.userInfo}>{list[index].id}</Text>
             <Text style={styles.userInfo}>Bill Type </Text>
             <Text style={styles.userInfo}>Amount </Text>
           </View>
-          <View style={{}}>
-            <Text style={{color: GREY}}>01/02/2022</Text>
+          <View style={{marginTop: 2}}>
+            <Text style={{color: DARK}}>01/02/2022</Text>
           </View>
         </View>
       </TouchableOpacity>
