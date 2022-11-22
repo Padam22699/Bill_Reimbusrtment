@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "201665594021",
+    "project_id": "bill-reimbursement",
+    "storage_bucket": "bill-reimbursement.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:201665594021:android:3c85a9963d90f2b279834c",
+        "android_client_info": {
+          "package_name": "com.reimbursement"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "201665594021-kpmslmsg5p22mngjh8e4gb6710rbqci5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAE5Q-NFX9JyuD6fq96X-Y6Dionz1jJnts"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "201665594021-kpmslmsg5p22mngjh8e4gb6710rbqci5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

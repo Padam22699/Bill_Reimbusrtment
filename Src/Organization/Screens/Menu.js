@@ -9,6 +9,22 @@ import React from 'react';
 import {DARK, PRIMARY, WHITE} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 const Menu = ({navigation}) => {
+  const logout = async () => {
+    let data = {
+      loggedin: false,
+      loggedIntype:''
+    };
+    try {
+      const jsonValue = JSON.stringify(data);
+      await AsyncStorage.mergeItem('@user_data', jsonValue);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'AuthStack'}],
+      });
+    } catch (e) {
+      console.log('error in saving data', e);
+    }
+  };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.subcontainer}>
@@ -32,7 +48,7 @@ const Menu = ({navigation}) => {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => navigation.navigate('AuthStack')}>
+        <TouchableOpacity onPress={() => logout}>
           <View
             style={{
               flexDirection: 'row',

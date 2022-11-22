@@ -1,18 +1,19 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, StatusBar } from 'react-native';
 import Current from '../Screen/Current';
 import Past from '../Screen/Past'
 import { theme } from '../core/theme';
 import { Headers } from './Headers';
-import BottomTab from './BottomTab';
-import AntDesign from 'react-native-vector-icons/AntDesign'
 
 const Tab = createMaterialTopTabNavigator();
 
 function ToptabBar({ navigation }) {
     return (
         <View style={styles.container}>
+            <StatusBar
+                backgroundColor={theme.colors.primary}
+                barStyle='default' />
             <Headers backicon="menu-sharp"
                 onPress={() => navigation.openDrawer()}
                 Text=''
@@ -35,9 +36,6 @@ function ToptabBar({ navigation }) {
                     component={Past}
                     options={{
                         tabBarLabel: 'Past',
-                        // tabBarIcon: ({ Color, size }) => (
-                        //     <AntDesign name='leftcircle' size={24} Color={Color} />
-                        // ),
                     }}
 
                 />

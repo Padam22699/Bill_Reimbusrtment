@@ -24,24 +24,27 @@ const MyDrawer = () => {
     </Drawer.Navigator>
   );
 };
-function Routes({loggedin, loggedintype}) {
+function Routes({loggedin, loggedIntype}) {
+console.log(loggedin)
+console.log(loggedIntype)
   return (
     <Stack.Navigator
-      initialRouteName={
-        loggedin
-          ? loggedintype == 'Emp'
-            ? 'Drawer'
-            : 'Organization'
-          : 'AuthStack'
-      }>
-      <Stack.Screen
-        name="AuthStack"
-        component={AuthStack}
-        options={{headerShown: false}}
-      />
+    initialRouteName={
+      loggedin
+        ? loggedIntype == 'Emp' 
+          ? 'Drawer'
+          : 'Organization'
+        : 'AuthStack'
+    }
+    >
       <Stack.Screen
         name="Drawer"
         component={MyDrawer}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="AuthStack"
+        component={AuthStack}
         options={{headerShown: false}}
       />
 

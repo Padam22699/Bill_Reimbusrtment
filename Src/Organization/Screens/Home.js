@@ -11,6 +11,8 @@ import {
 import React from 'react';
 import {A, DARK, PRIMARY, B, C, WHITE} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Deshboard = ({navigation}) => {
   const data = [
     {
@@ -157,7 +159,7 @@ const Deshboard = ({navigation}) => {
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
-               Category Name
+              Category Name
             </Text>
           </View>
           <View style={{marginRight: 20}}>
@@ -193,7 +195,7 @@ const Deshboard = ({navigation}) => {
                 textAlignVertical: 'center',
                 marginTop: 3,
               }}>
-              Status 
+              Status
             </Text>
           </View>
         </View>
@@ -201,6 +203,22 @@ const Deshboard = ({navigation}) => {
     );
   };
 
+  const logout = async () => {
+    let data = {
+      loggedin: false,
+      loggedIntype:''
+    };
+    try {
+      const jsonValue = JSON.stringify(data);
+      await AsyncStorage.mergeItem('@user_data', jsonValue);
+      navigation.reset({
+        index: 0,
+        routes: [{name: 'AuthStack'}],
+      });
+    } catch (e) {
+      console.log('error in saving data', e);
+    }
+  };
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
       <View style={{marginHorizontal: 12}}>
@@ -209,13 +227,15 @@ const Deshboard = ({navigation}) => {
             <Text style={styles.heading}>WEDIGTECH</Text>
           </View>
           <View style={{flexDirection: 'row'}}>
-            <Icon
-              name="sign-out-alt"
-              size={22}
-              color={PRIMARY}
-              style={{paddingRight: 30}}
-              onPress={() => navigation.navigate('AuthStack')}
-            />
+            <TouchableOpacity onPress={() => logout()}>
+              <Icon
+                name="sign-out-alt"
+                size={22}
+                color={PRIMARY}
+                style={{paddingRight: 30}}
+              />
+            </TouchableOpacity>
+
             <Icon
               name="bell"
               size={22}

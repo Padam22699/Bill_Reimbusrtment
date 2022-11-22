@@ -17,10 +17,20 @@ const Stack = createNativeStackNavigator();
 
 function AuthStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="SplashScreen">
       <Stack.Screen
         name="SplashScreen"
         component={SplashScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="OrgSignin"
+        component={OrgSignin}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="OrgSignup"
+        component={OrgSignup}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -56,16 +66,6 @@ export default AuthStack;
 export const Organization = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="OrgSignin"
-        component={OrgSignin}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="OrgSignup"
-        component={OrgSignup}
-        options={{headerShown: false}}
-      />
       <Stack.Screen
         name="MyTabs"
         component={Tabs}

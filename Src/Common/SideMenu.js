@@ -34,7 +34,8 @@ const SideMenu = ({ navigation }) => {
 
   const logout = async () => {
     let data = {
-      loggedin: false
+      loggedin: false,
+      loggedIntype:''
     }
     try {
       const jsonValue = JSON.stringify(data)

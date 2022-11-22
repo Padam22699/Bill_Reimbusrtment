@@ -22,9 +22,14 @@ import DeviceInfo from 'react-native-device-info';
 import {clearLogin, login} from '../redux/actions/loginAction';
 import {useEffect} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import messaging from '@react-native-firebase/messaging';
+import {
+  clearForgotPassword,
+  forgotPassword,
+} from '../redux/actions/forgotPasswordAction';
 import {setToken} from '../redux/actions/tokenAction';
-import { clearForgotPassword, forgotPassword } from '../redux/actions/forgotPasswordAction';
-import messaging from '@react-native-firebase/messaging'
+import Loader from '../Organization/Componets/Loader';
+
 export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
   const [email, setEmail] = useState({value: '', error: ''});
@@ -32,8 +37,9 @@ export default function LoginScreen({navigation}) {
 
   const loginResponse = useSelector(state => state.loginReducer.data);
   const loading = useSelector(state => state.loginReducer.loading);
-  const forgotPasswordResponse = useSelector(state => state.forgotPasswordReducer.data);
-
+  const forgotPasswordResponse = useSelector(
+    state => state.forgotPasswordReducer.data,
+  );
 
   const onLoginPressed = () => {
     const emailError = emailValidator(email.value);
@@ -43,10 +49,10 @@ export default function LoginScreen({navigation}) {
       setPassword({...password, error: passwordError});
       return;
     }
-    requestUserPermission()
+    requestUserPermission();
     // saveData()
   };
-  const requestUserPermission = async() => {
+  const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission();
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
@@ -54,14 +60,18 @@ export default function LoginScreen({navigation}) {
 
     if (enabled) {
       console.log('Authorization status:', authStatus);
-      getFirebaseToken()
+      getFirebaseToken();
     }
-  }
+  };
+
   const getFirebaseToken = async () => {
-    await messaging().getToken().then((token) => {
-      loginAPI(token)
-    })
-  }
+    await messaging()
+      .getToken()
+      .then(token => {
+        loginAPI(token);
+      });
+  };
+
   const saveData = async newData => {
     let userData = newData;
     userData = {...userData, ...{loggedin: true, loggedIntype: 'Emp'}};
@@ -76,22 +86,19 @@ export default function LoginScreen({navigation}) {
       console.log('error in saving data', e);
     }
   };
-
-  const loginAPI = () => {
+  const loginAPI = firebase_token => {
     const request = {
-      'email': email.value,
-      'password': password.value,
-      'role': 'employee',
-      'device_type': Platform.OS,
-      'device_token': '123456',
-      'device_id': DeviceInfo.getDeviceId(),
+      email: email.value,
+      password: password.value,
+      role: 'employee',
+      device_type: Platform.OS,
+      device_token: '123456',
+      device_id: DeviceInfo.getDeviceId(),
     };
     dispatch(login(request));
   };
 
   useEffect(() => {
-
-    
     if (loginResponse != null) {
       console.log('loginResponse', loginResponse);
       if (
@@ -107,44 +114,48 @@ export default function LoginScreen({navigation}) {
       ) {
         console.log('response', loginResponse);
         saveData(loginResponse.data);
-        dispatch(setToken(loginResponse.data.token))
         dispatch(clearLogin());
       }
     }
   }, [loginResponse]);
-
   const forgotPasswordPress = () => {
-    const emailError = emailValidator(email.value)
+    const emailError = emailValidator(email.value);
     if (emailError) {
-      setEmail({ ...email, error: emailError })
-      return
+      setEmail({...email, error: emailError});
+      return;
     }
-    forgotPasswordAPI()
-  }
-
+    forgotPasswordAPI();
+  };
   const forgotPasswordAPI = () => {
     let request = {
-      "email": email.value,
-      "role": "employee"
-    }
-    dispatch(forgotPassword(request))
-  }
-
+      email: email.value,
+      role: 'employee',
+    };
+    dispatch(forgotPassword(request));
+  };
   useEffect(() => {
     if (forgotPasswordResponse != null) {
-      console.log("forgotPasswordResponse", forgotPasswordResponse)
-      if (Object.keys(forgotPasswordResponse).length != 0 && forgotPasswordResponse.statusCode != 200) {
-        alert(forgotPasswordResponse.message)
-        dispatch(clearForgotPassword())
+      console.log('forgotPasswordResponse', forgotPasswordResponse);
+      if (
+        Object.keys(forgotPasswordResponse).length != 0 &&
+        forgotPasswordResponse.statusCode != 200
+      ) {
+        alert(forgotPasswordResponse.message);
+        dispatch(clearForgotPassword());
       }
-      if (Object.keys(forgotPasswordResponse).length != 0 && forgotPasswordResponse.statusCode == 200) {
-        console.log("response", forgotPasswordResponse)
-        alert(forgotPasswordResponse.message)
-        dispatch(clearForgotPassword())
+      if (
+        Object.keys(forgotPasswordResponse).length != 0 &&
+        forgotPasswordResponse.statusCode == 200
+      ) {
+        console.log('response', forgotPasswordResponse);
+        alert(forgotPasswordResponse.message);
+        dispatch(clearForgotPassword());
       }
     }
+  }, [forgotPasswordResponse]);
 
-  }, [forgotPasswordResponse])
+  const [loader, setloader] = useState(true);
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: theme.colors.surface}}>
       <StatusBar
@@ -169,7 +180,6 @@ export default function LoginScreen({navigation}) {
         />
         <TextInput
           label="Password"
-          // keyboardType="numeric"
           returnKeyType="done"
           value={password.value}
           onChangeText={text => setPassword({value: text, error: ''})}
@@ -178,7 +188,7 @@ export default function LoginScreen({navigation}) {
           password={true}
         />
         <View style={styles.forgotPassword}>
-          <TouchableOpacity activeOpacity={0.8} onPress= {forgotPasswordPress}>
+          <TouchableOpacity activeOpacity={0.8} onPress={forgotPasswordPress}>
             <Text style={styles.forgot}>Forgot your password?</Text>
           </TouchableOpacity>
         </View>

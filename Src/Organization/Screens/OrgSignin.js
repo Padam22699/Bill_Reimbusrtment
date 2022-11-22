@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import {Text} from 'react-native-paper';
+import { clearLogin, login } from '../../redux/actions/loginAction';
 import Logo from '../../components/Logo';
 import Backbtn from '../Componets/Backbtn';
 import {theme} from '../../core/theme';
@@ -17,6 +18,7 @@ import {emailValidator} from '../../helpers/emailValidator';
 import {passwordValidator} from '../../helpers/passwordValidator';
 import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
+import DeviceInfo from 'react-native-device-info';
 import OrgtextInput from '../Componets/OrgtextInput';
 export default function OrgSignin({navigation}) {
   const dispatch = useDispatch();
@@ -55,7 +57,7 @@ export default function OrgSignin({navigation}) {
     };
     try {
       const jsonValue = JSON.stringify(Organizationdata);
-      await AsyncStorage.setItem('@Organization_data', jsonValue);
+      await AsyncStorage.setItem('@user_data', jsonValue);
       navigation.reset({
         index: 0,
         routes: [{name: 'MyTabs'}],
@@ -131,8 +133,8 @@ export default function OrgSignin({navigation}) {
           mode="contained"
           // onPress={onLoginPressed}
           onPress={() =>
-            // navigation.navigate('MyTabs')
-            onLoginPressed()
+            navigation.navigate('Organization')
+            // onLoginPressed()
           }
           activeOpacity={0.9}>
           <LinearGradient

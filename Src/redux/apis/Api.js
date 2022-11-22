@@ -46,3 +46,93 @@ export const getNotification = async (requestJson) => {
     }
   }
 };
+
+export const forgotPassword = async (requestJson) => {
+  try {
+    const response = await axios.post('user/forgot-password', requestJson);
+    console.log('REQUEST=> ', requestJson);
+    console.log('RESPONSE=> ', response.data);
+    return response.data;
+  } catch (err) {
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return alert("There is an issue in response, please try again later")
+    }
+  }
+};
+
+export const addBill = async (requestJson) => {
+  try {
+    const response = await axios.post('https://reimbursement.wedighq.com/bill', requestJson, { "headers": { 'Content-Type': 'multipart/form-data', 'Authorization': store.getState().tokenReducer.data } });
+    console.log('REQUEST=> ', requestJson);
+    console.log('RESPONSE=> ', response.data);
+    return response.data;
+  } catch (err) {
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return alert("There is an issue in response, please try again later")
+    }
+  }
+};
+
+export const getAllBills = async (requestJson) => {
+  try {
+    const response = await axios.post('bill/getAll', requestJson, { "headers": { 'Content-Type': 'application/json', 'Authorization': store.getState().tokenReducer.data } });
+    console.log('REQUEST=> ', requestJson);
+    console.log('RESPONSE=> ', response.data);
+    return response.data;
+  } catch (err) {
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return alert("There is an issue in response, please try again later")
+    }
+  }
+};
+
+export const getBillDetail = async (requestJson) => {
+  try {
+    const response = await axios.post('bill/detail', requestJson, { "headers": { 'Content-Type': 'application/json', 'Authorization': store.getState().tokenReducer.data } });
+    console.log('REQUEST=> ', requestJson);
+    console.log('RESPONSE=> ', response.data);
+    return response.data;
+  } catch (err) {
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return alert("There is an issue in response, please try again later")
+    }
+  }
+};
+
+export const isPhysicallySubmitted = async (requestJson) => {
+  try {
+    const response = await axios.post('bill/is-phy-submitted', requestJson, { "headers": { 'Content-Type': 'application/json', 'Authorization': store.getState().tokenReducer.data } });
+    console.log('REQUEST=> ', requestJson);
+    console.log('RESPONSE=> ', response.data);
+    return response.data;
+  } catch (err) {
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return console.log(err.response)
+    }
+  }
+};
+
+export const reminder = async (requestJson) => {
+  try {
+    const response = await axios.post('bill/is-reminder', requestJson, { "headers": { 'Content-Type': 'application/json', 'Authorization': store.getState().tokenReducer.data } });
+    console.log('REQUEST=> ', requestJson);
+    console.log('RESPONSE=> ', response.data);
+    return response.data;
+  } catch (err) {
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return alert("There is an issue in response, please try again later")
+    }
+  }
+};

@@ -141,7 +141,7 @@ export default function OrgSignup({navigation}) {
     Organizationdata = {...Organizationdata, ...{loggedin: true}};
     try {
       const jsonValue = JSON.stringify(Organizationdata);
-      await AsyncStorage.setItem('@Organization_data', jsonValue);
+      await AsyncStorage.setItem('user_data', jsonValue);
       navigation.reset({
         index: 0,
         routes: [{name: 'MyTabs'}],

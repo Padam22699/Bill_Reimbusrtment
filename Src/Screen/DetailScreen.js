@@ -1,20 +1,166 @@
-import React, { useState } from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
+import moment from 'moment';
+import React, { useCallback, useEffect, useState } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, StatusBar, Image, } from 'react-native'
 import * as Animatable from 'react-native-animatable';
-import { Button } from 'react-native-paper';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { useDispatch, useSelector } from 'react-redux';
 import Imagepath from '../Assets/Images/Imagepath';
 import { theme } from '../core/theme';
-import LinearGradient from 'react-native-linear-gradient';
-
+import { clearGetBillDetail, getBillDetail } from '../redux/actions/getBillDetailAction'
+import {clearReminder, reminder} from '../redux/actions/reminderAction'
+import { clearIsPhysicallySubmitted, isPhysicallySubmitted } from '../redux/actions/isPhysicallySubmittedAction'
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function DetailScreen({ navigation }) {
+
+    const dispatch = useDispatch()
+    const routes = useRoute()
+
+    const [userData, setUserData] = useState(null)
+    const [billDetail, setBillDetail] = useState(null)
     const [checkbook, setcheckbook] = useState(false)
+
+    const getBillDetailResponse = useSelector(state => state.getBillDetailReducer.data)
+    const physicalSubmitResponse = useSelector(state => state.isPhysicallySubmittedReducer.data)
+    const reminderResponse = useSelector(state => state.reminderReducer.data)
+    const loading = useSelector(state => state.getBillDetailReducer.loading)
+
+    useFocusEffect(
+        useCallback(() => {
+            getData()
+        }, [])
+    )
+
+    const getData = async () => {
+        try {
+            const value = await AsyncStorage.getItem('@user_data')
+            console.log("value", value)
+            if (value !== null) {
+                const data = JSON.parse(value)
+                if (data != null) {
+                    setUserData(data)
+                } else {
+                    setUserData(null)
+                }
+            } else {
+                setUserData(null)
+            }
+        } catch (e) {
+            console.log("storage error", e)
+        }
+    }
+
+    useEffect(() => {
+        if (userData != null) {
+            fetchBillDetail()
+        }
+    }, [userData])
+
+    const fetchBillDetail = () => {
+        let request = {
+            "user_id": userData.user_id,
+            "bill_id": routes.params.bill_id,
+            "type": "employee"
+        }
+        dispatch(getBillDetail(request))
+    }
+
+    useEffect(() => {
+        if (getBillDetailResponse != null) {
+            console.log("getBillDetailResponse", getBillDetailResponse)
+            if (Object.keys(getBillDetailResponse).length != 0 && getBillDetailResponse.statusCode != 200) {
+                alert(getBillDetailResponse.message)
+                dispatch(clearGetBillDetail())
+            }
+            if (Object.keys(getBillDetailResponse).length != 0 && getBillDetailResponse.statusCode == 200) {
+                console.log("response", getBillDetailResponse)
+                setBillDetail(getBillDetailResponse.data[0])
+                setcheckbook(getBillDetailResponse.data[0].is_physically_submitted)
+                dispatch(clearGetBillDetail())
+            }
+        }
+    }, [getBillDetailResponse])
+
+    const icon = (type) => {
+        switch (type) {
+            case "Medical": {
+                return Imagepath.medicine
+            }
+            case "Fuel": {
+                return Imagepath.Fuel
+            }
+            case "Food": {
+                return Imagepath.foodfork
+            }
+            case "Others": {
+                return Imagepath.Others
+            }
+            default: {
+                return Imagepath.Others
+            }
+        }
+    }
+
+    const handlePhysicallySubmit = (submitted) => {
+        let request = {
+            "user_id": userData.user_id,
+            "bill_id": routes.params.bill_id,
+            "is_phy_submitted": submitted
+        }
+        dispatch(isPhysicallySubmitted(request))
+    }
+
+    useEffect(() => {
+        if (physicalSubmitResponse != null) {
+            console.log("physicalSubmitResponse", physicalSubmitResponse)
+            if (Object.keys(physicalSubmitResponse).length != 0 && physicalSubmitResponse.statusCode != 200) {
+                alert(physicalSubmitResponse.message)
+                dispatch(clearIsPhysicallySubmitted())
+            }
+            if (Object.keys(physicalSubmitResponse).length != 0 && physicalSubmitResponse.statusCode == 200) {
+                console.log("response", physicalSubmitResponse)
+                alert(physicalSubmitResponse.message)
+                dispatch(clearIsPhysicallySubmitted())
+            }
+        }
+    }, [physicalSubmitResponse])
+
+    useEffect(() => {
+        if (userData != null) {
+            handlePhysicallySubmit(checkbook)
+        }
+    }, [checkbook])
+
+    const sendReminder = () => {
+        let request = {
+            "user_id": userData.user_id,
+            "bill_id": routes.params.bill_id,
+            "message": "Your bill still to be approve."
+        }
+        dispatch(reminder(request))
+    }
+
+    useEffect(() => {
+        if (reminderResponse != null) {
+            console.log("reminderResponse", reminderResponse)
+            if (Object.keys(reminderResponse).length != 0 && reminderResponse.statusCode != 200) {
+                alert(reminderResponse.message)
+                dispatch(clearReminder())
+            }
+            if (Object.keys(reminderResponse).length != 0 && reminderResponse.statusCode == 200) {
+                console.log("response", reminderResponse)
+                alert(reminderResponse.message)
+                dispatch(clearReminder())
+            }
+        }
+    }, [reminderResponse])
 
     return (
 
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
             <Animatable.View animation="zoomInDown" style={{ transform: "scale" }}>
                 <StatusBar
                     backgroundColor={theme.colors.primary}
@@ -25,15 +171,12 @@ export default function DetailScreen({ navigation }) {
                     </TouchableOpacity>
                     <View style={styles.touchablview}>
                         <TouchableOpacity style={styles.imagetouchabl} activeOpacity={0.9} >
-                            <Image source={Imagepath.Fuel} style={styles.imagestyle} />
+                            <Image source={billDetail != null ? icon(billDetail.type) : Imagepath.Fuel} style={styles.imagestyle} />
                         </TouchableOpacity>
                         <View style={styles.fonticon}>
                             <FontAwesome name='rupee' size={18} color={theme.colors.white} style={{ top: 5 }} />
                             <View>
-                                <Text style={styles.textrupees}>1550.00</Text>
-                                <>
-                                    <Text style={styles.textfuelthe}>The Fuel</Text>
-                                </>
+                                <Text style={styles.textrupees}>{billDetail != null ? billDetail.amount : null}</Text>
                             </View>
                         </View>
                     </View>
@@ -46,15 +189,15 @@ export default function DetailScreen({ navigation }) {
                         <View>
                             <View style={styles.flexview}>
                                 <Text style={styles.textdate}>Date</Text>
-                                <Text style={styles.textmar}>Mar 27,2022</Text>
+                                <Text style={styles.textmar}>{billDetail != null ? moment(billDetail.date).format("MMM DD, yyyy") : null}</Text>
                             </View>
                             <View style={styles.flexview}>
                                 <Text style={styles.textdate}>Description</Text>
-                                <Text style={styles.textfuel}>This is a reimbursement applied for the fuel.</Text>
+                                <Text style={styles.textfuel}>{billDetail != null ? billDetail.description : null}</Text>
                             </View>
                             <View style={styles.flexview}>
                                 <Text style={styles.textdate}>Attachment</Text>
-                                <Image source={Imagepath.Fuel} style={{ height: 25, width: 25, resizeMode: "contain", tintColor: theme.colors.primary }} />
+                                <Image source={billDetail != null ? { uri: billDetail.bill_attachment } : Imagepath.Fuel} style={{ height: 25, width: 25, resizeMode: "contain" }} />
                             </View>
                             <View style={styles.flexview}>
                                 <Text style={styles.textdate}>Status</Text>
@@ -66,38 +209,23 @@ export default function DetailScreen({ navigation }) {
                             <View style={styles.flexview}>
                                 <Text style={styles.textdate}>Physically submitted the bill</Text>
                                 <TouchableOpacity style={styles.imagetouchstyle} onPress={() => { setcheckbook(!checkbook) }} activeOpacity={0.9} >
-                                    <Image source={checkbook ? Imagepath .check: Imagepath} style={styles.imageCheck} />
+                                    <Image source={checkbook ? Imagepath.check : Imagepath} style={styles.imageCheck} />
                                 </TouchableOpacity>
                             </View>
                         </View>
                         {checkbook &&
-                            <TouchableOpacity onPress={() => navigation.navigate('Current')} activeOpacity={0.9}>
+                            <TouchableOpacity onPress={sendReminder} activeOpacity={0.9}>
                                 <Text style={styles.textstyle}>
                                     Add Reminder
                                 </Text>
                             </TouchableOpacity>
                         }
-                        {/* <View style={{ marginTop: 30, marginHorizontal: 30 }}>
-                            <TouchableOpacity mode="contained" onPress={() => navigation.navigate('Current')} activeOpacity={0.9}>
-                                <LinearGradient colors={["#7426f2", '#3d0891']} style={styles.touchabltext}>
-                                    <Text style={styles.textstyle}>
-                                    Submitted
-                                    </Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
-                        </View> */}
-
-                        {/* <View style={styles.button}>
-                            <Button mode="contained" onPress={() => navigation.navigate('Current')} >
-                                Sending Reminder
-                            </Button>
-                        </View> */}
 
                     </View>
                 </View>
 
             </Animatable.View >
-        </View >
+        </SafeAreaView>
     );
 }
 const styles = StyleSheet.create({
@@ -123,7 +251,7 @@ const styles = StyleSheet.create({
         fontSize: 16, color: theme.colors.white,
     },
     textfuel: {
-        fontSize: 16, color: theme.colors.text, flex: 0.9, textAlign: "center", top: 9, left: 12
+        fontSize: 16, color: theme.colors.text, flex: 0.9, textAlign: "right"
     },
     container2: {
         marginHorizontal: 18, marginVertical: 40
@@ -147,7 +275,7 @@ const styles = StyleSheet.create({
         fontSize: 18, color: theme.colors.text,
     },
     textmar: {
-        fontSize: 16, color: theme.colors.text
+        fontSize: 16, color: theme.colors.text, textAlign: 'right'
     },
     flexapproved: {
         flexDirection: 'row', alignItems: "center"

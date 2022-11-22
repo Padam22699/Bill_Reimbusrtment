@@ -40,7 +40,7 @@ const LandingScreen = ({navigation}) => {
             colors={['#7426f2', '#3d0891']}
             style={styles.touchabltext}>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Organization')}
+              onPress={() => navigation.navigate('OrgSignin')}
               activeOpacity={0.9}>
               <Text style={styles.textstyle}>Organization</Text>
             </TouchableOpacity>

@@ -1,14 +1,93 @@
-import React, { useState, useEffect, } from 'react'
+import React, { useState, useEffect, useCallback, } from 'react'
 import { View, StyleSheet, Text, Image, FlatList, TextInput, TouchableOpacity, Modal } from 'react-native'
 import { theme } from '../core/theme'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import { ApproveData } from '../Common/VerticalData';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearGetAllBills, getAllBills } from '../redux/actions/getAllBillsAction';
+import Imagepath from '../Assets/Images/Imagepath';
+import moment from 'moment';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Past({ navigation }) {
 
-  const [current, setCurrent] = useState(ApproveData)
+  const dispatch = useDispatch()
+
+  const [userData, setUserData] = useState(null)
+  const [searchText, setSearchText] = useState("")
+  const [selectedType, setSelectedType] = useState("")
+
+  const [current, setCurrent] = useState([])
   const [modalOpen, setModalOpen] = useState(false)
+
+  const getAllBillsResponse = useSelector(state => state.getAllBillsReducer.data);
+  const loading = useSelector(state => state.getAllBillsReducer.loading);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData()
+    }, [])
+  )
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@user_data')
+      console.log("value", value)
+      if (value !== null) {
+        const data = JSON.parse(value)
+        if (data != null) {
+          setUserData(data)
+        } else {
+          setUserData(null)
+        }
+      } else {
+        setUserData(null)
+      }
+    } catch (e) {
+      console.log("storage error", e)
+    }
+  }
+
+  useEffect(() => {
+    if (userData != null) {
+      fetchAllBills(searchText, selectedType)
+    }
+  }, [userData])
+
+  const fetchAllBills = (search, type) => {
+    let request = {
+      "user_id": userData.user_id,
+      "type": "employee",
+      "page": "1",
+      "reverse": 1,
+      "date_wise": "date",
+      "search": search,
+      "bill_type": type,
+      "from_date": "",
+      "to_date": ""
+    }
+
+    dispatch(getAllBills(request))
+  }
+
+  useEffect(() => {
+    if (getAllBillsResponse != null) {
+      console.log("getAllBillsResponse", getAllBillsResponse)
+      if (Object.keys(getAllBillsResponse).length != 0 && getAllBillsResponse.statusCode != 200) {
+        alert(getAllBillsResponse.message)
+        dispatch(clearGetAllBills())
+      }
+      if (Object.keys(getAllBillsResponse).length != 0 && getAllBillsResponse.statusCode == 200) {
+        console.log("response", getAllBillsResponse)
+        setCurrent(getAllBillsResponse.data)
+        dispatch(clearGetAllBills())
+        setModalOpen(false)
+      }
+    }
+  }, [getAllBillsResponse])
 
   const typeColor = (type) => {
     if (type == "fuel") {
@@ -21,47 +100,80 @@ export default function Past({ navigation }) {
       return 'blue'
     }
   }
+
+  const icon = (type) => {
+    switch (type) {
+      case "Medical": {
+        return Imagepath.medicine
+      }
+      case "Fuel": {
+        return Imagepath.Fuel
+      }
+      case "Food": {
+        return Imagepath.foodfork
+      }
+      case "Others": {
+        return Imagepath.Others
+      }
+      default: {
+        return Imagepath.Others
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (userData != null) {
+      fetchAllBills(searchText, selectedType)
+    }
+  }, [searchText, selectedType])
+
   const renderItem = ({ item }) => {
     return (
       <View style={styles.mainView}>
-        <View style={styles.imageView}>
-          <View style={{ ...styles.imagetype, backgroundColor: typeColor(item.type) }}>
-            <Image source={item.image} style={styles.imagestyle} />
+        <TouchableOpacity activeOpacity={0.9} style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => { navigation.navigate('DetailScreen', { bill_id: item.bill_id }) }}>
+          <View style={styles.imageView}>
+            <View style={{ ...styles.imagetype, backgroundColor: typeColor(item.type) }}>
+              <Image source={icon(item.type)} style={styles.imagestyle} />
+            </View>
           </View>
-        </View>
-        <View style={styles.textview}>
-          <Text style={styles.textblood}>{item.title}</Text>
-          <Text style={{ ...styles.textapprove, color: item.status ? theme.colors.green : 'red' }}>{item.Approved}</Text>
-        </View>
-        <Text style={styles.textblue}>{item.text}</Text>
-        <View style={styles.texticon}>
-          <Text style={styles.textmar}>{item.date}</Text>
-          <View style={styles.rupeestyle}>
-            <FontAwesome name='rupee' size={18} color={theme.colors.text} style={styles.fontstyle} />
-            <Text style={styles.textrupees}>{item.rupee}</Text>
+          <View style={{flex: 1, marginLeft: -27}}>
+            <View style={styles.textview}>
+              <Text style={styles.textblood}>{moment(item.date).format("MMM DD, yyyy")}</Text>
+              <Text style={{ ...styles.textapprove, color: item.status == "Approved" ? theme.colors.green : item.status == "Pending" ? 'orange' : 'red' }}>{item.status}</Text>
+            </View>
+            <View style={styles.texticon}>
+              <Text style={styles.textmar}>{item.description}</Text>
+              <View style={styles.rupeestyle}>
+                <FontAwesome name='rupee' size={18} color={theme.colors.text} style={styles.fontstyle} />
+                <Text style={styles.textrupees}>{item.amount}</Text>
+              </View>
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
 
       </View>
     )
   }
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <Modal
         animationType="slide"
         transparent={true}
         visible={modalOpen} >
         <View style={styles.modalView}>
-          <TouchableOpacity activeOpacity={0.9}>
+          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("") }}>
+            <Text style={styles.textstyle}>All</Text>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("Medical") }}>
             <Text style={styles.textstyle}>Medical</Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.9}>
+          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("Food") }}>
             <Text style={styles.textstyle}>Food</Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.9}>
+          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("Fuel") }}>
             <Text style={styles.textstyle}>Fuel</Text>
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.9}>
+          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("Other") }}>
             <Text style={styles.textstyle}>Others</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => { setModalOpen(false) }} style={styles.okstyle}>
@@ -79,23 +191,25 @@ export default function Past({ navigation }) {
           <TextInput placeholder='Search'
             onChangeText={text => {
               console.log(text)
-              if (text != "") {
-                setCurrent(current.filter((item) => item.title.includes(text)))
-                console.log(current.filter((item) => item.title.includes(text)));
-              }
-              else {
-                setCurrent(ApproveData)
-              }
+              setSearchText(text)
+              // if (text != "") {
+              //   setCurrent(current.filter((item) => item.title.includes(text)))
+              //   console.log(current.filter((item) => item.title.includes(text)));
+              // }
+              // else {
+              //   setCurrent(ApproveData)
+              // }
             }} />
         </View>
       </View>
       <FlatList
+        style={{ marginBottom: 20 }}
         data={current}
         keyExtractor={item => item.id}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false} />
 
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -112,8 +226,14 @@ const styles = StyleSheet.create({
     height: 40, width: 40, borderRadius: 40, alignItems: 'center', justifyContent: 'center'
   },
   imageView: {
-    height: 48, width: 48, backgroundColor: '#fff', borderRadius: 40, alignItems: "center", justifyContent: "center",
-    elevation: 2, position: 'absolute', left: -22, top: 22
+    height: 48,
+    width: 48,
+    backgroundColor: '#fff',
+    borderRadius: 40,
+    alignItems: "center",
+    justifyContent: "center",
+    elevation: 2,
+    marginLeft: -27,
   },
   imagestyle: {
     height: 30, width: 30, resizeMode: "contain", tintColor: theme.colors.white
@@ -122,16 +242,16 @@ const styles = StyleSheet.create({
     flexDirection: "row", justifyContent: "space-between", alignItems: 'center'
   },
   textblood: {
-    left: 32, fontSize: 18, color: theme.colors.text, fontWeight: 'bold'
+    left: 32, fontSize: 16, color: theme.colors.text, fontWeight: 'bold'
   },
   textapprove: {
-    marginVertical: 4, fontSize: 16, fontWeight: 'bold'
+    marginVertical: 4, fontSize: 16, color: theme.colors.green, fontWeight: 'bold'
   },
   textblue: {
-    left: 32, fontSize: 14, color: theme.colors.text
+    left: 32, fontSize: 14, color: theme.colors.text, paddingRight: 30
   },
   textmar: {
-    left: 32, marginTop: 12, fontSize: 14, color: theme.colors.text
+    left: 32, marginTop: 12, fontSize: 14, color: theme.colors.text, width: '50%'
   },
   textrupees: {
     marginTop: 12, fontSize: 18, color: theme.colors.text
@@ -168,7 +288,5 @@ const styles = StyleSheet.create({
   textstyle: {
     color: theme.colors.text, fontSize: 16, fontWeight: '800', marginTop: 5
   }
-
-
 
 })
