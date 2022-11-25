@@ -24,6 +24,8 @@ target 'reimbursement' do
   pod 'FirebaseCoreInternal', :modular_headers => true
   pod 'GoogleUtilities', :modular_headers => true
 
+  pod 'RNSVG', :path => '../node_modules/react-native-svg'
+
   target 'reimbursementTests' do
     inherit! :complete
     # Pods for testing

@@ -8,7 +8,7 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import {Text} from 'react-native-paper';
+import {ActivityIndicator, Text} from 'react-native-paper';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 import TextInput from '../components/TextInput';
@@ -29,6 +29,7 @@ import {
 } from '../redux/actions/forgotPasswordAction';
 import {setToken} from '../redux/actions/tokenAction';
 import Loader from '../Organization/Componets/Loader';
+import {WHITE} from '../Organization/Colors/Color';
 
 export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
@@ -37,6 +38,9 @@ export default function LoginScreen({navigation}) {
 
   const loginResponse = useSelector(state => state.loginReducer.data);
   const loading = useSelector(state => state.loginReducer.loading);
+  const forgetloading = useSelector(
+    state => state.forgotPasswordReducer.loading,
+  );
   const forgotPasswordResponse = useSelector(
     state => state.forgotPasswordReducer.data,
   );
@@ -78,9 +82,10 @@ export default function LoginScreen({navigation}) {
     try {
       const jsonValue = JSON.stringify(userData);
       await AsyncStorage.setItem('@user_data', jsonValue);
+
       navigation.reset({
         index: 0,
-        routes: [{name: 'Drawer'}],
+        routes: [{name: 'MyDrawer'}],
       });
     } catch (e) {
       console.log('error in saving data', e);
@@ -118,6 +123,7 @@ export default function LoginScreen({navigation}) {
       }
     }
   }, [loginResponse]);
+
   const forgotPasswordPress = () => {
     const emailError = emailValidator(email.value);
     if (emailError) {
@@ -154,65 +160,71 @@ export default function LoginScreen({navigation}) {
     }
   }, [forgotPasswordResponse]);
 
-  const [loader, setloader] = useState(true);
-
   return (
-    <ScrollView style={{flex: 1, backgroundColor: theme.colors.surface}}>
-      <StatusBar
-        backgroundColor={theme.colors.surface}
-        barStyle="dark-content"
-      />
-      <BackButton goBack={navigation.goBack} />
-      <KeyboardAvoidingView style={styles.keyboar}>
-        <Logo />
-        <Header>LOGIN</Header>
-        <TextInput
-          label="Email id"
-          returnKeyType="next"
-          value={email.value}
-          onChangeText={text => setEmail({value: text, error: ''})}
-          error={!!email.error}
-          errorText={email.error}
-          autoCapitalize="none"
-          autoCompleteType="email"
-          textContentType="emailAddress"
-          keyboardType="email-address"
+    <>
+      <ScrollView
+        style={{
+          flex: 1,
+          backgroundColor: theme.colors.surface,
+          width: '100%',
+        }}>
+        <StatusBar
+          backgroundColor={theme.colors.surface}
+          barStyle="dark-content"
         />
-        <TextInput
-          label="Password"
-          returnKeyType="done"
-          value={password.value}
-          onChangeText={text => setPassword({value: text, error: ''})}
-          error={!!password.error}
-          errorText={password.error}
-          password={true}
-        />
-        <View style={styles.forgotPassword}>
-          <TouchableOpacity activeOpacity={0.8} onPress={forgotPasswordPress}>
-            <Text style={styles.forgot}>Forgot your password?</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAvoidingView>
-      <View style={{paddingHorizontal: 20, width: '100%', maxWidth: '100%'}}>
-        <TouchableOpacity
-          mode="contained"
-          onPress={onLoginPressed}
-          activeOpacity={0.9}>
-          <LinearGradient
-            colors={['#7426f2', '#3d0891']}
-            style={styles.touchabltext}>
-            <Text style={styles.textstyle}>Login</Text>
-          </LinearGradient>
-        </TouchableOpacity>
-        <View style={styles.row}>
-          <Text>Don’t have an account? </Text>
+        <BackButton goBack={navigation.goBack} />
+        <KeyboardAvoidingView style={styles.keyboar}>
+          <Logo />
+          <Header>LOGIN</Header>
+          <TextInput
+            label="Email id"
+            returnKeyType="next"
+            value={email.value}
+            onChangeText={text => setEmail({value: text, error: ''})}
+            error={!!email.error}
+            errorText={email.error}
+            autoCapitalize="none"
+            autoCompleteType="email"
+            textContentType="emailAddress"
+            keyboardType="email-address"
+          />
+          <TextInput
+            label="Password"
+            returnKeyType="done"
+            value={password.value}
+            onChangeText={text => setPassword({value: text, error: ''})}
+            error={!!password.error}
+            errorText={password.error}
+            password={true}
+          />
+          <View style={styles.forgotPassword}>
+            <TouchableOpacity activeOpacity={0.8} onPress={forgotPasswordPress}>
+              <Text style={styles.forgot}>Forgot your password?</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAvoidingView>
+        <View style={{paddingHorizontal: 20, width: '100%', maxWidth: '100%'}}>
           <TouchableOpacity
-            onPress={() => navigation.replace('RegisterScreen')}>
-            <Text style={styles.link}>Sign Up</Text>
+            mode="contained"
+            onPress={onLoginPressed}
+            activeOpacity={0.9}>
+            <LinearGradient
+              colors={['#7426f2', '#3d0891']}
+              style={styles.touchabltext}>
+              <Text style={styles.textstyle}>Login</Text>
+            </LinearGradient>
           </TouchableOpacity>
+          <View style={styles.row}>
+            <Text>Don’t have an account? </Text>
+            <TouchableOpacity
+              onPress={() => navigation.replace('RegisterScreen')}>
+              <Text style={styles.link}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+      {loading || (forgetloading && <Loader />)}
+    </>
   );
 }
 

@@ -1,8 +1,9 @@
 import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import React, {createRef, useState, useEffect} from 'react';
+import React, {createRef, useState, useEffect, useCallback} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Swiper from 'react-native-deck-swiper';
 import {DARK, GREY, PRIMARY, WHITE} from '../Colors/Color';
+import {useFocusEffect} from '@react-navigation/native';
 const OrganizationDeatailScreeen = ({navigation, route}) => {
   const data = route.params.item;
   const list = route.params.data;
@@ -10,15 +11,28 @@ const OrganizationDeatailScreeen = ({navigation, route}) => {
 
   const [index, setindex] = useState(indexx);
 
+  useFocusEffect(
+    useCallback(() => {
+      console.log('DetailsScreenss', {item: data, data: list, index: indexx});
+    }, []),
+  );
+
   const Card = ({card, index}) => {
     return (
       <TouchableOpacity
         activeOpacity={1}
         style={styles.card}
-        onPress={() => navigation.navigate('UserDetail')}>
+        onPress={() => {
+          console.log('navigation', navigation);
+          navigation.navigate('UserDetail', {
+            item: data,
+            data: list,
+            index: indexx,
+          });
+        }}>
         <View style={[styles.imageConatiner]}>
           <Image
-            source={require('../../Assets/pic3.jpg')}
+            source={require('../../Assets/bills.png')}
             style={styles.billImage}
           />
         </View>

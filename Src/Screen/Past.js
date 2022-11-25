@@ -1,292 +1,443 @@
-import React, { useState, useEffect, useCallback, } from 'react'
-import { View, StyleSheet, Text, Image, FlatList, TextInput, TouchableOpacity, Modal } from 'react-native'
-import { theme } from '../core/theme'
+import React, {useState, useEffect, useCallback} from 'react';
+import {
+  View,
+  StyleSheet,
+  Text,
+  Image,
+  FlatList,
+  TextInput,
+  TouchableOpacity,
+  Modal,
+} from 'react-native';
+import {theme} from '../core/theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { ApproveData } from '../Common/VerticalData';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import {ApproveData} from '../Common/VerticalData';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { clearGetAllBills, getAllBills } from '../redux/actions/getAllBillsAction';
+import {
+  clearGetAllBills,
+  getAllBills,
+} from '../redux/actions/getAllBillsAction';
 import Imagepath from '../Assets/Images/Imagepath';
 import moment from 'moment';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
+import Loader from '../Organization/Componets/Loader';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import {DARK, GREY} from '../Organization/Colors/Color';
+export default function Past({navigation}) {
+  const dispatch = useDispatch();
 
-export default function Past({ navigation }) {
+  const [userData, setUserData] = useState(null);
+  const [searchText, setSearchText] = useState('');
+  const [selectedType, setSelectedType] = useState('');
 
-  const dispatch = useDispatch()
+  const [current, setCurrent] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const [userData, setUserData] = useState(null)
-  const [searchText, setSearchText] = useState("")
-  const [selectedType, setSelectedType] = useState("")
-
-  const [current, setCurrent] = useState([])
-  const [modalOpen, setModalOpen] = useState(false)
-
-  const getAllBillsResponse = useSelector(state => state.getAllBillsReducer.data);
+  const getAllBillsResponse = useSelector(
+    state => state.getAllBillsReducer.data,
+  );
   const loading = useSelector(state => state.getAllBillsReducer.loading);
 
   useFocusEffect(
     useCallback(() => {
-      getData()
-    }, [])
-  )
+      getData();
+    }, []),
+  );
 
   const getData = async () => {
     try {
-      const value = await AsyncStorage.getItem('@user_data')
-      console.log("value", value)
+      const value = await AsyncStorage.getItem('@user_data');
+      console.log('value', value);
       if (value !== null) {
-        const data = JSON.parse(value)
+        const data = JSON.parse(value);
         if (data != null) {
-          setUserData(data)
+          setUserData(data);
         } else {
-          setUserData(null)
+          setUserData(null);
         }
       } else {
-        setUserData(null)
+        setUserData(null);
       }
     } catch (e) {
-      console.log("storage error", e)
+      console.log('storage error', e);
     }
-  }
+  };
 
   useEffect(() => {
     if (userData != null) {
-      fetchAllBills(searchText, selectedType)
+      fetchAllBills(searchText, selectedType);
     }
-  }, [userData])
+  }, [userData]);
 
   const fetchAllBills = (search, type) => {
     let request = {
-      "user_id": userData.user_id,
-      "type": "employee",
-      "page": "1",
-      "reverse": 1,
-      "date_wise": "date",
-      "search": search,
-      "bill_type": type,
-      "from_date": "",
-      "to_date": ""
-    }
+      user_id: userData.user_id,
+      type: 'employee',
+      page: '1',
+      reverse: 1,
+      date_wise: 'date',
+      search: search,
+      bill_type: type,
+      from_date: '',
+      to_date: '',
+    };
 
-    dispatch(getAllBills(request))
-  }
+    dispatch(getAllBills(request));
+  };
 
   useEffect(() => {
     if (getAllBillsResponse != null) {
-      console.log("getAllBillsResponse", getAllBillsResponse)
-      if (Object.keys(getAllBillsResponse).length != 0 && getAllBillsResponse.statusCode != 200) {
-        alert(getAllBillsResponse.message)
-        dispatch(clearGetAllBills())
+      console.log('getAllBillsResponse', getAllBillsResponse);
+      if (
+        Object.keys(getAllBillsResponse).length != 0 &&
+        getAllBillsResponse.statusCode != 200
+      ) {
+        alert(getAllBillsResponse.message);
+        dispatch(clearGetAllBills());
       }
-      if (Object.keys(getAllBillsResponse).length != 0 && getAllBillsResponse.statusCode == 200) {
-        console.log("response", getAllBillsResponse)
-        setCurrent(getAllBillsResponse.data)
-        dispatch(clearGetAllBills())
-        setModalOpen(false)
+      if (
+        Object.keys(getAllBillsResponse).length != 0 &&
+        getAllBillsResponse.statusCode == 200
+      ) {
+        console.log('response', getAllBillsResponse);
+        setCurrent(getAllBillsResponse.data);
+        dispatch(clearGetAllBills());
+        setModalOpen(false);
       }
     }
-  }, [getAllBillsResponse])
+  }, [getAllBillsResponse]);
 
-  const typeColor = (type) => {
-    if (type == "fuel") {
-      return theme.colors.primary
+  const typeColor = type => {
+    if (type == 'fuel') {
+      return theme.colors.primary;
+    } else if (type == 'medical') {
+      return 'red';
+    } else {
+      return 'blue';
     }
-    else if (type == "medical") {
-      return 'red'
-    }
-    else {
-      return 'blue'
-    }
-  }
+  };
 
-  const icon = (type) => {
+  const icon = type => {
     switch (type) {
-      case "Medical": {
-        return Imagepath.medicine
+      case 'Medical': {
+        return Imagepath.medicine;
       }
-      case "Fuel": {
-        return Imagepath.Fuel
+      case 'Fuel': {
+        return Imagepath.Fuel;
       }
-      case "Food": {
-        return Imagepath.foodfork
+      case 'Food': {
+        return Imagepath.foodfork;
       }
-      case "Others": {
-        return Imagepath.Others
+      case 'Others': {
+        return Imagepath.Others;
       }
       default: {
-        return Imagepath.Others
+        return Imagepath.Others;
       }
     }
-  }
+  };
 
   useEffect(() => {
     if (userData != null) {
-      fetchAllBills(searchText, selectedType)
+      fetchAllBills(searchText, selectedType);
     }
-  }, [searchText, selectedType])
+  }, [searchText, selectedType]);
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     return (
       <View style={styles.mainView}>
-        <TouchableOpacity activeOpacity={0.9} style={{ flexDirection: 'row', alignItems: 'center' }} onPress={() => { navigation.navigate('DetailScreen', { bill_id: item.bill_id }) }}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          style={{flexDirection: 'row', alignItems: 'center'}}
+          onPress={() => {
+            navigation.navigate('DetailScreen', {bill_id: item.bill_id});
+          }}>
           <View style={styles.imageView}>
-            <View style={{ ...styles.imagetype, backgroundColor: typeColor(item.type) }}>
+            <View
+              style={{
+                ...styles.imagetype,
+                backgroundColor: typeColor(item.type),
+              }}>
               <Image source={icon(item.type)} style={styles.imagestyle} />
             </View>
           </View>
           <View style={{flex: 1, marginLeft: -27}}>
             <View style={styles.textview}>
-              <Text style={styles.textblood}>{moment(item.date).format("MMM DD, yyyy")}</Text>
-              <Text style={{ ...styles.textapprove, color: item.status == "Approved" ? theme.colors.green : item.status == "Pending" ? 'orange' : 'red' }}>{item.status}</Text>
+              <Text style={styles.textblood}>
+                {moment(item.date).format('MMM DD, yyyy')}
+              </Text>
+              <Text
+                style={{
+                  ...styles.textapprove,
+                  color:
+                    item.status == 'Approved'
+                      ? theme.colors.green
+                      : item.status == 'Pending'
+                      ? 'orange'
+                      : 'red',
+                }}>
+                {item.status}
+              </Text>
             </View>
             <View style={styles.texticon}>
               <Text style={styles.textmar}>{item.description}</Text>
               <View style={styles.rupeestyle}>
-                <FontAwesome name='rupee' size={18} color={theme.colors.text} style={styles.fontstyle} />
+                <FontAwesome
+                  name="rupee"
+                  size={18}
+                  color={theme.colors.text}
+                  style={styles.fontstyle}
+                />
                 <Text style={styles.textrupees}>{item.amount}</Text>
               </View>
             </View>
           </View>
         </TouchableOpacity>
-
       </View>
-    )
-  }
+    );
+  };
   return (
-    <SafeAreaView style={styles.container}>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalOpen} >
-        <View style={styles.modalView}>
-          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("") }}>
-            <Text style={styles.textstyle}>All</Text>
+    <>
+      <SafeAreaView style={styles.container}>
+        <Modal animationType="slide" transparent={true} visible={modalOpen}>
+          <View style={styles.modalView}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectedType('');
+                  setModalOpen(false);
+                }}>
+                <Text style={styles.textstyle}>All</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalOpen(false);
+                }}>
+                <Icon name="times" size={20} color={DARK} />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {
+                setSelectedType('Medical'), setModalOpen(false);
+              }}>
+              <Text style={styles.textstyle}>Medical</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {
+                setSelectedType('Food'), setModalOpen(false);
+              }}>
+              <Text style={styles.textstyle}>Food</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {
+                setSelectedType('Fuel'), setModalOpen(false);
+              }}>
+              <Text style={styles.textstyle}>Fuel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.9}
+              onPress={() => {
+                setSelectedType('Other'), setModalOpen(false);
+              }}>
+              <Text style={styles.textstyle}>Others</Text>
+            </TouchableOpacity>
+          </View>
+        </Modal>
+        <View style={styles.searchinput}>
+          <TouchableOpacity
+            style={styles.iconstyle}
+            onPress={() => {
+              setModalOpen(true);
+            }}>
+            <AntDesign name="filter" size={25} color={theme.colors.text} />
           </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("Medical") }}>
-            <Text style={styles.textstyle}>Medical</Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("Food") }}>
-            <Text style={styles.textstyle}>Food</Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("Fuel") }}>
-            <Text style={styles.textstyle}>Fuel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.9} onPress={() => { setSelectedType("Other") }}>
-            <Text style={styles.textstyle}>Others</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => { setModalOpen(false) }} style={styles.okstyle}>
-            <Text style={styles.oktext}>OK</Text>
-          </TouchableOpacity>
+          <View style={{flex: 0.8}}>
+            <TextInput
+              placeholder="Search"
+              onChangeText={text => {
+                console.log(text);
+                setSearchText(text);
+                // if (text != "") {
+                //   setCurrent(current.filter((item) => item.title.includes(text)))
+                //   console.log(current.filter((item) => item.title.includes(text)));
+                // }
+                // else {
+                //   setCurrent(ApproveData)
+                // }
+              }}
+            />
+          </View>
         </View>
-
-      </Modal>
-      <View style={styles.searchinput} >
-        <TouchableOpacity style={styles.iconstyle}
-          onPress={() => { setModalOpen(true) }} >
-          <AntDesign name='filter' size={25} color={theme.colors.text} />
-        </TouchableOpacity>
-        <View style={{ flex: 0.8 }}>
-          <TextInput placeholder='Search'
-            onChangeText={text => {
-              console.log(text)
-              setSearchText(text)
-              // if (text != "") {
-              //   setCurrent(current.filter((item) => item.title.includes(text)))
-              //   console.log(current.filter((item) => item.title.includes(text)));
-              // }
-              // else {
-              //   setCurrent(ApproveData)
-              // }
-            }} />
-        </View>
-      </View>
-      <FlatList
-        style={{ marginBottom: 20 }}
-        data={current}
-        keyExtractor={item => item.id}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false} />
-
-    </SafeAreaView>
-  )
+        <FlatList
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text
+                  style={{
+                    marginBottom: 120,
+                    alignSelf: 'center',
+                    textAlignVertical: 'center',
+                    fontSize: 24,
+                    color: GREY,
+                  }}>
+                  Result not found
+                </Text>
+              </View>
+            );
+          }}
+          style={{marginBottom: 20}}
+          data={current}
+          marginBottom={40}
+          keyExtractor={item => item.id}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+        />
+      </SafeAreaView>
+      {loading && <Loader />}
+    </>
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1, backgroundColor: theme.colors.white,
-    paddingHorizontal: 14, paddingVertical: 14
+    flex: 1,
+    backgroundColor: theme.colors.white,
+    paddingHorizontal: 14,
+    paddingVertical: 14,
   },
   mainView: {
-    backgroundColor: "#fff", marginVertical: 10, padding: 5, elevation: 2, marginHorizontal: 22,
+    backgroundColor: '#fff',
+    marginVertical: 10,
+    padding: 5,
+    elevation: 2,
+    marginHorizontal: 22,
     paddingHorizontal: 7,
   },
   imagetype: {
-    height: 40, width: 40, borderRadius: 40, alignItems: 'center', justifyContent: 'center'
+    height: 40,
+    width: 40,
+    borderRadius: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   imageView: {
     height: 48,
     width: 48,
     backgroundColor: '#fff',
     borderRadius: 40,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     elevation: 2,
     marginLeft: -27,
   },
   imagestyle: {
-    height: 30, width: 30, resizeMode: "contain", tintColor: theme.colors.white
+    height: 30,
+    width: 30,
+    resizeMode: 'contain',
+    tintColor: theme.colors.white,
   },
   textview: {
-    flexDirection: "row", justifyContent: "space-between", alignItems: 'center'
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   textblood: {
-    left: 32, fontSize: 16, color: theme.colors.text, fontWeight: 'bold'
+    left: 32,
+    fontSize: 16,
+    color: theme.colors.text,
+    fontWeight: 'bold',
   },
   textapprove: {
-    marginVertical: 4, fontSize: 16, color: theme.colors.green, fontWeight: 'bold'
+    marginVertical: 4,
+    fontSize: 16,
+    color: theme.colors.green,
+    fontWeight: 'bold',
   },
   textblue: {
-    left: 32, fontSize: 14, color: theme.colors.text, paddingRight: 30
+    left: 32,
+    fontSize: 14,
+    color: theme.colors.text,
+    paddingRight: 30,
   },
   textmar: {
-    left: 32, marginTop: 12, fontSize: 14, color: theme.colors.text, width: '50%'
+    left: 32,
+    marginTop: 12,
+    fontSize: 14,
+    color: theme.colors.text,
+    width: '50%',
   },
   textrupees: {
-    marginTop: 12, fontSize: 18, color: theme.colors.text
+    marginTop: 12,
+    fontSize: 18,
+    color: theme.colors.text,
   },
   searchinput: {
-    marginHorizontal: 22, elevation: 5, backgroundColor: "#fff", paddingHorizontal: 10, marginVertical: 7,
-    flexDirection: "row", alignItems: "center",
+    marginHorizontal: 22,
+    elevation: 5,
+    backgroundColor: '#fff',
+    paddingHorizontal: 10,
+    marginVertical: 7,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   iconstyle: {
     // position: "absolute", right: 0, top: 10, paddingHorizontal: 14,
-    right: 0, position: "absolute", paddingHorizontal: 10,
+    right: 0,
+    position: 'absolute',
+    paddingHorizontal: 10,
   },
   texticon: {
-    flexDirection: "row", justifyContent: "space-between", alignItems: "center"
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   rupeestyle: {
-    flexDirection: "row", alignItems: "center"
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   fontstyle: {
-    marginTop: 14, right: 4
+    marginTop: 14,
+    right: 4,
   },
   modalView: {
+    borderColor: '#454545',
+    borderWidth: 1,
     backgroundColor: theme.colors.white,
-    marginTop: 170,
+    marginTop: 125,
     marginHorizontal: 35,
-    padding: 10
+    padding: 10,
   },
   okstyle: {
-    width: 60, alignSelf: "flex-end", alignItems: "center", justifyContent: "center"
+    width: 60,
+    alignSelf: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   oktext: {
-    color: "#000", fontSize: 16, fontWeight: '600'
+    color: '#000',
+    fontSize: 16,
+    fontWeight: '600',
   },
   textstyle: {
-    color: theme.colors.text, fontSize: 16, fontWeight: '800', marginTop: 5
-  }
-
-})
+    color: theme.colors.text,
+    fontSize: 16,
+    fontWeight: '800',
+    marginTop: 5,
+  },
+});

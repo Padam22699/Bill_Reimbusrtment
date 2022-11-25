@@ -22,7 +22,7 @@ const LandingScreen = ({navigation}) => {
         barStyle="dark-content"
       />
       <Animatable.View style={styles.imageview} animation="zoomInDown">
-        <Image source={Imagepath.Consulting} style={styles.imagestyle} />
+        <Image source={require('../Assets/L3.png')} style={styles.imagestyle} />
       </Animatable.View>
 
       <Animatable.View style={styles.Buttonview} animation="lightSpeedIn">
@@ -53,9 +53,9 @@ const LandingScreen = ({navigation}) => {
             source={Imagepath.wave}
             style={{tintColor: theme.colors.violet}}
           />
-          <View style={styles.imagestylelogo}>
+          {/* <View style={styles.imagestylelogo}>
             <Image source={Imagepath.engagement} style={styles.imagesour} />
-          </View>
+          </View> */}
         </Animatable.View>
       </View>
     </View>
@@ -71,11 +71,12 @@ export const styles = StyleSheet.create({
   imageview: {
     backgroundColor: theme.colors.violet,
     width: '100%',
+   
     borderBottomRightRadius: 30,
     borderBottomLeftRadius: 30,
   },
   imagestyle: {
-    height: 350,
+    height: 330,
     width: '100%',
     alignItems: 'center',
     resizeMode: 'contain',

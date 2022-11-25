@@ -133,7 +133,7 @@ export default function OrgSignin({navigation}) {
           mode="contained"
           // onPress={onLoginPressed}
           onPress={() =>
-            navigation.navigate('Organization')
+            navigation.navigate('OrgDrawer')
             // onLoginPressed()
           }
           activeOpacity={0.9}>

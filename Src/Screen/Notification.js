@@ -1,82 +1,107 @@
-import { useFocusEffect } from '@react-navigation/native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { Headers } from '../Common/Headers';
-import { theme } from '../core/theme';
-import { getNotification } from '../redux/actions/notificationAction';
+import {useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {Headers} from '../Common/Headers';
+import Heading from '../components/Heading';
+import {theme} from '../core/theme';
+import {GREY, WHITE} from '../Organization/Colors/Color';
+import {getNotification} from '../redux/actions/notificationAction';
 
-const Notification = () => {
+const Notification = ({navigation}) => {
+  const dispatch = useDispatch();
 
-  const dispatch = useDispatch()
+  const [notifications, setNotifications] = useState([]);
+  const [page, setPage] = useState(1);
 
-  const [notifications, setNotifications] = useState([])
-  const [page, setPage] = useState(1)
-
-  const notificationResponse = useSelector(state => state.notificationReducer.data)
+  const notificationResponse = useSelector(
+    state => state.notificationReducer.data,
+  );
 
   useFocusEffect(
     useCallback(() => {
-      fetchNotifications(1)
-    }, [])
-  )
+      fetchNotifications(1);
+    }, []),
+  );
 
-  const fetchNotifications = (page) => {
+  const fetchNotifications = page => {
     let request = {
-      "user_id": "636122b24ddcaf16082448ff",
-      "reverse": -1,
-      "page": page
-    }
+      user_id: '636122b24ddcaf16082448ff',
+      reverse: -1,
+      page: page,
+    };
 
-    dispatch(getNotification(request))
-  }
+    dispatch(getNotification(request));
+  };
 
   useEffect(() => {
     if (notificationResponse != null) {
-      console.log("notificationResponse", notificationResponse)
-      if (Object.keys(notificationResponse).length != 0 && notificationResponse.statusCode != 200) {
-        alert(notificationResponse.message)
+      console.log('notificationResponse', notificationResponse);
+      if (
+        Object.keys(notificationResponse).length != 0 &&
+        notificationResponse.statusCode != 200
+      ) {
+        alert(notificationResponse.message);
       }
-      if (Object.keys(notificationResponse).length != 0 && notificationResponse.statusCode == 200) {
-        setNotifications(notificationResponse.data)
-        setPage(page => page + 1)
+      if (
+        Object.keys(notificationResponse).length != 0 &&
+        notificationResponse.statusCode == 200
+      ) {
+        setNotifications(notificationResponse.data);
+        setPage(page => page + 1);
       }
     }
-  }, [notificationResponse])
+  }, [notificationResponse]);
 
-  const renderNotifications = ({ item }) => {
+  const renderNotifications = ({item}) => {
     return (
       <View>
         <Text>{item.text}</Text>
       </View>
-    )
-  }
+    );
+  };
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={notifications}
-        renderItem={renderNotifications}
-        // onEndReached={fetchNotifications(page)}
-        ListEmptyComponent={() => {
-          return (
-            <Text style={styles.text}>Notification Screen</Text>
-          )
-        }
-        }
-      />
+    <View style={{backgroundColor: WHITE, flex: 1, paddingHorizontal: 12}}>
+      {/* <Heading navigation={navigation} /> */}
 
+      <View style={styles.container}>
+        <FlatList
+          data={notifications}
+          renderItem={renderNotifications}
+          // onEndReached={fetchNotifications(page)}
+          ListEmptyComponent={() => {
+            return (
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
+                <Text style={styles.text}>Notifications</Text>
+              </View>
+            );
+          }}
+        />
+      </View>
     </View>
-
-  )
+  );
 };
 const styles = StyleSheet.create({
   container: {
-    flex: 1, paddingHorizontal: 10, backgroundColor: theme.colors.white,
-    alignItems: "center", justifyContent: "center",
+    paddingHorizontal: 10,
+    backgroundColor: theme.colors.white,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 20,
+    backgroundColor: WHITE,
   },
   text: {
-    fontSize: 22, color: "#000"
-  }
-})
+    fontSize: 22,
+    color: GREY,
+    marginBottom: 120,
+    alignSelf: 'center',
+    textAlignVertical: 'center',
+  },
+});
 export default Notification;

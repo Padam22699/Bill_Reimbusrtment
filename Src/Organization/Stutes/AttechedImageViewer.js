@@ -1,9 +1,20 @@
 import {SafeAreaView, StyleSheet, View, Image} from 'react-native';
-import React from 'react';
+import React, {useCallback} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {PRIMARY} from '../Colors/Color';
-import ReactNativeZoomableView from '@dudigital/react-native-zoomable-view/src/ReactNativeZoomableView';
+import {useFocusEffect} from '@react-navigation/native';
 const AttechedImageViewer = ({navigation}) => {
+
+  useFocusEffect(
+    useCallback(() => {
+      console.log('image');
+
+      return () => {
+        console.log('imageblur');
+      };
+    }, []),
+  );
+
   return (
     //   <View style={{flex: 1}}>
     //     <ReactNativeZoomableView
@@ -25,13 +36,13 @@ const AttechedImageViewer = ({navigation}) => {
     //   </View>
     // );
     <SafeAreaView style={styles.container}>
-      <ReactNativeZoomableView
+      <View
         maxZoom={2}
         minZoom={1}
         zoomStep={0.5}
         initialZoom={1}
         bindToBorders={true}
-        onZoomAfter={this.logOutZoomState}
+        // onZoomAfter={this.logOutZoomState}
         style={[
           styles.Imagecontainer,
           {
@@ -39,16 +50,19 @@ const AttechedImageViewer = ({navigation}) => {
           },
         ]}>
         <Image
-          source={require('../../Assets/pic3.jpg')}
+          source={require('../../Assets/bills.png')}
           style={{width: '100%', height: '100%', resizeMode: 'cover'}}
         />
-      </ReactNativeZoomableView>
+      </View>
       <View style={styles.iconContainer}>
         <Icon
           name="times"
           color={PRIMARY}
           size={24}
-          onPress={() => navigation.goBack()}
+          onPress={() =>
+            {console.log('imageback')
+            navigation.goBack()}
+          }
         />
       </View>
     </SafeAreaView>

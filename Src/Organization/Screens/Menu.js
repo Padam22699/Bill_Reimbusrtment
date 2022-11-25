@@ -8,6 +8,7 @@ import {
 import React from 'react';
 import {DARK, PRIMARY, WHITE} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Menu = ({navigation}) => {
   const logout = async () => {
     let data = {
@@ -31,7 +32,10 @@ const Menu = ({navigation}) => {
         <View style={styles.headingContiner}>
           <Text style={styles.heading}>Hi Admin</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+        <TouchableOpacity 
+        // onPress={() => navigation.navigate('Profile')}
+        
+        >
           <View
             style={{
               flexDirection: 'row',
@@ -48,7 +52,7 @@ const Menu = ({navigation}) => {
             />
           </View>
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => logout}>
+        <TouchableOpacity onPress={() => logout()}>
           <View
             style={{
               flexDirection: 'row',

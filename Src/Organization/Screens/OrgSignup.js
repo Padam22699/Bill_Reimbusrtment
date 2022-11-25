@@ -215,8 +215,8 @@ export default function OrgSignup({navigation}) {
               mode="contained"
               // onPress={onSignUpPressed}
               onPress={() =>
-                //  navigation.navigate('OrgSignin')
-                onSignUpPressed()
+                navigation.navigate('Organization')
+                // onSignUpPressed()
               }
               activeOpacity={0.9}>
               <LinearGradient

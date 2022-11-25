@@ -27,6 +27,9 @@ import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import {addBill, clearAddBill} from '../redux/actions/addBillAction';
+import Heading from '../components/Heading';
+import Loader from '../Organization/Componets/Loader';
+
 export default function Reimbursement({navigation}) {
   const dispatch = useDispatch();
 
@@ -67,11 +70,6 @@ export default function Reimbursement({navigation}) {
       return;
     }
     addBillApi();
-    setDate('');
-    setAmount('');
-    setDescription('');
-    setParticipants('');
-    setupload(false);
   };
   useFocusEffect(
     useCallback(() => {
@@ -120,8 +118,8 @@ export default function Reimbursement({navigation}) {
     ]);
     const OpenGallery = () => {
       ImagePicker.openPicker({
-        width: 300,
-        height: 400,
+        width: 1000,
+        height: 1000,
         cropping: true,
       }).then(image => {
         setupload(image.path);
@@ -129,8 +127,8 @@ export default function Reimbursement({navigation}) {
     };
     const OpenCamera = () => {
       ImagePicker.openCamera({
-        width: 300,
-        height: 400,
+        width: 1000,
+        height: 1000,
         cropping: true,
       }).then(image => {
         setupload(image.path);
@@ -172,7 +170,14 @@ export default function Reimbursement({navigation}) {
         console.log('response', addBillResponse);
         dispatch(clearAddBill());
 
-        navigation.navigate('Current');
+        navigation.navigate('Bills',{screen:'ToptabBar'});
+
+        setDate('Select a Date');
+        setAmount({value: ''});
+        setDescription({value: ''});
+        setParticipants({value: ''});
+        setupload(false);
+        setSelect('');
       }
     }
   }, [addBillResponse]);
@@ -201,138 +206,147 @@ export default function Reimbursement({navigation}) {
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <StatusBar backgroundColor={theme.colors.white} barStyle="dark-content" />
-      <View style={styles.mainview}>
-        <Text
-          style={{
-            textAlign: 'center',
-            fontSize: 18,
-            fontWeight: '700',
-            bottom: 10,
-          }}>
-          Bill Type
-        </Text>
-        <View style={styles.datetimestyle}>
-          <DateTimePickerModal
-            maximumDate={new Date()}
-            isVisible={isDatePickerVisible}
-            mode="date"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              showDatePicker();
-            }}
-            activeOpacity={0.8}>
-            <Text style={styles.textdate}>{date}</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              showDatePicker();
-            }}
-            activeOpacity={0.8}>
-            <Entypo name="calendar" size={25} color={theme.colors.primary} />
-          </TouchableOpacity>
-        </View>
-        <View>
-          <View style={{}}>
-            <TextInput
-              label="Amount"
-              keyboardType={'numeric'}
-              value={amount.value}
-              onChangeText={text => {
-                setAmount({value: text, error: ''});
-              }}
-              error={!!amount.error}
-              errorText={amount.error}
-              style={{
-                paddingHorizontal: 12,
-                backgroundColor: theme.colors.surface,
-              }}
+    <>
+      <ScrollView style={styles.container}>
+        <StatusBar
+          backgroundColor={theme.colors.white}
+          barStyle="dark-content"
+        />
+
+        {/* <View style={{paddingHorizontal: 12}}>
+          <Heading navigation={navigation}/>
+        </View> */}
+        <View style={styles.mainview}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 18,
+              fontWeight: '700',
+              bottom: 10,
+            }}>
+            Add Expense
+          </Text>
+          <View style={styles.datetimestyle}>
+            <DateTimePickerModal
+              maximumDate={new Date()}
+              isVisible={isDatePickerVisible}
+              mode="date"
+              onConfirm={handleConfirm}
+              onCancel={hideDatePicker}
             />
-            <FontAwesome
-              name="rupee"
-              size={18}
-              color={theme.colors.text}
-              style={{position: 'absolute', top: 37, marginHorizontal: 15}}
-            />
-          </View>
-          <TextInput
-            label="Description"
-            value={description.value}
-            onChangeText={text => {
-              setDescription({value: text, error: ''});
-            }}
-            error={!!description.error}
-            errorText={description.error}
-          />
-          <TextInput
-            label="Participants"
-            keyboardType={'numeric'}
-            value={participants.value}
-            onChangeText={text => {
-              setParticipants({value: text, error: ''});
-            }}
-            error={!!participants.error}
-            errorText={participants.error}
-          />
-          <View style={styles.attachview}>
-            <Text style={styles.textbill}>Attach your bill</Text>
             <TouchableOpacity
-              style={styles.touchacrop}
               onPress={() => {
-                imageCrop();
-              }}>
-              <Image source={Imagepath.Medical} style={styles.imagecrop} />
+                showDatePicker();
+              }}
+              activeOpacity={0.8}>
+              <Text style={styles.textdate}>{date}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                showDatePicker();
+              }}
+              activeOpacity={0.8}>
+              <Entypo name="calendar" size={25} color={theme.colors.primary} />
             </TouchableOpacity>
           </View>
-          {upload && (
-            <View style={styles.imageflex}>
+          <View>
+            <View style={{}}>
+              <TextInput
+                label="Amount "
+                keyboardType={'numeric'}
+                value={amount.value}
+                onChangeText={text => {
+                  setAmount({value: text, error: ''});
+                }}
+                error={!!amount.error}
+                errorText={amount.error}
+                style={{
+                  backgroundColor: theme.colors.surface,
+                  width: '100%',
+                }}
+              />
+              {/* <FontAwesome
+                name="rupee"
+                size={16}
+                color={theme.colors.text}
+                style={{position: 'absolute', top: 44, marginHorizontal: 15}}
+              /> */}
+            </View>
+            <TextInput
+              label="Description"
+              value={description.value}
+              onChangeText={text => {
+                setDescription({value: text, error: ''});
+              }}
+              error={!!description.error}
+              errorText={description.error}
+            />
+            <TextInput
+              label="Participants"
+              keyboardType={'numeric'}
+              value={participants.value}
+              onChangeText={text => {
+                setParticipants({value: text, error: ''});
+              }}
+              error={!!participants.error}
+              errorText={participants.error}
+            />
+            <View style={styles.attachview}>
+              <Text style={styles.textbill}>Attach your bill</Text>
               <TouchableOpacity
-                style={styles.touchablicon}
-                activeOpacity={0.9}
+                style={styles.touchacrop}
                 onPress={() => {
-                  ('');
+                  imageCrop();
                 }}>
-                <Image
-                  source={upload ? {uri: upload} : Imagepath.file}
-                  style={styles.imagestyle}
-                />
+                <Image source={Imagepath.Medical} style={styles.imagecrop} />
               </TouchableOpacity>
             </View>
-          )}
-          <Text style={styles.textbill}>Select your bill type</Text>
-          <View style={{flex: 1}}>
-            <FlatList
-              data={Iconlist}
-              horizontal
-              keyExtractor={item => item.id}
-              renderItem={renderItem}
-              showsHorizontalScrollIndicator={false}
-            />
-          </View>
-          <View style={{marginTop: 30, marginHorizontal: 30}}>
-            <TouchableOpacity
-              mode="contained"
-              onPress={onSubmitPress}
-              activeOpacity={0.9}>
-              <LinearGradient
-                colors={['#7426f2', '#3d0891']}
-                style={styles.touchabltext}>
-                <Text style={styles.textstyle}>SUBMIT</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-          {/* <View style={{ marginVertical: 30, marginHorizontal: 30 }}>
+            {upload && (
+              <View style={styles.imageflex}>
+                <TouchableOpacity
+                  style={styles.touchablicon}
+                  activeOpacity={0.9}>
+                  <Image
+                    source={upload ? {uri: upload} : Imagepath.file}
+                    style={styles.imagestyle}
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+            <Text style={styles.textbill}>Select your bill type</Text>
+            <View style={{flex: 1}}>
+              <FlatList
+                data={Iconlist}
+                horizontal
+                keyExtractor={item => item.id}
+                renderItem={renderItem}
+                showsHorizontalScrollIndicator={false}
+              />
+            </View>
+            <View
+              style={{marginTop: 30, marginHorizontal: 30, marginBottom: 20}}>
+              <TouchableOpacity
+                mode="contained"
+                onPress={onSubmitPress}
+                activeOpacity={0.9}>
+                <LinearGradient
+                  colors={['#7426f2', '#3d0891']}
+                  style={styles.touchabltext}>
+                  <Text style={styles.textstyle}>SUBMIT</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+            {/* <View style={{ marginVertical: 30, marginHorizontal: 30 }}>
             <Button mode="contained" onPress={() => navigation.navigate('Current')} >
               SUBMIT
             </Button>
           </View> */}
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+
+      {loading && <Loader />}
+    </>
   );
 }
 

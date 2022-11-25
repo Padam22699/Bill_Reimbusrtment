@@ -16,6 +16,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Imagepath from '../Assets/Images/Imagepath';
 import {useDispatch, useSelector} from 'react-redux';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -24,6 +25,8 @@ import {
 } from '../redux/actions/getAllBillsAction';
 import moment from 'moment';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import Loader from '../Organization/Componets/Loader';
+import {DARK, GREY} from '../Organization/Colors/Color';
 
 export default function Current({navigation}) {
   const dispatch = useDispatch();
@@ -149,7 +152,6 @@ export default function Current({navigation}) {
       fetchAllBills(searchText, selectedType);
     }
   }, [searchText, selectedType]);
-
   const renderItem = ({item}) => {
     return (
       <View style={styles.mainView}>
@@ -157,7 +159,7 @@ export default function Current({navigation}) {
           style={{flexDirection: 'row', alignItems: 'center'}}
           activeOpacity={0.9}
           onPress={() => {
-            navigation.navigate('DetailScreen', {bill_id: item.bill_id});
+            navigation.push('DetailScreen', {bill_id: item.bill_id});
           }}>
           <View style={styles.imageView}>
             <View
@@ -204,81 +206,122 @@ export default function Current({navigation}) {
     );
   };
   return (
-    <SafeAreaView style={styles.container}>
-      <Modal animationType="slide" transparent={true} visible={modalOpen}>
-        <View style={styles.modalView}>
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedType('');
-            }}>
-            <Text style={styles.textstyle}>All</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedType('Medical');
-            }}>
-            <Text style={styles.textstyle}>Medical</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedType('Food');
-            }}>
-            <Text style={styles.textstyle}>Food</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedType('Fuel');
-            }}>
-            <Text style={styles.textstyle}>Fuel</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setSelectedType('Others');
-            }}>
-            <Text style={styles.textstyle}>Others</Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity onPress={() => { setModalOpen(false) }} style={styles.okstyle}>
+    <>
+      <SafeAreaView style={styles.container}>
+        <Modal animationType="slide" transparent={true} visible={modalOpen}>
+          <View style={styles.modalView}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+              }}>
+              <TouchableOpacity
+                onPress={() => {
+                  setSelectedType('');
+                  setModalOpen(false);
+                }}>
+                <Text style={styles.textstyle}>All</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  setModalOpen(false);
+                }}>
+                <Icon name="times" size={20} color={DARK} />
+              </TouchableOpacity>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedType('Medical');
+                setModalOpen(false);
+              }}>
+              <Text style={styles.textstyle}>Medical</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedType('Food');
+                setModalOpen(false);
+              }}>
+              <Text style={styles.textstyle}>Food</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedType('Fuel');
+                setModalOpen(false);
+              }}>
+              <Text style={styles.textstyle}>Fuel</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setSelectedType('Others');
+                setModalOpen(false);
+              }}>
+              <Text style={styles.textstyle}>Others</Text>
+            </TouchableOpacity>
+            {/* <TouchableOpacity onPress={() => { setModalOpen(false) }} style={styles.okstyle}>
             <Text style={styles.oktext}>OK</Text>
           </TouchableOpacity> */}
-        </View>
-      </Modal>
-      <View style={styles.searchinput}>
-        <TouchableOpacity style={styles.iconstyle}>
-          <AntDesign
-            name="filter"
-            size={25}
-            color={theme.colors.text}
-            onPress={() => {
-              setModalOpen(true);
-            }}
-          />
-        </TouchableOpacity>
+          </View>
+        </Modal>
+        <View style={styles.searchinput}>
+          <TouchableOpacity style={styles.iconstyle}>
+            <AntDesign
+              name="filter"
+              size={25}
+              color={theme.colors.text}
+              onPress={() => {
+                setModalOpen(true);
+              }}
+            />
+          </TouchableOpacity>
 
-        <View style={{flex: 0.8}}>
-          <TextInput
-            placeholder="Search"
-            onChangeText={text => {
-              console.log(text);
-              setSearchText(text);
-              // if (text != "") {
-              //   let curr = current
-              //   setCurrent(curr.filter((item) => item.type.includes(text)))
-              //   console.log(curr.filter((item) => item.type.includes(text)));
-              // }
-              // else {
-              //   setCurrent(current)
-              // }
-            }}
-          />
+          <View style={{flex: 0.8}}>
+            <TextInput
+              placeholder="Search"
+              onChangeText={text => {
+                console.log(text);
+                setSearchText(text);
+                // if (text != "") {
+                //   let curr = current
+                //   setCurrent(curr.filter((item) => item.type.includes(text)))
+                //   console.log(curr.filter((item) => item.type.includes(text)));
+                // }
+                // else {
+                //   setCurrent(current)
+                // }
+              }}
+            />
+          </View>
         </View>
-      </View>
-      <FlatList
-        style={{marginBottom: 20}}
-        data={current}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-      />
-    </SafeAreaView>
+        <FlatList
+          contentContainerStyle={{flexGrow: 1}}
+          ListEmptyComponent={() => {
+            return (
+              <View style={{flex:1,alignItems:"center",justifyContent:'center'}}>
+                <Text
+                  style={{
+                   marginBottom:120,
+                    alignSelf:'center',
+                    textAlignVertical: 'center',
+                    fontSize: 24,
+                    color: GREY,
+                  }}>
+                  Result not found
+                </Text>
+                
+              </View>
+            );
+          }}
+          style={{marginBottom: 20}}
+          data={current}
+          marginBottom={40}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+        />
+      </SafeAreaView>
+      {loading && <Loader />}
+    </>
   );
 }
 
@@ -296,6 +339,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginHorizontal: 22,
     paddingHorizontal: 7,
+    marginBottom: 10,
   },
   imagetype: {
     height: 40,
@@ -385,9 +429,11 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: theme.colors.white,
-    marginTop: 170,
+    marginTop: 125,
     marginHorizontal: 35,
     padding: 10,
+    borderColor: '#454545',
+    borderWidth: 1,
   },
   okstyle: {
     width: 60,

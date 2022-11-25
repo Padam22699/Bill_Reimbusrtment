@@ -13,6 +13,11 @@ import Tabs from '../Organization/Navigation/Tabs';
 import Profile from '../Organization/Screens/Profile';
 import OrgSignin from '../Organization/Screens/OrgSignin';
 import OrgSignup from '../Organization/Screens/OrgSignup';
+import ImageViwers from '../components/ImageViwers';
+import Reimbursement from '../Screen/Reimbursement';
+import DetailScreen from '../Screen/DetailScreen';
+
+import ToptabBar from '../Common/ToptabBar';
 const Stack = createNativeStackNavigator();
 
 function AuthStack() {
@@ -46,6 +51,11 @@ function AuthStack() {
       <Stack.Screen
         name="RegisterScreen"
         component={RegisterScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ImageViwers"
+        component={ImageViwers}
         options={{headerShown: false}}
       />
       <Stack.Screen
@@ -94,3 +104,28 @@ export const Organization = () => {
     </Stack.Navigator>
   );
 };
+export const Transactions = () => {
+  return (
+    <Stack.Navigator
+    initialRouteName='ToptabBar'
+    >
+      <Stack.Screen
+        name="ToptabBar"
+        component={ToptabBar}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="DetailScreen"
+        component={DetailScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="ImageViwers"
+        component={ImageViwers}
+        options={{headerShown: false}}
+      />
+    </Stack.Navigator>
+  );
+};
+
+

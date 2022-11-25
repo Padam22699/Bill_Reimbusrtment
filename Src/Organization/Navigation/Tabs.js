@@ -6,13 +6,12 @@ import ForwordedRequest from '../Screens/ForwordedRequest';
 import PenddingRequsest from '../Screens/PenddingRequsest';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {DARK, PRIMARY, WHITE} from '../Colors/Color';
-
+import {Transactions} from '../Navigation/Auth';
 import {Image} from 'react-native';
-import Menu from '../Screens/Menu';
-
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {OrgDrawer} from '../../Navigation/Routes';
 const Tab = createBottomTabNavigator();
-const Tabs = () => {
+export const Tabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
@@ -98,7 +97,14 @@ const Tabs = () => {
       />
       <Tab.Screen
         name="Menu"
-        component={Menu}
+        component={Tabs}
+        listeners={({navigation}) => ({
+          tabPress: e => {
+            console.log(navigation)
+            e.preventDefault();
+            navigation.openDrawer();
+          },
+        })}
         options={{
           headerShown: false,
           tabBarIcon: ({focused, color}) => {
