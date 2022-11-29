@@ -1,29 +1,29 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Image} from 'react-native';
 import React from 'react';
 import Home from '../Screens/Home';
 import CompleteRequest from '../Screens/CompleteRequest';
 import ForwordedRequest from '../Screens/ForwordedRequest';
 import PenddingRequsest from '../Screens/PenddingRequsest';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {DARK, PRIMARY, WHITE} from '../Colors/Color';
-import {Transactions} from '../Navigation/Auth';
-import {Image} from 'react-native';
+import {DARK, PRIMARY} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {OrgDrawer} from '../../Navigation/Routes';
 const Tab = createBottomTabNavigator();
 export const Tabs = () => {
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: PRIMARY,
+        tabBarInactiveTintColor: 'black',
         tabBarStyle: {
           height: 60,
-          elevation: 1,
           position: 'absolute',
-          backgroundColor: WHITE,
+          backgroundColor: "#FAC898",
+          borderTopLeftRadius: 30,
+          borderTopRightRadius: 30,
         },
         tabBarLabelStyle: {
-          marginBottom: 7,
+          paddingVertical: 5,
+          fontSize:12
         },
       }}>
       <Tab.Screen
@@ -31,9 +31,9 @@ export const Tabs = () => {
         component={Home}
         options={{
           headerShown: false,
-          tabBarIcon: ({focused, color}) => {
+          tabBarIcon: ({focused}) => {
             return (
-              <Icon name="home" size={24} color={focused ? PRIMARY : 'black'} />
+              <Icon name="home" size={25} color={focused ? PRIMARY : 'black'} />
             );
           },
         }}
@@ -43,13 +43,13 @@ export const Tabs = () => {
         component={CompleteRequest}
         options={{
           headerShown: false,
-          tabBarIcon: ({focused, color}) => {
+          tabBarIcon: ({focused}) => {
             return (
               <Image
                 source={require('../../Assets/Images/checked.png')}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 25,
+                  height: 25,
                   tintColor: focused ? PRIMARY : DARK,
                 }}
               />
@@ -62,13 +62,13 @@ export const Tabs = () => {
         component={ForwordedRequest}
         options={{
           headerShown: false,
-          tabBarIcon: ({focused, color}) => {
+          tabBarIcon: ({focused}) => {
             return (
               <Image
                 source={require('../../Assets/Images/forward.png')}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 25,
+                  height: 25,
                   tintColor: focused ? PRIMARY : DARK,
                 }}
               />
@@ -81,13 +81,13 @@ export const Tabs = () => {
         component={PenddingRequsest}
         options={{
           headerShown: false,
-          tabBarIcon: ({focused, color}) => {
+          tabBarIcon: ({focused}) => {
             return (
               <Image
                 source={require('../../Assets/Images/pending.png')}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 25,
+                  height: 25,
                   tintColor: focused ? PRIMARY : DARK,
                 }}
               />
@@ -107,13 +107,13 @@ export const Tabs = () => {
         })}
         options={{
           headerShown: false,
-          tabBarIcon: ({focused, color}) => {
+          tabBarIcon: ({focused}) => {
             return (
               <Image
                 source={require('../../Assets/Images/m.png')}
                 style={{
-                  width: 24,
-                  height: 24,
+                  width: 25,
+                  height: 25,
                   tintColor: focused ? PRIMARY : DARK,
                 }}
               />
@@ -126,5 +126,3 @@ export const Tabs = () => {
 };
 
 export default Tabs;
-
-const styles = StyleSheet.create({});

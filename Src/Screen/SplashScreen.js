@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, StatusBar, Text, StyleSheet } from 'react-native';
 import { theme } from '../core/theme';
 import * as Animatable from 'react-native-animatable';
+import LinearGradient from 'react-native-linear-gradient';
 
 
 const SplashScreen = ({ navigation }) => {
@@ -19,11 +20,15 @@ const SplashScreen = ({ navigation }) => {
         }, 5000)
     }, [])
     return (
-        <View style={styles.container}>
+        <LinearGradient
+            colors={['#CF9FFF', '#E14D2A']}
+            useAngle={true}
+            angle={10}
+            style={styles.container}>
             {
                 !isSecondAnimation ? <AnimationSplashScreen animationType="slideInDown" /> : <AnimationSplashScreen animationType="zoomIn" />
             }
-        </View>
+        </LinearGradient>
     )
 
     function AnimationSplashScreen({
@@ -32,7 +37,7 @@ const SplashScreen = ({ navigation }) => {
         return <Animatable.View animation={animationType}>
             <StatusBar
                 animated={true}
-                backgroundColor={theme.colors.PRIMARY}
+                backgroundColor={theme.colors.violet}
                 barStyle="default" />
             <View style={styles.textview}>
                 <Text style={styles.text}>Wedigtech</Text>

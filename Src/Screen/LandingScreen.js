@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -8,13 +8,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import Imagepath from '../Assets/Images/Imagepath';
-import Background from '../components/Background';
-import Button from '../components/Button';
-import {theme} from '../core/theme';
+import { theme } from '../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
 
-const LandingScreen = ({navigation}) => {
+const LandingScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar
@@ -27,7 +24,9 @@ const LandingScreen = ({navigation}) => {
 
       <Animatable.View style={styles.Buttonview} animation="lightSpeedIn">
         <LinearGradient
-          colors={['#7426f2', '#3d0891']}
+          colors={['#CF9FFF', '#5D3FD3']}
+          useAngle={true}
+          angle={10}
           style={styles.touchabltext}>
           <TouchableOpacity
             onPress={() => navigation.navigate('LoginScreen')}
@@ -35,9 +34,11 @@ const LandingScreen = ({navigation}) => {
             <Text style={styles.textstyle}>Employee</Text>
           </TouchableOpacity>
         </LinearGradient>
-        <View style={{marginTop: 45}}>
+        <View style={{ marginTop: 45 }}>
           <LinearGradient
-            colors={['#7426f2', '#3d0891']}
+            colors={['#FAC898', '#E14D2A']}
+            useAngle={true}
+            angle={10}
             style={styles.touchabltext}>
             <TouchableOpacity
               onPress={() => navigation.navigate('OrgSignin')}
@@ -47,17 +48,6 @@ const LandingScreen = ({navigation}) => {
           </LinearGradient>
         </View>
       </Animatable.View>
-      <View>
-        <Animatable.View animation="zoomInDown">
-          <Image
-            source={Imagepath.wave}
-            style={{tintColor: theme.colors.violet}}
-          />
-          {/* <View style={styles.imagestylelogo}>
-            <Image source={Imagepath.engagement} style={styles.imagesour} />
-          </View> */}
-        </Animatable.View>
-      </View>
     </View>
   );
 };
@@ -66,14 +56,11 @@ export default LandingScreen;
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: theme.colors.violet,
   },
   imageview: {
-    backgroundColor: theme.colors.violet,
-    width: '100%',
-   
-    borderBottomRightRadius: 30,
-    borderBottomLeftRadius: 30,
+    // backgroundColor: theme.colors.violet,
+    // width: '100%',
   },
   imagestyle: {
     height: 330,
@@ -108,6 +95,6 @@ export const styles = StyleSheet.create({
   touchabltext: {
     height: 45,
     justifyContent: 'center',
-    borderRadius: 7,
+    borderRadius: 15,
   },
 });

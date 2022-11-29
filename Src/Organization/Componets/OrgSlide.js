@@ -1,41 +1,41 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
-  Alert,
-  ScrollView,
 } from 'react-native';
-import {DARK, GREY, PRIMARY, WHITE} from '../Colors/Color';
+import {DARK} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export const OrgSlide = ({navigation}) => {
-  const [name, setName] = useState(null);
 
-  //   useEffect(() => {
-  //     getUserData();
-  //   }, []);
+  const [email, setemail] = useState(null);
 
-  //   const getUserData = async () => {
-  //     try {
-  //       const value = await AsyncStorage.getItem('@user_data');
-  //       console.log('value', value);
-  //       if (value !== null) {
-  //         const data = JSON.parse(value);
-  //         if (data != null) {
-  //           setName(data.first_name + ' ' + data.last_name);
-  //         } else {
-  //           setName(null);
-  //         }
-  //       } else {
-  //         setName(null);
-  //       }
-  //     } catch (e) {
-  //       console.log('storage error', e);
-  //     }
-  //   };
+  useEffect(() => {
+    getUserData();
+  }, []);
+
+  const getUserData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@user_data');
+      console.log('value', value);
+      if (value !== null) {
+        const data = JSON.parse(value);
+        if (data != null) {
+          setemail(data.email);
+        } else {
+          setemail(null);
+        }
+      } else {
+        setemail(null);
+      }
+    } catch (e) {
+      console.log('storage error', e);
+    }
+  };
 
   const logout = async () => {
     let data = {
@@ -55,23 +55,23 @@ export const OrgSlide = ({navigation}) => {
   };
 
   return (
-    <View style={{paddingHorizontal: 12}}>
+    <View style={{flex: 1, borderTopLeftRadius: 40, borderBottomLeftRadius: 40, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: '#E14D2A'}}>
       <View
-      style={{borderBottomColor:GREY,borderBottomWidth:1,paddingBottom:15}}
+      style={{borderBottomColor: '#E14D2A', borderBottomWidth: 1, padding: 20, backgroundColor: "#FAC898", borderTopLeftRadius: 40,}}
       >
         <Text style={styles.text}>Admin</Text>
-        <Text style={{color:'#6F7378'}}>Admin@gmail.com</Text>
+        <Text style={{color:'#E14D2A'}}>{email}</Text>
       </View>
-      <View>
+      <View style={{borderBottomLeftRadius: 40, backgroundColor: 'white', flex: 1, paddingTop: 20}}>
         <TouchableOpacity
           style={styles.screenCiantainer}
           onPress={() => navigation.navigate('Home')}>
           <View style={styles.manuconatiner}>
             <Icon
               name="home"
-              size={18}
+              size={15}
               style={{marginRight: 10}}
-              color="#808080"
+              color="#000"
             />
             <Text style={styles.heading}>Home</Text>
           </View>
@@ -84,9 +84,10 @@ export const OrgSlide = ({navigation}) => {
             <Image
               source={require('../../Assets/Images/checked.png')}
               style={{
-                width: 20,
-                height: 20,
-                tintColor: GREY,
+                width: 15,
+                height: 15,
+                tintColor: "#000",
+                marginRight: 10
               }}
             />
             <Text style={styles.heading}>Completed</Text>
@@ -99,9 +100,10 @@ export const OrgSlide = ({navigation}) => {
             <Image
               source={require('../../Assets/Images/forward.png')}
               style={{
-                width: 20,
-                height: 20,
-                tintColor: GREY,
+                width: 15,
+                height: 15,
+                tintColor: "#000",
+                marginRight: 10
               }}
             />
             <Text style={styles.heading}>Forwarded</Text>
@@ -114,10 +116,10 @@ export const OrgSlide = ({navigation}) => {
             <Image
               source={require('../../Assets/Images/pending.png')}
               style={{
-                width: 20,
-                height: 20,
-
-                tintColor: GREY,
+                width: 15,
+                height: 15,
+                tintColor: "#000",
+                marginRight: 10
               }}
             />
             <Text style={styles.heading}>Pending</Text>
@@ -129,9 +131,9 @@ export const OrgSlide = ({navigation}) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="sign-out-alt"
-              size={16}
+              size={15}
               style={{marginRight: 10}}
-              color="#808080"
+              color="#000"
             />
             <Text style={[styles.heading,{marginLeft:1,}]}>Logout</Text>
           </View>
@@ -146,14 +148,13 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   text: {
-    color: PRIMARY,
+    color: '#E14D2A',
     fontSize: 22,
     fontWeight: '700',
-    marginTop: 12,
     marginVertical: 5,
   },
   options: {
-    color: PRIMARY,
+    color: "#E14D2A",
     fontSize: 16,
     marginVertical: 5,
   },
@@ -168,21 +169,22 @@ export const styles = StyleSheet.create({
   manuconatiner: {
     flexDirection: 'row',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    paddingHorizontal: 20, 
+    paddingVertical: 5
   },
   screenCiantainer: {
-    marginTop: 13,
+    marginBottom: 10,
     // borderBottomWidth: 1,
     // borderBottomColor: '#808080',
-    paddingBottom: 12,
   },
   heading: {
-    fontSize: 18,
-    marginLeft: 10,
-    color: '#808080',
+    fontSize: 14,
+    color: '#000',
   },
   logout: {
     textShadowColor: 'rgba(0, 0, 0, 0.23)',
-    textShadowOffset: {width: -1, height: 1},
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
     fontSize: 24,
     fontWeight: 'bold',

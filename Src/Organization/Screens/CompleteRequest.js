@@ -7,9 +7,9 @@ import {
   SafeAreaView,
 } from 'react-native';
 import React from 'react';
-import {A, DARK, PRIMARY, B, C, WHITE, GREY} from '../Colors/Color';
+import { PRIMARY } from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-const CompleteRequest = ({navigation}) => {
+const CompleteRequest = ({ navigation }) => {
   const data = [
     {
       id: '1',
@@ -49,21 +49,38 @@ const CompleteRequest = ({navigation}) => {
     },
   ];
 
-  const RecentRequestList = ({item}) => {
+  const RecentRequestList = ({ item, index }) => {
     return (
-      <TouchableOpacity activeOpacity={0.9}
-      onPress={()=>navigation.navigate('UserDetail' ,item)}
-      >
+      <TouchableOpacity
+        activeOpacity={0.9}
+        onPress={() =>
+          navigation.navigate('DetailScreen', {
+            item: item,
+            data: data,
+            index: index,
+          })
+        }>
         <View style={styles.recentList}>
           <View
-            style={{alignItems: 'center', marginLeft: 10, paddingVertical: 15}}>
+            style={{
+              height: 48,
+              width: 48,
+              backgroundColor: '#fff',
+              borderRadius: 40,
+              alignItems: 'center',
+              justifyContent: 'center',
+              elevation: 2,
+              marginLeft: -30,
+              borderWidth: 1,
+              borderColor: '#E14D2A'
+            }}>
             <Icon name={item.iconName} size={24} color={PRIMARY} />
           </View>
-          <View style={{marginRight: 70}}>
+          <View style={{ flex: 1, marginLeft: 12 }}>
             <Text
               style={{
                 fontSize: 16,
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 marginBottom: 8,
               }}>
@@ -72,14 +89,14 @@ const CompleteRequest = ({navigation}) => {
             <Text
               style={{
                 fontSize: 12,
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
               Category Name
             </Text>
           </View>
-          <View style={{marginRight: 20}}>
+          <View style={{ marginRight: 20 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -89,13 +106,13 @@ const CompleteRequest = ({navigation}) => {
               <Icon
                 name="rupee-sign"
                 size={13}
-                color={DARK}
-                style={{marginRight: 2}}
+                color={"#E14D2A"}
+                style={{ marginRight: 2 }}
               />
               <Text
                 style={{
                   fontSize: 16,
-                  color: DARK,
+                  color: "#E14D2A",
                   fontWeight: 'bold',
                 }}>
                 200
@@ -104,14 +121,15 @@ const CompleteRequest = ({navigation}) => {
 
             <Text
               style={{
-                fontSize: 8,
-                color: GREY,
+                fontSize: 12,
+                color: "#E14D2A",
                 fontWeight: 'bold',
+                paddingVertical: 4,
                 textAlign: 'center',
                 textAlignVertical: 'center',
-                marginTop: 12,
+                marginTop: 3,
               }}>
-              10\02\2022
+              Status
             </Text>
           </View>
         </View>
@@ -122,18 +140,15 @@ const CompleteRequest = ({navigation}) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headingContianer}>
-        <Text style={styles.heading}>Completed Request</Text>
+        <Text style={styles.heading}>Completed Requests</Text>
       </View>
-      <View style={{marginHorizontal: 10}}>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: 80,
-          }}
-          data={data}
-          renderItem={({item}) => <RecentRequestList item={item} />}
-        />
-      </View>
+      <FlatList
+        contentContainerStyle={{ flexGrow: 1 }}
+        showsVerticalScrollIndicator={false}
+        style={{ marginBottom: 55 }}
+        data={data}
+        renderItem={({ item }) => <RecentRequestList item={item} />}
+      />
     </SafeAreaView>
   );
 };
@@ -141,36 +156,28 @@ const CompleteRequest = ({navigation}) => {
 export default CompleteRequest;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: WHITE,
-  },
-  recentList: {
-    backgroundColor: WHITE,
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    elevation: 4,
-    shadowRadius: 5,
-    shadowOpacity: 0.75,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 20,
-  },
   headingContianer: {
-    justifyContent: 'center',
-    elevation: 1,
+    margin: 12,
   },
   heading: {
-    marginTop: 15,
-    marginLeft: 10,
-    color: DARK,
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
-    paddingBottom: 15,
+    color: "#E14D2A",
+  },
+  container: {
+    flex: 1,
+    margin: 12
+  },
+  recentList: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: "#FAC898",
+    marginVertical: 10,
+    elevation: 5,
+    marginHorizontal: 22,
+    padding: 10,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#E14D2A'
   },
 });

@@ -1,19 +1,33 @@
-import React from 'react';
-import {View, StyleSheet, Text, ScrollView} from 'react-native';
+import React, { useState } from 'react';
+import {View, StyleSheet, Text} from 'react-native';
 import {TextInput as Input} from 'react-native-paper';
 import {theme} from '../../core/theme';
-import { PRIMARY } from '../Colors/Color';
+import Icon from 'react-native-vector-icons/FontAwesome5';
 
-export default function OrgtextInput({errorText, description, ...props}) {
+export default function OrgtextInput({errorText, description, password = false, ...props}) {
+  const [hidePassword, sethidePassword] = useState(password);
   return (
     <View style={styles.container}>
-      <Input
-        style={styles.input}
-        selectionColor={PRIMARY}
-        underlineColor="transparent"
-        mode="outlined"
-        {...props}
-      />
+      <View style={styles.inputContainer}>
+        <Input
+          secureTextEntry={hidePassword}
+          style={styles.input}
+          underlineColor="transparent"
+          underlineColorAndroid="transparent"
+          theme={{colors: {primary: '#E14D2A'}}}
+          // mode="outlined"
+          {...props}
+        />
+        {password && (
+          <Icon
+            onPress={() => sethidePassword(!hidePassword)}
+            name={hidePassword ? 'eye-slash' : 'eye'}
+            size={20}
+            style={{marginRight: 8, color: '#E14D2A'}}
+          />
+        )}
+      </View>
+
       {description && !errorText ? (
         <Text style={styles.description}>{description}</Text>
       ) : null}
@@ -25,10 +39,21 @@ export default function OrgtextInput({errorText, description, ...props}) {
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    flex: 1,
     marginVertical: 8,
+  },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: "#E14D2A",
+    borderRadius: 15,
+    padding: 4
   },
   input: {
     backgroundColor: theme.colors.surface,
+    flex: 1,
   },
   description: {
     fontSize: 13,

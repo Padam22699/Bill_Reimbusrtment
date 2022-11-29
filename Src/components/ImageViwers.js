@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, View, Image} from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 import React, {useCallback} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {PRIMARY} from '../Organization/Colors/Color';
@@ -21,16 +21,12 @@ const ImageViwers = ({navigation, route}) => {
         index={0}
         renderIndicator={() => null}
         style={[styles.Imagecontainer, {}]}>
-        {/* <Image
-          source={{uri:images}}
-          style={{width: '100%', height: '100%', resizeMode: 'cover'}}
-        /> */}
       </ImageViewer>
       <View style={styles.iconContainer}>
         <Icon
           name="times"
           color={PRIMARY}
-          size={24}
+          size={20}
           onPress={() => navigation.goBack()}
         />
       </View>
@@ -45,16 +41,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   Imagecontainer: {
-    // marginHorizontal: 10,
-    // marginVertical: 30,
-    // borderRadius: 20,
-    height: '90%',
-    width: '90%',
+    height: '100%',
+    width: '100%',
   },
   iconContainer: {
     position: 'absolute',
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
     backgroundColor: 'white',
     borderRadius: 35,
     justifyContent: 'center',

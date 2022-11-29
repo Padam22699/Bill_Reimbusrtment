@@ -80,7 +80,6 @@ export default function OrgSignup({navigation}) {
     const OrganizationAddError = OrganizationAddressV(OrganizationAddres.value);
     const emailError = emailValidatorV(email.value);
     const passwordError = passwordValidatorV(password.value);
-    // const OrganizationError = OrganizationValidator(Organization.value)
 
     if (
       emailError ||
@@ -220,7 +219,9 @@ export default function OrgSignup({navigation}) {
               }
               activeOpacity={0.9}>
               <LinearGradient
-                colors={[PRIMARY, PRIMARY]}
+                colors={['#FAC898', '#E14D2A']}
+                useAngle={true}
+                angle={10}
                 style={styles.touchabltext}>
                 <Text style={styles.textstyle}>Sign Up</Text>
               </LinearGradient>
@@ -274,17 +275,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   touchabltext: {
+    marginVertical: 20,
     height: 45,
     justifyContent: 'center',
-    borderRadius: 7,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
+    borderRadius: 15,
   },
   textstyle: {
     fontSize: 18,
+    textAlign: 'center',
     color: '#fff',
-    fontWeight: 'bold',
   },
   signview: {
     paddingHorizontal: 20,

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useFocusEffect, useRoute} from '@react-navigation/native';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import moment from 'moment';
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -13,21 +13,22 @@ import {
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Imagepath from '../Assets/Images/Imagepath';
-import {theme} from '../core/theme';
+import { theme } from '../core/theme';
 import {
   clearGetBillDetail,
   getBillDetail,
 } from '../redux/actions/getBillDetailAction';
-import {clearReminder, reminder} from '../redux/actions/reminderAction';
+import { clearReminder, reminder } from '../redux/actions/reminderAction';
 import {
   clearIsPhysicallySubmitted,
   isPhysicallySubmitted,
 } from '../redux/actions/isPhysicallySubmittedAction';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import Loader from '../Organization/Componets/Loader';
 
-export default function DetailScreen({navigation}) {
+export default function DetailScreen({ navigation }) {
   const dispatch = useDispatch();
   const routes = useRoute();
 
@@ -194,7 +195,7 @@ export default function DetailScreen({navigation}) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
+      <Animatable.View animation="zoomInDown" style={{ transform: 'scale' }}>
         <StatusBar backgroundColor={theme.colors.primary} barStyle="default" />
         <View style={styles.mainview}>
           <TouchableOpacity
@@ -206,7 +207,7 @@ export default function DetailScreen({navigation}) {
               name="close"
               size={25}
               color={'#fff'}
-              style={{alignSelf: 'flex-end'}}
+              style={{ alignSelf: 'flex-end' }}
             />
           </TouchableOpacity>
           <View style={styles.touchablview}>
@@ -223,7 +224,7 @@ export default function DetailScreen({navigation}) {
                 name="rupee"
                 size={18}
                 color={theme.colors.white}
-                style={{top: 5}}
+                style={{ top: 5 }}
               />
               <View>
                 <Text style={styles.textrupees}>
@@ -237,7 +238,7 @@ export default function DetailScreen({navigation}) {
           <View style={styles.elevationstyle}>
             <Text style={styles.textExpe}>Expense Details</Text>
 
-            <View>
+            <View style={{ marginTop: 20 }}>
               <View style={styles.flexview}>
                 <Text style={styles.textdate}>Date</Text>
                 <Text style={styles.textmar}>
@@ -264,10 +265,10 @@ export default function DetailScreen({navigation}) {
                   <Image
                     source={
                       billDetail != null
-                        ? {uri: billDetail.bill_attachment}
+                        ? { uri: billDetail.bill_attachment }
                         : Imagepath.Fuel
                     }
-                    style={{height: 25, width: 25, resizeMode: 'contain'}}
+                    style={{ height: 50, width: 50, resizeMode: 'contain' }}
                   />
                 </TouchableOpacity>
               </View>
@@ -284,14 +285,14 @@ export default function DetailScreen({navigation}) {
                   Physically submitted the bill
                 </Text>
                 <TouchableOpacity
-                  style={styles.imagetouchstyle}
+                  style={[styles.imagetouchstyle, {backgroundColor: checkbook ? '#5D3FD3' : '#fff' }]}
                   onPress={() => {
                     setcheckbook(!checkbook);
                   }}
                   activeOpacity={0.9}>
                   <Image
                     source={checkbook ? Imagepath.check : Imagepath}
-                    style={styles.imageCheck}
+                    style={[styles.imageCheck, {tintColor: checkbook ? 'white' : '#E6E6FA'}]}
                   />
                 </TouchableOpacity>
               </View>
@@ -304,6 +305,7 @@ export default function DetailScreen({navigation}) {
           </View>
         </View>
       </Animatable.View>
+      {loading && <Loader />}
     </SafeAreaView>
   );
 }
@@ -317,8 +319,8 @@ const styles = StyleSheet.create({
     height: 135,
     paddingHorizontal: 18,
     paddingVertical: 8,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   touchablview: {
     flexDirection: 'row',
@@ -356,46 +358,49 @@ const styles = StyleSheet.create({
   },
   container2: {
     marginHorizontal: 18,
-    marginVertical: 40,
+    marginTop: 20,
   },
   imagetouchstyle: {
-    height: 24,
-    width: 24,
-    backgroundColor: '#fff',
+    height: 20,
+    width: 20,
+    backgroundColor: '#E6E6FA',
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    borderColor: '#5D3FD3',
+    padding:2
   },
   imageCheck: {
-    height: 20,
-    width: 20,
+    height: 15,
+    width: 15,
     resizeMode: 'contain',
     tintColor: theme.colors.text,
   },
   elevationstyle: {
-    height: 450,
+    // height: 450,
     backgroundColor: '#fff',
     marginTop: 24,
     elevation: 10,
-    borderRadius: 16,
-    paddingHorizontal: 14,
-    padding: 14,
+    borderRadius: 15,
+    padding: 20,
   },
   textExpe: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: theme.colors.text,
+    color: '#5D3FD3',
+    textAlign: 'center'
   },
   flexview: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginVertical: 14,
+    marginVertical: 10,
     paddingVertical: 2,
   },
   textdate: {
-    fontSize: 18,
+    fontSize: 16,
     color: theme.colors.text,
+    fontWeight: '500'
   },
   textmar: {
     fontSize: 16,
@@ -429,10 +434,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 7,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   textstyle: {
-    fontSize: 18,
+    fontSize: 16,
     color: theme.colors.primary,
   },
 });

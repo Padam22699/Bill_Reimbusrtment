@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -13,24 +13,22 @@ import {
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import Entypo from 'react-native-vector-icons/Entypo';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import TextInput from '../components/TextInput';
 import Imagepath from '../Assets/Images/Imagepath';
 import ImagePicker from 'react-native-image-crop-picker';
-import {Iconlist} from '../Common/VerticalData';
-import {theme} from '../core/theme';
+import { Iconlist } from '../Common/VerticalData';
+import { theme } from '../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
-import {amountValidator} from '../helpers/amountValidator';
-import {descriptionValidator} from '../helpers/descriptionValidator';
-import {participantsValidator} from '../helpers/participantsValidator';
-import {useFocusEffect} from '@react-navigation/native';
+import { amountValidator } from '../helpers/amountValidator';
+import { descriptionValidator } from '../helpers/descriptionValidator';
+import { participantsValidator } from '../helpers/participantsValidator';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useDispatch, useSelector} from 'react-redux';
-import {addBill, clearAddBill} from '../redux/actions/addBillAction';
-import Heading from '../components/Heading';
+import { useDispatch, useSelector } from 'react-redux';
+import { addBill, clearAddBill } from '../redux/actions/addBillAction';
 import Loader from '../Organization/Componets/Loader';
 
-export default function Reimbursement({navigation}) {
+export default function Reimbursement({ navigation }) {
   const dispatch = useDispatch();
 
   const [userData, setUserData] = useState(null);
@@ -40,9 +38,9 @@ export default function Reimbursement({navigation}) {
   const [upload, setupload] = useState(false);
   const [select, setSelect] = useState('');
 
-  const [amount, setAmount] = useState({value: '', error: ''});
-  const [description, setDescription] = useState({value: '', error: ''});
-  const [participants, setParticipants] = useState({value: '', error: ''});
+  const [amount, setAmount] = useState({ value: '', error: '' });
+  const [description, setDescription] = useState({ value: '', error: '' });
+  const [participants, setParticipants] = useState({ value: '', error: '' });
 
   const addBillResponse = useSelector(state => state.addBillReducer.data);
   const loading = useSelector(state => state.addBillReducer.loading);
@@ -52,9 +50,9 @@ export default function Reimbursement({navigation}) {
     const participantsError = participantsValidator(participants.value);
 
     if (amountError || descriptionError || participantsError) {
-      setAmount({...amount, error: amountError});
-      setDescription({...description, error: descriptionError});
-      setParticipants({...participants, error: participantsError});
+      setAmount({ ...amount, error: amountError });
+      setDescription({ ...description, error: descriptionError });
+      setParticipants({ ...participants, error: participantsError });
       return;
     }
     if (date == 'Select a Date') {
@@ -103,9 +101,9 @@ export default function Reimbursement({navigation}) {
   };
   const handleConfirm = date => {
     setDate(moment(date).format('DD MMM yyyy'));
-    // console.warn("A date has been picked: ", date);
     hideDatePicker();
   };
+
   const imageCrop = () => {
     Alert.alert('Attach your Select bill', '', [
       {
@@ -113,8 +111,8 @@ export default function Reimbursement({navigation}) {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'Gallery', onPress: () => OpenGallery()},
-      {text: 'Camera', onPress: () => OpenCamera()},
+      { text: 'Gallery', onPress: () => OpenGallery() },
+      { text: 'Camera', onPress: () => OpenCamera() },
     ]);
     const OpenGallery = () => {
       ImagePicker.openPicker({
@@ -170,19 +168,19 @@ export default function Reimbursement({navigation}) {
         console.log('response', addBillResponse);
         dispatch(clearAddBill());
 
-        navigation.navigate('Bills',{screen:'ToptabBar'});
+        navigation.navigate('Bills', { screen: 'ToptabBar' });
 
         setDate('Select a Date');
-        setAmount({value: ''});
-        setDescription({value: ''});
-        setParticipants({value: ''});
+        setAmount({ value: '' });
+        setDescription({ value: '' });
+        setParticipants({ value: '' });
         setupload(false);
         setSelect('');
       }
     }
   }, [addBillResponse]);
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
       <View style={styles.antDesign}>
         <TouchableOpacity
@@ -207,22 +205,18 @@ export default function Reimbursement({navigation}) {
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <StatusBar
-          backgroundColor={theme.colors.white}
+          backgroundColor={theme.colors.primary}
           barStyle="dark-content"
         />
-
-        {/* <View style={{paddingHorizontal: 12}}>
-          <Heading navigation={navigation}/>
-        </View> */}
-        <View style={styles.mainview}>
+        <ScrollView style={styles.mainview}>
           <Text
             style={{
               textAlign: 'center',
               fontSize: 18,
               fontWeight: '700',
-              bottom: 10,
+              marginVertical: 10,
             }}>
             Add Expense
           </Text>
@@ -256,7 +250,7 @@ export default function Reimbursement({navigation}) {
                 keyboardType={'numeric'}
                 value={amount.value}
                 onChangeText={text => {
-                  setAmount({value: text, error: ''});
+                  setAmount({ value: text, error: '' });
                 }}
                 error={!!amount.error}
                 errorText={amount.error}
@@ -265,18 +259,12 @@ export default function Reimbursement({navigation}) {
                   width: '100%',
                 }}
               />
-              {/* <FontAwesome
-                name="rupee"
-                size={16}
-                color={theme.colors.text}
-                style={{position: 'absolute', top: 44, marginHorizontal: 15}}
-              /> */}
             </View>
             <TextInput
               label="Description"
               value={description.value}
               onChangeText={text => {
-                setDescription({value: text, error: ''});
+                setDescription({ value: text, error: '' });
               }}
               error={!!description.error}
               errorText={description.error}
@@ -286,7 +274,7 @@ export default function Reimbursement({navigation}) {
               keyboardType={'numeric'}
               value={participants.value}
               onChangeText={text => {
-                setParticipants({value: text, error: ''});
+                setParticipants({ value: text, error: '' });
               }}
               error={!!participants.error}
               errorText={participants.error}
@@ -307,14 +295,14 @@ export default function Reimbursement({navigation}) {
                   style={styles.touchablicon}
                   activeOpacity={0.9}>
                   <Image
-                    source={upload ? {uri: upload} : Imagepath.file}
+                    source={upload ? { uri: upload } : Imagepath.file}
                     style={styles.imagestyle}
                   />
                 </TouchableOpacity>
               </View>
             )}
             <Text style={styles.textbill}>Select your bill type</Text>
-            <View style={{flex: 1}}>
+            <View style={{ flex: 1 }}>
               <FlatList
                 data={Iconlist}
                 horizontal
@@ -324,26 +312,23 @@ export default function Reimbursement({navigation}) {
               />
             </View>
             <View
-              style={{marginTop: 30, marginHorizontal: 30, marginBottom: 20}}>
+              style={{ marginTop: 30, marginBottom: 50 }}>
               <TouchableOpacity
                 mode="contained"
                 onPress={onSubmitPress}
                 activeOpacity={0.9}>
                 <LinearGradient
-                  colors={['#7426f2', '#3d0891']}
+                  colors={['#CF9FFF', '#5D3FD3']}
+                  useAngle={true}
+                  angle={10}
                   style={styles.touchabltext}>
                   <Text style={styles.textstyle}>SUBMIT</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>
-            {/* <View style={{ marginVertical: 30, marginHorizontal: 30 }}>
-            <Button mode="contained" onPress={() => navigation.navigate('Current')} >
-              SUBMIT
-            </Button>
-          </View> */}
           </View>
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
 
       {loading && <Loader />}
     </>
@@ -361,17 +346,19 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 15,
     justifyContent: 'space-between',
-    borderRadius: 7,
-    borderColor: theme.colors.secondary,
+    borderRadius: 15,
+    borderColor: "#5D3FD3",
+    height: 75
   },
   mainview: {
-    paddingVertical: 30,
-    paddingHorizontal: 24,
+    flex: 1,
+    padding: 20,
     backgroundColor: '#fff',
     elevation: 2,
     marginHorizontal: 16,
-    marginVertical: 20,
-    borderRadius: 7,
+    marginTop: 20,
+    marginBottom: 80,
+    borderRadius: 15,
   },
   attachview: {
     flexDirection: 'row',
@@ -486,9 +473,8 @@ const styles = StyleSheet.create({
   touchabltext: {
     height: 45,
     justifyContent: 'center',
-    borderRadius: 7,
+    borderRadius: 15,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   textstyle: {
     fontSize: 18,

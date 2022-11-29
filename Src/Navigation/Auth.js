@@ -4,7 +4,7 @@ import LoginScreen from '../Screen/LoginScreen';
 import RegisterScreen from '../Screen/RegisterScreen';
 import OrganizationLoginScreen from '../Screen/OrganizationLoginScreen';
 import OrganizationSignUpScreen from '../Screen/OrganizationSignUpScreen';
-import SplashScreen, {styles} from '../Screen/SplashScreen';
+import SplashScreen from '../Screen/SplashScreen';
 import LandingScreen from '../Screen/LandingScreen';
 import FullDetailScreen from '../Organization/Stutes/FullDetailScreen';
 import OrganizationDeatailScreeen from '../Organization/Stutes/OrganizationDeatailScreeen';
@@ -14,7 +14,6 @@ import Profile from '../Organization/Screens/Profile';
 import OrgSignin from '../Organization/Screens/OrgSignin';
 import OrgSignup from '../Organization/Screens/OrgSignup';
 import ImageViwers from '../components/ImageViwers';
-import Reimbursement from '../Screen/Reimbursement';
 import DetailScreen from '../Screen/DetailScreen';
 
 import ToptabBar from '../Common/ToptabBar';

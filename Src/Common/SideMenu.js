@@ -1,19 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  Image,
-  Alert,
-  ScrollView,
 } from 'react-native';
-import Imagepath from '../Assets/Images/Imagepath';
-import {theme} from '../core/theme';
-import {DARK, GREY, PRIMARY, WHITE} from '../Organization/Colors/Color';
+import { theme } from '../core/theme';
+import { DARK } from '../Organization/Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-const SideMenu = ({navigation}) => {
+
+const SideMenu = ({ navigation }) => {
   const [name, setName] = useState(null);
   const [email, setemail] = useState(null);
 
@@ -53,7 +50,7 @@ const SideMenu = ({navigation}) => {
       await AsyncStorage.mergeItem('@user_data', jsonValue);
       navigation.reset({
         index: 0,
-        routes: [{name: 'AuthStack'}],
+        routes: [{ name: 'AuthStack' }],
       });
     } catch (e) {
       console.log('error in saving data', e);
@@ -61,40 +58,22 @@ const SideMenu = ({navigation}) => {
   };
 
   return (
-    <View style={{paddingHorizontal: 12}}>
-      <View style={{flexDirection: 'row', alignItems: 'center',borderBottomColor:GREY,borderBottomWidth:1}}>
-        {/* <View
-          style={{
-            // borderColor: GREY,
-            // borderWidth: 2,
-            padding: 10,
-            borderRadius: 40,
-            marginRight: 10,
-          }}>
-          <Icon name="user" size={20} color={GREY} style/>
-        </View> */}
-        <View
-          style={{
-            borderBottomColor: GREY,
-            // borderBottomWidth: 1,
-            // paddingBottom: 20,
-            marginBottom:20
-          }}>
-          <Text style={styles.text}>{name}</Text>
-          <Text style={{color: '#6F7378'}}>{email}</Text>
-        </View>
+    <View style={{ flex: 1, borderTopLeftRadius: 40, borderBottomLeftRadius: 40, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: '#5D3FD3' }}>
+      <View style={{ borderBottomColor: '#5D3FD3', borderBottomWidth: 1, padding: 20, backgroundColor: "#E6E6FA", borderTopLeftRadius: 40, }}>
+        <Text style={styles.text}>{name}</Text>
+        <Text style={{ color: '#5D3FD3' }}>{email}</Text>
       </View>
 
-      <View>
+      <View style={{borderBottomLeftRadius: 40, backgroundColor: 'white', flex: 1, paddingTop: 20}}>
         <TouchableOpacity
           style={styles.screenCiantainer}
           onPress={() => navigation.navigate('Home')}>
           <View style={styles.manuconatiner}>
             <Icon
               name="home"
-              size={20}
-              style={{marginRight: 10}}
-              color="#808080"
+              size={15}
+              style={{ marginRight: 10 }}
+              color='#000'
             />
             <Text style={styles.heading}>Home</Text>
           </View>
@@ -106,9 +85,9 @@ const SideMenu = ({navigation}) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="exchange-alt"
-              size={20}
-              style={{marginRight: 10}}
-              color="#808080"
+              size={15}
+              style={{ marginRight: 10 }}
+              color='#000'
             />
             <Text style={styles.heading}>Bills</Text>
           </View>
@@ -119,9 +98,9 @@ const SideMenu = ({navigation}) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="plus-circle"
-              size={20}
-              style={{marginRight: 10}}
-              color="#808080"
+              size={15}
+              style={{ marginRight: 10 }}
+              color='#000'
             />
             <Text style={styles.heading}>Add</Text>
           </View>
@@ -132,9 +111,9 @@ const SideMenu = ({navigation}) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="bell"
-              size={20}
-              style={{marginRight: 10}}
-              color="#808080"
+              size={15}
+              style={{ marginRight: 10 }}
+              color='#000'
             />
             <Text style={styles.heading}>Notification</Text>
           </View>
@@ -145,9 +124,9 @@ const SideMenu = ({navigation}) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="sign-out-alt"
-              size={20}
-              style={{marginRight: 10}}
-              color="#808080"
+              size={15}
+              style={{ marginRight: 10 }}
+              color='#000'
             />
             <Text style={styles.heading}>Logout</Text>
           </View>
@@ -162,10 +141,9 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   text: {
-    color: DARK,
+    color: '#5D3FD3',
     fontSize: 22,
     fontWeight: '700',
-    marginTop: 12,
     marginVertical: 5,
   },
   options: {
@@ -184,21 +162,22 @@ export const styles = StyleSheet.create({
   manuconatiner: {
     flexDirection: 'row',
     alignItems: 'center',
+    borderBottomWidth: 1,
+    paddingHorizontal: 20, 
+    paddingVertical: 5
   },
   screenCiantainer: {
-    marginTop: 10,
+    marginBottom: 10,
     // borderBottomWidth: 1,
     // borderBottomColor: '#808080',
-    paddingBottom: 12,
   },
   heading: {
-    fontSize: 18,
-
-    color: '#808080',
+    fontSize: 14,
+    color: '#000',
   },
   logout: {
     textShadowColor: 'rgba(0, 0, 0, 0.23)',
-    textShadowOffset: {width: -1, height: 1},
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
     fontSize: 24,
     fontWeight: 'bold',

@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -9,12 +9,11 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import {theme} from '../core/theme';
+import { theme } from '../core/theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {ApproveData} from '../Common/VerticalData';
-import {useDispatch, useSelector} from 'react-redux';
-import {useFocusEffect} from '@react-navigation/native';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   clearGetAllBills,
@@ -22,11 +21,12 @@ import {
 } from '../redux/actions/getAllBillsAction';
 import Imagepath from '../Assets/Images/Imagepath';
 import moment from 'moment';
-import {SafeAreaView} from 'react-native-safe-area-context';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {DARK, GREY} from '../Organization/Colors/Color';
-export default function Past({navigation}) {
+import { DARK, GREY } from '../Organization/Colors/Color';
+
+export default function Past({ navigation }) {
   const dispatch = useDispatch();
 
   const [userData, setUserData] = useState(null);
@@ -146,14 +146,14 @@ export default function Past({navigation}) {
     }
   }, [searchText, selectedType]);
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
       <View style={styles.mainView}>
         <TouchableOpacity
           activeOpacity={0.9}
-          style={{flexDirection: 'row', alignItems: 'center'}}
+          style={{ flexDirection: 'row', alignItems: 'center' }}
           onPress={() => {
-            navigation.navigate('DetailScreen', {bill_id: item.bill_id});
+            navigation.navigate('DetailScreen', { bill_id: item.bill_id });
           }}>
           <View style={styles.imageView}>
             <View
@@ -164,7 +164,7 @@ export default function Past({navigation}) {
               <Image source={icon(item.type)} style={styles.imagestyle} />
             </View>
           </View>
-          <View style={{flex: 1, marginLeft: -27}}>
+          <View style={{ flex: 1, marginLeft: -30 }}>
             <View style={styles.textview}>
               <Text style={styles.textblood}>
                 {moment(item.date).format('MMM DD, yyyy')}
@@ -176,21 +176,20 @@ export default function Past({navigation}) {
                     item.status == 'Approved'
                       ? theme.colors.green
                       : item.status == 'Pending'
-                      ? 'orange'
-                      : 'red',
+                        ? 'orange'
+                        : 'red',
                 }}>
                 {item.status}
               </Text>
             </View>
             <View style={styles.texticon}>
-              <Text style={styles.textmar}>{item.description}</Text>
+              <Text numberOfLines={1} style={styles.textmar}>{item.description}</Text>
               <View style={styles.rupeestyle}>
                 <FontAwesome
                   name="rupee"
-                  size={18}
-                  color={theme.colors.text}
-                  style={styles.fontstyle}
-                />
+                  size={15}
+                  color={"#5D3FD3"}
+                  style={styles.fontstyle} />
                 <Text style={styles.textrupees}>{item.amount}</Text>
               </View>
             </View>
@@ -227,28 +226,28 @@ export default function Past({navigation}) {
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                setSelectedType('Medical'), setModalOpen(false);
+                setSelectedType('Medical'); setModalOpen(false);
               }}>
               <Text style={styles.textstyle}>Medical</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                setSelectedType('Food'), setModalOpen(false);
+                setSelectedType('Food'); setModalOpen(false);
               }}>
               <Text style={styles.textstyle}>Food</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                setSelectedType('Fuel'), setModalOpen(false);
+                setSelectedType('Fuel'); setModalOpen(false);
               }}>
               <Text style={styles.textstyle}>Fuel</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                setSelectedType('Other'), setModalOpen(false);
+                setSelectedType('Other'); setModalOpen(false);
               }}>
               <Text style={styles.textstyle}>Others</Text>
             </TouchableOpacity>
@@ -262,19 +261,12 @@ export default function Past({navigation}) {
             }}>
             <AntDesign name="filter" size={25} color={theme.colors.text} />
           </TouchableOpacity>
-          <View style={{flex: 0.8}}>
+          <View style={{ flex: 0.8 }}>
             <TextInput
               placeholder="Search"
               onChangeText={text => {
                 console.log(text);
                 setSearchText(text);
-                // if (text != "") {
-                //   setCurrent(current.filter((item) => item.title.includes(text)))
-                //   console.log(current.filter((item) => item.title.includes(text)));
-                // }
-                // else {
-                //   setCurrent(ApproveData)
-                // }
               }}
             />
           </View>
@@ -301,9 +293,8 @@ export default function Past({navigation}) {
               </View>
             );
           }}
-          style={{marginBottom: 20}}
+          style={{ marginBottom: 55 }}
           data={current}
-          marginBottom={40}
           keyExtractor={item => item.id}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
@@ -318,16 +309,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.white,
-    paddingHorizontal: 14,
-    paddingVertical: 14,
+    padding: 14,
   },
   mainView: {
-    backgroundColor: '#fff',
+    backgroundColor: '#E6E6FA',
     marginVertical: 10,
-    padding: 5,
-    elevation: 2,
+    elevation: 5,
     marginHorizontal: 22,
-    paddingHorizontal: 7,
+    padding: 10,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#5D3FD3'
   },
   imagetype: {
     height: 40,
@@ -344,7 +336,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     elevation: 2,
-    marginLeft: -27,
+    marginLeft: -30,
+    borderWidth: 1,
+    borderColor: '#5D3FD3'
   },
   imagestyle: {
     height: 30,
@@ -360,7 +354,7 @@ const styles = StyleSheet.create({
   textblood: {
     left: 32,
     fontSize: 16,
-    color: theme.colors.text,
+    color: "#5D3FD3",
     fontWeight: 'bold',
   },
   textapprove: {
@@ -379,13 +373,14 @@ const styles = StyleSheet.create({
     left: 32,
     marginTop: 12,
     fontSize: 14,
-    color: theme.colors.text,
+    color: "#5D3FD3",
     width: '50%',
   },
   textrupees: {
     marginTop: 12,
     fontSize: 18,
-    color: theme.colors.text,
+    color: "#5D3FD3",
+    fontWeight: '700'
   },
   searchinput: {
     marginHorizontal: 22,
@@ -395,9 +390,9 @@ const styles = StyleSheet.create({
     marginVertical: 7,
     flexDirection: 'row',
     alignItems: 'center',
+    borderRadius: 15
   },
   iconstyle: {
-    // position: "absolute", right: 0, top: 10, paddingHorizontal: 14,
     right: 0,
     position: 'absolute',
     paddingHorizontal: 10,
@@ -414,14 +409,15 @@ const styles = StyleSheet.create({
   fontstyle: {
     marginTop: 14,
     right: 4,
+    fontWeight: '700'
   },
   modalView: {
-    borderColor: '#454545',
-    borderWidth: 1,
     backgroundColor: theme.colors.white,
     marginTop: 125,
     marginHorizontal: 35,
     padding: 10,
+    borderColor: '#454545',
+    borderWidth: 1,
   },
   okstyle: {
     width: 60,
@@ -436,8 +432,7 @@ const styles = StyleSheet.create({
   },
   textstyle: {
     color: theme.colors.text,
-    fontSize: 16,
-    fontWeight: '800',
+    fontSize: 14,
     marginTop: 5,
   },
 });

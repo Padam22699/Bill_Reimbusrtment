@@ -46,7 +46,6 @@ export default function RegisterScreen({navigation}) {
     const lastnameError = LastnameValidator(Lastname.value);
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
-    // const OrganizationError = OrganizationValidator(Organization.value)
 
     if (emailError || passwordError || nameError || lastnameError) {
       setName({...name, error: nameError});
@@ -190,7 +189,9 @@ export default function RegisterScreen({navigation}) {
                 onPress={onSignUpPressed}
                 activeOpacity={0.9}>
                 <LinearGradient
-                  colors={['#7426f2', '#3d0891']}
+                  colors={['#CF9FFF', '#5D3FD3']}
+                  useAngle={true}
+                  angle={10}
                   style={styles.touchabltext}>
                   <Text style={styles.textstyle}>Sign Up</Text>
                 </LinearGradient>
@@ -238,15 +239,14 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   touchabltext: {
+    marginVertical: 20,
     height: 45,
     justifyContent: 'center',
-    borderRadius: 7,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
+    borderRadius: 15,
   },
   textstyle: {
     fontSize: 18,
+    textAlign: 'center',
     color: '#fff',
   },
   signview: {

@@ -20,6 +20,11 @@ import LinearGradient from 'react-native-linear-gradient';
 import {useDispatch, useSelector} from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
 import OrgtextInput from '../Componets/OrgtextInput';
+import Loader from '../Componets/Loader';
+import messaging from '@react-native-firebase/messaging';
+import { clearForgotPassword, forgotPassword } from '../../redux/actions/forgotPasswordAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 export default function OrgSignin({navigation}) {
   const dispatch = useDispatch();
   const [email, setEmail] = useState({value: '', error: ''});
@@ -27,6 +32,8 @@ export default function OrgSignin({navigation}) {
 
   const loginResponse = useSelector(state => state.loginReducer.data);
   const loading = useSelector(state => state.loginReducer.loading);
+  const forgetloading = useSelector(state => state.forgotPasswordReducer.loading);
+  const forgotPasswordResponse = useSelector(state => state.forgotPasswordReducer.data);
 
   const onLoginPressed = () => {
     const emailError = emailValidator(email.value);
@@ -36,19 +43,41 @@ export default function OrgSignin({navigation}) {
       setPassword({...password, error: passwordError});
       return;
     }
-    loginAPI();
+    requestUserPermission();
   };
-  const loginAPI = () => {
+
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      getFirebaseToken();
+    }
+  };
+
+  const getFirebaseToken = async () => {
+    await messaging()
+      .getToken()
+      .then(token => {
+        loginAPI(token);
+      });
+  };
+
+  const loginAPI = (firebase_token) => {
     const request = {
       email: email.value,
       password: password.value,
       role: 'organization',
       device_type: Platform.OS,
-      device_token: '123456',
+      device_token: firebase_token,
       device_id: DeviceInfo.getDeviceId(),
     };
     dispatch(login(request));
   };
+
   const saveData = async newData => {
     let Organizationdata = newData;
     Organizationdata = {
@@ -60,12 +89,13 @@ export default function OrgSignin({navigation}) {
       await AsyncStorage.setItem('@user_data', jsonValue);
       navigation.reset({
         index: 0,
-        routes: [{name: 'MyTabs'}],
+        routes: [{name: 'OrgDrawer'}],
       });
     } catch (e) {
       console.log('error in saving data', e);
     }
   };
+
   useEffect(() => {
     if (loginResponse != null) {
       console.log('loginResponse', loginResponse);
@@ -87,6 +117,44 @@ export default function OrgSignin({navigation}) {
     }
   }, [loginResponse]);
 
+  const forgotPasswordPress = () => {
+    const emailError = emailValidator(email.value);
+    if (emailError) {
+      setEmail({ ...email, error: emailError });
+      return;
+    }
+    forgotPasswordAPI();
+  };
+
+  const forgotPasswordAPI = () => {
+    let request = {
+      email: email.value,
+      role: 'organization',
+    };
+    dispatch(forgotPassword(request));
+  };
+
+  useEffect(() => {
+    if (forgotPasswordResponse != null) {
+      console.log('forgotPasswordResponse', forgotPasswordResponse);
+      if (
+        Object.keys(forgotPasswordResponse).length != 0 &&
+        forgotPasswordResponse.statusCode != 200
+      ) {
+        alert(forgotPasswordResponse.message);
+        dispatch(clearForgotPassword());
+      }
+      if (
+        Object.keys(forgotPasswordResponse).length != 0 &&
+        forgotPasswordResponse.statusCode == 200
+      ) {
+        console.log('response', forgotPasswordResponse);
+        alert(forgotPasswordResponse.message);
+        dispatch(clearForgotPassword());
+      }
+    }
+  }, [forgotPasswordResponse]);
+
   return (
     <ScrollView style={{flex: 1, backgroundColor: theme.colors.surface}}>
       <StatusBar
@@ -96,8 +164,7 @@ export default function OrgSignin({navigation}) {
       <Backbtn goBack={navigation.goBack} />
       <KeyboardAvoidingView style={styles.keyboar}>
         <Logo />
-        {/* <Header>LOGIN</Header> */}
-        <Text style={{fontSize: 22, fontWeight: 'bold', color: PRIMARY}}>
+        <Text style={{fontSize: 22, fontWeight: 'bold', color: PRIMARY, marginVertical: 20}}>
           LOGIN
         </Text>
         <OrgtextInput
@@ -114,16 +181,15 @@ export default function OrgSignin({navigation}) {
         />
         <OrgtextInput
           label="Password"
-          keyboardType="numeric"
           returnKeyType="done"
           value={password.value}
           onChangeText={text => setPassword({value: text, error: ''})}
           error={!!password.error}
           errorText={password.error}
-          secureTextEntry
+          password={true}
         />
         <View style={styles.forgotPassword}>
-          <TouchableOpacity activeOpacity={0.8}>
+          <TouchableOpacity activeOpacity={0.8} onPress={forgotPasswordPress}>
             <Text style={styles.forgot}>Forgot your password?</Text>
           </TouchableOpacity>
         </View>
@@ -131,14 +197,16 @@ export default function OrgSignin({navigation}) {
       <View style={{paddingHorizontal: 20, width: '100%', maxWidth: '100%'}}>
         <TouchableOpacity
           mode="contained"
-          // onPress={onLoginPressed}
-          onPress={() =>
-            navigation.navigate('OrgDrawer')
-            // onLoginPressed()
-          }
+          onPress={onLoginPressed}
+          // onPress={() =>
+          //   navigation.navigate('OrgDrawer')
+          //   // onLoginPressed()
+          // }
           activeOpacity={0.9}>
           <LinearGradient
-            colors={[PRIMARY, PRIMARY]}
+            colors={['#FAC898', '#E14D2A']}
+            useAngle={true}
+            angle={10}
             style={styles.touchabltext}>
             <Text style={styles.textstyle}>Login</Text>
           </LinearGradient>
@@ -150,6 +218,7 @@ export default function OrgSignin({navigation}) {
           </TouchableOpacity>
         </View>
       </View>
+      {(loading || forgetloading) && <Loader />}
     </ScrollView>
   );
 }
@@ -188,7 +257,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 7,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   textstyle: {
     fontSize: 18,

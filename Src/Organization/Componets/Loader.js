@@ -1,11 +1,10 @@
-import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import React from 'react';
-import {DARK} from '../Colors/Color';
 
 const Loader = () => {
   return (
     <View style={[StyleSheet.absoluteFillObject, styles.conatianer]}>
-      <ActivityIndicator size={60} />
+      <ActivityIndicator size={40} color={'#5D3FD3'}/>
     </View>
   );
 };

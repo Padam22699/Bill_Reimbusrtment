@@ -5,15 +5,14 @@ import {
   FlatList,
   View,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
+  StatusBar,
 } from 'react-native';
 import React from 'react';
-import {A, DARK, PRIMARY, B, C, WHITE} from '../Colors/Color';
+import { A, DARK, PRIMARY, B, C, WHITE } from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Deshboard = ({navigation}) => {
+const Deshboard = ({ navigation }) => {
   const data = [
     {
       id: '1',
@@ -52,12 +51,12 @@ const Deshboard = ({navigation}) => {
       iconName: 'gas-pump',
     },
   ];
+
   const MiddleContent = ({
     money,
     heading,
-    month,
     backGround,
-    onpress = () => {},
+    onpress = () => { },
   }) => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={onpress}>
@@ -67,12 +66,11 @@ const Deshboard = ({navigation}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              width: deviceWidth - 255,
+              width: deviceWidth / 3 - 20,
               backgroundColor: backGround,
               height: 90,
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
-              flex: 2.4,
             }}>
             <Icon name="rupee-sign" size={20} color={WHITE} />
             <Text
@@ -90,35 +88,25 @@ const Deshboard = ({navigation}) => {
 
           <View
             style={{
-              marginBottom: 10,
               alignItems: 'center',
               justifyContent: 'center',
               flex: 1,
               alignContent: 'center',
+              padding: 4
             }}>
             <Text
+              adjustsFontSizeToFit={true}
               style={{
-                fontSize: 17,
+                fontSize: 20,
                 alignSelf: 'center',
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
                 textAlign: 'center',
                 justifyContent: 'center',
-                marginTop: 10,
+                margin: 5,
               }}>
               {heading}
-            </Text>
-            <Text
-              style={{
-                fontSize: 17,
-                alignSelf: 'center',
-                color: DARK,
-                fontWeight: 'bold',
-                textAlignVertical: 'center',
-                textAlign: 'center',
-              }}>
-              {month}
             </Text>
           </View>
         </View>
@@ -126,7 +114,7 @@ const Deshboard = ({navigation}) => {
     );
   };
 
-  const RecentRequestList = ({item, index}) => {
+  const RecentRequestList = ({ item, index }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
@@ -139,14 +127,25 @@ const Deshboard = ({navigation}) => {
         }>
         <View style={styles.recentList}>
           <View
-            style={{alignItems: 'center', marginLeft: 10, paddingVertical: 15}}>
+            style={{
+              height: 48,
+              width: 48,
+              backgroundColor: '#fff',
+              borderRadius: 40,
+              alignItems: 'center',
+              justifyContent: 'center',
+              elevation: 2,
+              marginLeft: -30,
+              borderWidth: 1,
+              borderColor: '#E14D2A'
+            }}>
             <Icon name={item.iconName} size={24} color={PRIMARY} />
           </View>
-          <View style={{marginRight: 70}}>
+          <View style={{ flex: 1, marginLeft: 12 }}>
             <Text
               style={{
                 fontSize: 16,
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 marginBottom: 8,
               }}>
@@ -155,14 +154,14 @@ const Deshboard = ({navigation}) => {
             <Text
               style={{
                 fontSize: 12,
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
               Category Name
             </Text>
           </View>
-          <View style={{marginRight: 20}}>
+          <View style={{ marginRight: 20 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -172,13 +171,13 @@ const Deshboard = ({navigation}) => {
               <Icon
                 name="rupee-sign"
                 size={13}
-                color={DARK}
-                style={{marginRight: 2}}
+                color={"#E14D2A"}
+                style={{ marginRight: 2 }}
               />
               <Text
                 style={{
                   fontSize: 16,
-                  color: DARK,
+                  color: "#E14D2A",
                   fontWeight: 'bold',
                 }}>
                 200
@@ -188,7 +187,7 @@ const Deshboard = ({navigation}) => {
             <Text
               style={{
                 fontSize: 12,
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 paddingVertical: 4,
                 textAlign: 'center',
@@ -203,82 +202,47 @@ const Deshboard = ({navigation}) => {
     );
   };
 
-  const logout = async () => {
-    let data = {
-      loggedin: false,
-      loggedIntype:''
-    };
-    try {
-      const jsonValue = JSON.stringify(data);
-      await AsyncStorage.mergeItem('@user_data', jsonValue);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'AuthStack'}],
-      });
-    } catch (e) {
-      console.log('error in saving data', e);
-    }
-  };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
-      <View style={{marginHorizontal: 12}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: WHITE }}>
+      <StatusBar backgroundColor={"#E14D2A"} barStyle="default" />
+      <View style={{ margin: 12, flex: 1 }}>
         <View style={styles.header}>
           <View>
             <Text style={styles.heading}>WEDIGTECH</Text>
           </View>
-          <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity onPress={() => logout()}>
-              <Icon
-                name="sign-out-alt"
-                size={22}
-                color={PRIMARY}
-                style={{paddingRight: 30}}
-              />
-            </TouchableOpacity>
-
-            <Icon
-              name="bell"
-              size={22}
-              color={PRIMARY}
-              style={{paddingRight: 20}}
-            />
-          </View>
+          <Icon
+            name="bell"
+            size={24}
+            color={PRIMARY}
+          />
         </View>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginTop: 20,
           }}>
           <MiddleContent money={60} heading="This Month" backGround={A} />
           <MiddleContent
             money={200}
-            heading="Last"
-            month="6 Month"
+            heading="Last 6 Months"
             backGround={B}
           />
           <MiddleContent money={600} heading="This Year" backGround={C} />
         </View>
-        <View style={{marginBottom: 20}}>
-          <Text style={{fontSize: 20, color: DARK, fontWeight: 'bold'}}>
+        <View style={{ marginBottom: 10 }}>
+          <Text style={{ fontSize: 20, color: DARK, fontWeight: 'bold' }}>
             Recent Request
           </Text>
         </View>
-        <View
-          style={{
-            height: 400,
-          }}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom: 80,
-            }}
-            data={data}
-            renderItem={({item, index}) => (
-              <RecentRequestList item={item} index={index} />
-            )}
-          />
-        </View>
+        <FlatList
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          style={{ marginBottom: 55 }}
+          data={data}
+          renderItem={({ item, index }) => (
+            <RecentRequestList item={item} index={index} />
+          )}
+        />
       </View>
     </SafeAreaView>
   );
@@ -292,19 +256,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-
     marginTop: 12,
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: PRIMARY,
+    color: "#E14D2A",
   },
   Container: {
     marginTop: 20,
     backgroundColor: WHITE,
     height: 140,
-    width: deviceWidth - 255,
+    width: deviceWidth / 3 - 20,
     borderRadius: 20,
     shadowColor: DARK,
     shadowOffset: {
@@ -318,19 +281,15 @@ const styles = StyleSheet.create({
   },
   RecordContainer: {},
   recentList: {
-    backgroundColor: WHITE,
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    elevation: 4,
-    shadowRadius: 5,
-    shadowOpacity: 0.75,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 20,
+    backgroundColor: "#FAC898",
+    marginVertical: 10,
+    elevation: 5,
+    marginHorizontal: 22,
+    padding: 10,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#E14D2A'
   },
 });

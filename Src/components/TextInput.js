@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, ScrollView} from 'react-native';
+import {View, StyleSheet, Text} from 'react-native';
 import {TextInput as Input} from 'react-native-paper';
 import {theme} from '../core/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {GREY} from '../Organization/Colors/Color';
+
 export default function TextInput({
   errorText,
   description,
@@ -51,7 +51,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: GREY,
+    borderColor: "#5D3FD3",
+    borderRadius: 15,
+    padding: 4
   },
   input: {
     backgroundColor: theme.colors.surface,

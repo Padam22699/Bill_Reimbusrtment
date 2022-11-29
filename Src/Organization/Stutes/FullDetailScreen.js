@@ -1,29 +1,28 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, { useCallback, useState } from 'react';
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
-  StatusBar,
   Image,
   Modal,
   SafeAreaView,
+  ScrollView,
 } from 'react-native';
-import {DARK, GREY, PRIMARY, WHITE} from '../Colors/Color';
+import { DARK, PRIMARY, WHITE } from '../Colors/Color';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Imagepath from '../../Assets/Images/Imagepath';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-export default function FullDetailScreen({navigation, route}) {
-  const data = route.params.item;
-  const list = route.params.data;
-  const indexx = route.params.index;
+import { theme } from '../../core/theme';
+import LinearGradient from 'react-native-linear-gradient';
 
-  const [checkbook, setcheckbook] = useState(true);
+export default function FullDetailScreen({ navigation, route }) {
+
   const [stutes, setstutes] = useState('Pendding');
 
   useFocusEffect(
@@ -31,14 +30,17 @@ export default function FullDetailScreen({navigation, route}) {
       console.log('fullDeatailsScreen');
     }, []),
   );
+
   const [visible, setvisible] = useState(false);
+
   const images = [
-    {url: '', props: {source: require('../../Assets/bills.png')}},
+    { url: '', props: { source: require('../../Assets/bills.png') } },
   ];
+
   return (
     <>
-      <View style={styles.container}>
-        <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
+      <ScrollView style={styles.container}>
+        <Animatable.View animation="zoomInDown" style={{ transform: 'scale' }}>
           <View style={styles.mainview}>
             <TouchableOpacity
               onPress={() => {
@@ -49,7 +51,7 @@ export default function FullDetailScreen({navigation, route}) {
                 name="close"
                 size={25}
                 color={'#fff'}
-                style={{alignSelf: 'flex-end'}}
+                style={{ alignSelf: 'flex-end' }}
               />
             </TouchableOpacity>
             <View style={styles.touchablview}>
@@ -63,7 +65,7 @@ export default function FullDetailScreen({navigation, route}) {
                   name="rupee"
                   size={18}
                   color={WHITE}
-                  style={{top: 5}}
+                  style={{ top: 5 }}
                 />
                 <View>
                   <Text style={styles.textrupees}>1550.00</Text>
@@ -77,13 +79,12 @@ export default function FullDetailScreen({navigation, route}) {
           <View style={styles.container2}>
             <View style={styles.elevationstyle}>
               <Text style={styles.textExpe}>Expense Details</Text>
-
-              <View>
-                <View style={[styles.flexview, {paddingVertical: -3}]}>
+              <View style={{ marginTop: 20 }}>
+                <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Date</Text>
                   <Text style={styles.textmar}>Mar 27,2022</Text>
                 </View>
-                <View style={[styles.flexview, {paddingVertical: -6}]}>
+                <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Description</Text>
                   <Text style={styles.textfuel}>
                     This is a reimbursement applied for the fuel.
@@ -95,15 +96,14 @@ export default function FullDetailScreen({navigation, route}) {
                     <Image
                       source={require('../../Assets/bills.png')}
                       style={{
-                        height: 30,
-                        width: 30,
-                        borderRadius: 15,
-                        resizeMode: 'cover',
+                        height: 50,
+                        width: 50,
+                        resizeMode: 'contain',
                       }}
                     />
                   </TouchableOpacity>
                 </View>
-                <View style={[styles.flexview, {paddingVertical: 3}]}>
+                <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Status</Text>
                   <View style={styles.pickerContainer}>
                     <Picker
@@ -136,62 +136,45 @@ export default function FullDetailScreen({navigation, route}) {
               </View>
 
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={[styles.subtotal, {marginBottom: 10}]}>
+                style={styles.flexview}>
+                <Text style={[styles.textdate, {}]}>
                   Status by
                 </Text>
-                <Text style={[styles.subtotal, {fontSize: 16}]}>Name</Text>
+                <Text style={[styles.textmar, {}]}>Name</Text>
               </View>
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={styles.subtotal}>Sub Total</Text>
-                <Text style={[styles.subtotal, {fontSize: 16}]}>
+                style={styles.flexview}>
+                <Text style={styles.textdate}>Sub Total</Text>
+                <Text style={[styles.textmar, {}]}>
                   Total Amount
                 </Text>
               </View>
               <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 10,
-                }}>
-                <Text style={styles.subtotal}>Less Cash Advance</Text>
-                <Text style={[styles.subtotal, {fontSize: 16}]}> Amount</Text>
+                style={styles.flexview}>
+                <Text style={styles.textdate}>Less Cash Advance</Text>
+                <Text style={[styles.textmar, {}]}> Amount</Text>
               </View>
               <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 10,
-                }}>
-                <Text style={styles.subtotal}>Total Reimbursement</Text>
-                <Text style={[styles.subtotal, {fontSize: 16}]}> Amount</Text>
+                style={styles.flexview}>
+                <Text style={styles.textdate}>Total Reimbursement</Text>
+                <Text style={[styles.textmar, {}]}> Amount</Text>
               </View>
-              {/* <View style={styles.flexview}>
-              <Text style={styles.textdate}>Physically submitted the bill</Text>
-              <TouchableOpacity
-                style={styles.imagetouchstyle}
-                onPress={() => {
-                  setcheckbook(!checkbook);
-                }}
-                activeOpacity={0.9}>
-                <Image
-                  source={checkbook ? Imagepath.check : Imagepath}
-                  style={styles.imageCheck}
-                />
-              </TouchableOpacity>
-            </View> */}
             </View>
             <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => navigation.navigate('Home')}>
-              <View style={styles.submitebtnContainer}>
-                <Text style={styles.submitebtn}>Submit</Text>
-              </View>
+              mode="contained"
+              onPress={() => navigation.navigate('Home')}
+              activeOpacity={0.9}>
+              <LinearGradient
+                colors={['#FAC898', '#E14D2A']}
+                useAngle={true}
+                angle={10}
+                style={styles.touchabltext}>
+                <Text style={styles.textstyle}>SUBMIT</Text>
+              </LinearGradient>
             </TouchableOpacity>
           </View>
         </Animatable.View>
-      </View>
+      </ScrollView>
 
       {visible && (
         <Modal visible={visible} animationType="fade">
@@ -215,7 +198,7 @@ export default function FullDetailScreen({navigation, route}) {
               <Icon
                 name="times"
                 color={PRIMARY}
-                size={24}
+                size={20}
                 onPress={() => {
                   setvisible(false);
                 }}
@@ -228,9 +211,6 @@ export default function FullDetailScreen({navigation, route}) {
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   Imagecontainer: {
     marginHorizontal: 10,
     marginVertical: 30,
@@ -238,8 +218,8 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: 'absolute',
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
     backgroundColor: 'white',
     borderRadius: 35,
     justifyContent: 'center',
@@ -276,12 +256,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   mainview: {
-    backgroundColor: PRIMARY,
+    backgroundColor: "#E14D2A",
     height: 135,
     paddingHorizontal: 18,
     paddingVertical: 8,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   touchablview: {
     flexDirection: 'row',
@@ -321,6 +301,7 @@ const styles = StyleSheet.create({
   },
   container2: {
     marginHorizontal: 18,
+    marginTop: 20
   },
   imagetouchstyle: {
     height: 24,
@@ -337,32 +318,34 @@ const styles = StyleSheet.create({
     tintColor: DARK,
   },
   elevationstyle: {
-    height: 470,
     backgroundColor: '#fff',
     marginTop: 24,
     elevation: 10,
-    borderRadius: 16,
-    paddingHorizontal: 14,
-    padding: 14,
+    borderRadius: 15,
+    padding: 20,
   },
   textExpe: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: DARK,
+    color: '#E14D2A',
+    textAlign: 'center'
   },
   flexview: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginVertical: 10,
+    paddingVertical: 2,
   },
   textdate: {
-    fontSize: 18,
-    color: DARK,
+    fontSize: 16,
+    color: theme.colors.text,
+    fontWeight: '500'
   },
   textmar: {
     fontSize: 16,
-    color: DARK,
+    color: theme.colors.text,
+    textAlign: 'right',
   },
   pickerContainer: {
     alignItems: 'center',
@@ -392,11 +375,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   touchabltext: {
+    marginVertical: 20,
     height: 45,
     justifyContent: 'center',
-    borderRadius: 7,
+    borderRadius: 15,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   textstyle: {
     fontSize: 18,
