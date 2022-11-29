@@ -55,21 +55,21 @@ export const OrgSlide = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1, borderTopLeftRadius: 40, borderBottomLeftRadius: 40, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: '#E14D2A'}}>
+    <View style={{flex: 1, borderLeftWidth: 2, borderColor: '#E14D2A'}}>
       <View
-      style={{borderBottomColor: '#E14D2A', borderBottomWidth: 1, padding: 20, backgroundColor: "#FAC898", borderTopLeftRadius: 40,}}
+      style={{borderBottomColor: '#E14D2A', borderBottomWidth: 1, padding: 20, backgroundColor: "#FAC898",}}
       >
         <Text style={styles.text}>Admin</Text>
-        <Text style={{color:'#E14D2A'}}>{email}</Text>
+        <Text adjustsFontSizeToFit={true} allowFontScaling={true} numberOfLines={1} style={{color:'#E14D2A'}}>{email}</Text>
       </View>
-      <View style={{borderBottomLeftRadius: 40, backgroundColor: 'white', flex: 1, paddingTop: 20}}>
+      <View style={{backgroundColor: 'white', flex: 1, paddingTop: 20}}>
         <TouchableOpacity
           style={styles.screenCiantainer}
           onPress={() => navigation.navigate('Home')}>
           <View style={styles.manuconatiner}>
             <Icon
               name="home"
-              size={15}
+              size={20}
               style={{marginRight: 10}}
               color="#000"
             />
@@ -84,8 +84,8 @@ export const OrgSlide = ({navigation}) => {
             <Image
               source={require('../../Assets/Images/checked.png')}
               style={{
-                width: 15,
-                height: 15,
+                width: 20,
+                height: 20,
                 tintColor: "#000",
                 marginRight: 10
               }}
@@ -100,8 +100,8 @@ export const OrgSlide = ({navigation}) => {
             <Image
               source={require('../../Assets/Images/forward.png')}
               style={{
-                width: 15,
-                height: 15,
+                width: 20,
+                height: 20,
                 tintColor: "#000",
                 marginRight: 10
               }}
@@ -116,8 +116,8 @@ export const OrgSlide = ({navigation}) => {
             <Image
               source={require('../../Assets/Images/pending.png')}
               style={{
-                width: 15,
-                height: 15,
+                width: 20,
+                height: 20,
                 tintColor: "#000",
                 marginRight: 10
               }}
@@ -131,7 +131,7 @@ export const OrgSlide = ({navigation}) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="sign-out-alt"
-              size={15}
+              size={20}
               style={{marginRight: 10}}
               color="#000"
             />
@@ -169,7 +169,7 @@ export const styles = StyleSheet.create({
   manuconatiner: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     paddingHorizontal: 20, 
     paddingVertical: 5
   },

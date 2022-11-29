@@ -58,20 +58,20 @@ const SideMenu = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, borderTopLeftRadius: 40, borderBottomLeftRadius: 40, borderLeftWidth: 2, borderBottomWidth: 2, borderColor: '#5D3FD3' }}>
-      <View style={{ borderBottomColor: '#5D3FD3', borderBottomWidth: 1, padding: 20, backgroundColor: "#E6E6FA", borderTopLeftRadius: 40, }}>
+    <View style={{ flex: 1, borderLeftWidth: 2, borderColor: '#5D3FD3' }}>
+      <View style={{ borderBottomColor: '#5D3FD3', borderBottomWidth: 1, padding: 20, backgroundColor: "#E6E6FA", }}>
         <Text style={styles.text}>{name}</Text>
-        <Text style={{ color: '#5D3FD3' }}>{email}</Text>
+        <Text adjustsFontSizeToFit={true} allowFontScaling={true} numberOfLines={1} style={{ color: '#5D3FD3' }}>{email}</Text>
       </View>
 
-      <View style={{borderBottomLeftRadius: 40, backgroundColor: 'white', flex: 1, paddingTop: 20}}>
+      <View style={{backgroundColor: 'white', flex: 1, paddingTop: 20}}>
         <TouchableOpacity
           style={styles.screenCiantainer}
           onPress={() => navigation.navigate('Home')}>
           <View style={styles.manuconatiner}>
             <Icon
               name="home"
-              size={15}
+              size={20}
               style={{ marginRight: 10 }}
               color='#000'
             />
@@ -85,7 +85,7 @@ const SideMenu = ({ navigation }) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="exchange-alt"
-              size={15}
+              size={20}
               style={{ marginRight: 10 }}
               color='#000'
             />
@@ -98,7 +98,7 @@ const SideMenu = ({ navigation }) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="plus-circle"
-              size={15}
+              size={20}
               style={{ marginRight: 10 }}
               color='#000'
             />
@@ -111,7 +111,7 @@ const SideMenu = ({ navigation }) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="bell"
-              size={15}
+              size={20}
               style={{ marginRight: 10 }}
               color='#000'
             />
@@ -124,7 +124,7 @@ const SideMenu = ({ navigation }) => {
           <View style={styles.manuconatiner}>
             <Icon
               name="sign-out-alt"
-              size={15}
+              size={20}
               style={{ marginRight: 10 }}
               color='#000'
             />
@@ -162,7 +162,7 @@ export const styles = StyleSheet.create({
   manuconatiner: {
     flexDirection: 'row',
     alignItems: 'center',
-    borderBottomWidth: 1,
+    // borderBottomWidth: 1,
     paddingHorizontal: 20, 
     paddingVertical: 5
   },

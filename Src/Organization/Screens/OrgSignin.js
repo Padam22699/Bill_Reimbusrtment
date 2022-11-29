@@ -24,6 +24,7 @@ import Loader from '../Componets/Loader';
 import messaging from '@react-native-firebase/messaging';
 import { clearForgotPassword, forgotPassword } from '../../redux/actions/forgotPasswordAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoaderOrg from '../Componets/LoaderOrg';
 
 export default function OrgSignin({navigation}) {
   const dispatch = useDispatch();
@@ -218,7 +219,7 @@ export default function OrgSignin({navigation}) {
           </TouchableOpacity>
         </View>
       </View>
-      {(loading || forgetloading) && <Loader />}
+      {(loading || forgetloading) && <LoaderOrg />}
     </ScrollView>
   );
 }

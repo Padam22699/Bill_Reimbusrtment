@@ -53,7 +53,7 @@ export default function LoginScreen({ navigation }) {
     requestUserPermission();
     // saveData()
   };
-  
+
   const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -223,7 +223,7 @@ export default function LoginScreen({ navigation }) {
           </View>
         </View>
       </ScrollView>
-      {loading || (forgetloading && <Loader />)}
+      {(loading || forgetloading) && <Loader />}
     </>
   );
 }
