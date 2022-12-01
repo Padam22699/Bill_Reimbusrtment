@@ -78,7 +78,7 @@ export default function Past({ navigation }) {
       type: 'employee',
       page: '1',
       reverse: 1,
-      date_wise: 'date',
+      user_status: '',
       search: search,
       bill_type: type,
       from_date: '',

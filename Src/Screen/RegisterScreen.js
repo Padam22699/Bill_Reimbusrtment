@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { Text } from 'react-native-paper';
 import Logo from '../components/Logo';
-import TextInput from '../components/TextInput';
+import EmpTextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
 import { theme } from '../core/theme';
 import { emailValidator } from '../helpers/emailValidator';
@@ -33,6 +33,7 @@ export default function RegisterScreen({ navigation }) {
   const [Lastname, setLastname] = useState({ value: '', error: '' });
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
+  const [ConfirmPassword, setConfirmPassword] = useState({ value: '', error: '' });
   const [Organization, setOrganization] = useState({
     value: 'Wedig335431',
     error: '',
@@ -52,7 +53,10 @@ export default function RegisterScreen({ navigation }) {
       setLastname({ ...Lastname, error: lastnameError });
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
-      // setOrganization({ ...Organization, error: OrganizationError })
+      return;
+    }
+    if (password.value != ConfirmPassword.value) {
+      setConfirmPassword({ ...ConfirmPassword, error: "Confirm Password do not match with Password" });
       return;
     }
     requestUserPermission();
@@ -150,24 +154,24 @@ export default function RegisterScreen({ navigation }) {
             //scrollEnabled={this.state.openCountryDropwdown ? false : true}
             keyboardShouldPersistTaps={'handled'}
             style={styles.innerContainer}>
-            <TextInput
-              label="First Name"
+            <EmpTextInput
+              placeholder="First Name"
               returnKeyType="next"
               value={name.value}
               onChangeText={text => setName({ value: text, error: '' })}
               error={!!name.error}
               errorText={name.error}
             />
-            <TextInput
-              label="Last Name"
+            <EmpTextInput
+              placeholder="Last Name"
               returnKeyType="next"
               value={Lastname.value}
               onChangeText={text => setLastname({ value: text, error: '' })}
               error={!!Lastname.error}
               errorText={Lastname.error}
             />
-            <TextInput
-              label="Email"
+            <EmpTextInput
+              placeholder="Email"
               returnKeyType="next"
               value={email.value}
               onChangeText={text => setEmail({ value: text, error: '' })}
@@ -178,8 +182,8 @@ export default function RegisterScreen({ navigation }) {
               textContentType="emailAddress"
               keyboardType="email-address"
             />
-            <TextInput
-              label="Password"
+            <EmpTextInput
+              placeholder="Password"
               returnKeyType="done"
               value={password.value}
               onChangeText={text => setPassword({ value: text, error: '' })}
@@ -187,8 +191,18 @@ export default function RegisterScreen({ navigation }) {
               errorText={password.error}
               password={true}
             />
-            <TextInput
-              label="Organization id"
+            <EmpTextInput
+              placeholder="Confirm Password"
+              returnKeyType="done"
+              value={ConfirmPassword.value}
+              onChangeText={text => setConfirmPassword({ value: text, error: '' })}
+              error={!!ConfirmPassword.error}
+              errorText={ConfirmPassword.error}
+              password={true}
+            />
+            <EmpTextInput
+              editable={false}
+              placeholder="Organization id"
               returnKeyType="done"
               value={Organization.value}
               onChangeText={text => setOrganization({ value: text, error: '' })}

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import {View, StyleSheet, Text} from 'react-native';
-import {TextInput as Input} from 'react-native-paper';
+import {View, StyleSheet, Text, TextInput} from 'react-native';
 import {theme} from '../../core/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
@@ -9,13 +8,9 @@ export default function OrgtextInput({errorText, description, password = false, 
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <Input
+        <TextInput 
           secureTextEntry={hidePassword}
           style={styles.input}
-          underlineColor="transparent"
-          underlineColorAndroid="transparent"
-          theme={{colors: {primary: '#E14D2A'}}}
-          // mode="outlined"
           {...props}
         />
         {password && (
@@ -49,7 +44,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E14D2A",
     borderRadius: 15,
-    padding: 4
+    padding: 4,
+    backgroundColor: theme.colors.surface,
   },
   input: {
     backgroundColor: theme.colors.surface,

@@ -11,7 +11,7 @@ import {
 import { Text } from 'react-native-paper';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
-import TextInput from '../components/TextInput';
+import EmpTextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
 import { theme } from '../core/theme';
 import { emailValidator } from '../helpers/emailValidator';
@@ -174,8 +174,8 @@ export default function LoginScreen({ navigation }) {
         <KeyboardAvoidingView style={styles.keyboar}>
           <Logo />
           <Header>LOGIN</Header>
-          <TextInput
-            label="Email id"
+          <EmpTextInput
+            placeholder="Email id"
             returnKeyType="next"
             value={email.value}
             onChangeText={text => setEmail({ value: text, error: '' })}
@@ -186,8 +186,8 @@ export default function LoginScreen({ navigation }) {
             textContentType="emailAddress"
             keyboardType="email-address"
           />
-          <TextInput
-            label="Password"
+          <EmpTextInput
+            placeholder="Password"
             returnKeyType="done"
             value={password.value}
             onChangeText={text => setPassword({ value: text, error: '' })}

@@ -5,49 +5,122 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
+  TextInput,
+  Image,
 } from 'react-native';
-import React from 'react';
-import {PRIMARY} from '../Colors/Color';
+import React, { useCallback, useEffect, useState } from 'react';
+import { GREY, PRIMARY } from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-const ForwordedRequest = ({navigation}) => {
-  const data = [
-    {
-      id: '1',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '2',
-      iconName: 'hamburger',
-    },
-    {
-      id: '3',
-      iconName: 'plane',
-    },
-    {
-      id: '4',
-      iconName: 'hamburger',
-    },
-    {
-      id: '5',
-      iconName: 'plane',
-    },
-    {
-      id: '6',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '7',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '8',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '9',
-      iconName: 'gas-pump',
-    },
-  ];
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearGetAllBills, getAllBills } from '../../redux/actions/getAllBillsAction';
+import Imagepath from '../../Assets/Images/Imagepath';
+import LoaderOrg from '../Componets/LoaderOrg';
+const ForwordedRequest = ({ navigation }) => {
+
+  const [userData, setUserData] = useState(null);
+  const [data, setData] = useState([]);
+  const [page, setPage] = useState("1");
+  const [searchText, setSearchText] = useState("");
+
+  const dispatch = useDispatch()
+
+  const getAllBillsResponse = useSelector(
+    state => state.getAllBillsReducer.data,
+  );
+  const loading = useSelector(state => state.getAllBillsReducer.loading);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+      setPage("1")
+    }, []),
+  );
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@user_data');
+      if (value !== null) {
+        const data = JSON.parse(value);
+        if (data != null) {
+          setUserData(data);
+        } else {
+          setUserData(null);
+        }
+      } else {
+        setUserData(null);
+      }
+    } catch (e) {
+      console.log('storage error', e);
+    }
+  };
+
+  useEffect(() => {
+    if (userData != null) {
+      fetchAllBills("1", searchText);
+    }
+  }, [userData]);
+
+  const fetchAllBills = (page, searchText) => {
+    let request = {
+      user_id: userData.user_id,
+      type: 'organization',
+      page: page,
+      reverse: 1,
+      user_status: 'Forward',
+      search: searchText,
+      bill_type: "",
+      from_date: '',
+      to_date: '',
+    };
+
+    dispatch(getAllBills(request));
+  };
+
+  useEffect(() => {
+    if (getAllBillsResponse != null) {
+      console.log('getAllBillsResponse', getAllBillsResponse);
+      if (
+        Object.keys(getAllBillsResponse).length != 0 &&
+        getAllBillsResponse.statusCode != 200
+      ) {
+        alert(getAllBillsResponse.message);
+        dispatch(clearGetAllBills());
+      }
+      if (
+        Object.keys(getAllBillsResponse).length != 0 &&
+        getAllBillsResponse.statusCode == 200
+      ) {
+        let allRequest = getAllBillsResponse.data;
+        setData([...data, ...allRequest]);
+        let pageNum = parseInt(page);
+        let incPage = pageNum + 1;
+        setPage(incPage.toString())
+        dispatch(clearGetAllBills());
+      }
+    }
+  }, [getAllBillsResponse]);
+
+  const icon = type => {
+    switch (type) {
+      case 'Medical': {
+        return Imagepath.medicine;
+      }
+      case 'Fuel': {
+        return Imagepath.Fuel;
+      }
+      case 'Food': {
+        return Imagepath.foodfork;
+      }
+      case 'Others': {
+        return Imagepath.Others;
+      }
+      default: {
+        return Imagepath.Others;
+      }
+    }
+  };
 
   const RecentRequestList = ({ item, index }) => {
     return (
@@ -55,7 +128,6 @@ const ForwordedRequest = ({navigation}) => {
         activeOpacity={0.9}
         onPress={() =>
           navigation.navigate('DetailScreen', {
-            item: item,
             data: data,
             index: index,
           })
@@ -74,7 +146,7 @@ const ForwordedRequest = ({navigation}) => {
               borderWidth: 1,
               borderColor: '#E14D2A'
             }}>
-            <Icon name={item.iconName} size={24} color={PRIMARY} />
+            <Image source={icon(item.type)} style={{ height: 24, width: 24, tintColor: PRIMARY }} />
           </View>
           <View style={{ flex: 1, marginLeft: 12 }}>
             <Text
@@ -84,7 +156,7 @@ const ForwordedRequest = ({navigation}) => {
                 fontWeight: 'bold',
                 marginBottom: 8,
               }}>
-              Name of Employee
+              {item.employee}
             </Text>
             <Text
               style={{
@@ -93,7 +165,7 @@ const ForwordedRequest = ({navigation}) => {
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
-              Category Name
+              {item.type}
             </Text>
           </View>
           <View style={{ marginRight: 20 }}>
@@ -115,7 +187,7 @@ const ForwordedRequest = ({navigation}) => {
                   color: "#E14D2A",
                   fontWeight: 'bold',
                 }}>
-                200
+                {item.amount}
               </Text>
             </View>
 
@@ -129,7 +201,7 @@ const ForwordedRequest = ({navigation}) => {
                 textAlignVertical: 'center',
                 marginTop: 3,
               }}>
-              Status
+              {item.status}
             </Text>
           </View>
         </View>
@@ -137,20 +209,65 @@ const ForwordedRequest = ({navigation}) => {
     );
   };
 
+  useEffect(() => {
+    if (userData != null) {
+      setData([])
+      setPage("1")
+      fetchAllBills("1", searchText)
+    }
+  }, [searchText])
+
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.headingContianer}>
-        <Text style={styles.heading}>Forwarded Requests </Text>
-      </View>
+    <>
+      <SafeAreaView style={styles.container}>
+        <View style={styles.headingContianer}>
+          <Text style={styles.heading}>Forwarded Requests </Text>
+        </View>
+        <View style={{
+          marginHorizontal: 10,
+          elevation: 5,
+          backgroundColor: '#fff',
+          paddingHorizontal: 10,
+          marginVertical: 7,
+          flexDirection: 'row',
+          alignItems: 'center',
+          borderRadius: 15
+        }}>
+          <TextInput
+            placeholder="Search"
+            onChangeText={text => {
+              setSearchText(text);
+            }}
+          />
+        </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: 80,
-          }}
           data={data}
-          renderItem={({item}) => <RecentRequestList item={item} />}
+          contentContainerStyle={{ flexGrow: 1 }}
+          renderItem={RecentRequestList}
+          onEndReached={() => { fetchAllBills(page, searchText) }}
+          onEndReachedThreshold={0.1}
+          ListEmptyComponent={() => {
+            return (
+              <View style={{ flex: 1, alignItems: "center", justifyContent: 'center' }}>
+                <Text
+                  style={{
+                    marginBottom: 120,
+                    alignSelf: 'center',
+                    textAlignVertical: 'center',
+                    fontSize: 24,
+                    color: GREY,
+                  }}>
+                  Result not found
+                </Text>
+
+              </View>
+            );
+          }}
         />
-    </SafeAreaView>
+      </SafeAreaView>
+      {loading && <LoaderOrg />}
+    </>
   );
 };
 

@@ -42,6 +42,7 @@ export default function OrgSignup({ navigation }) {
 
   const [email, setEmail] = useState({ value: '', error: '' });
   const [password, setPassword] = useState({ value: '', error: '' });
+  const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' });
 
   const registerResponse = useSelector(state => state.registerReducer.data);
   const loading = useSelector(state => state.registerReducer.loading);
@@ -149,14 +150,14 @@ export default function OrgSignup({ navigation }) {
         <Logo />
         <Text style={styles.textcreate}>Create Account</Text>
       </View>
-      <KeyboardAvoidingView behavior="padding" style={styles.keyboarstyle}>
+      <KeyboardAvoidingView behavior="padding" style={styles.keyboarstyle} keyboardShouldPersistTaps='always'>
         <ScrollView
           nestedScrollEnabled={true}
           //scrollEnabled={this.state.openCountryDropwdown ? false : true}
           keyboardShouldPersistTaps={'handled'}
           style={styles.innerContainer}>
           <OrgtextInput
-            label="Organization Name"
+            placeholder="Organization Name"
             returnKeyType="next"
             value={OrganizationName.value}
             onChangeText={text => setOrganizationName({ value: text, error: '' })}
@@ -164,7 +165,7 @@ export default function OrgSignup({ navigation }) {
             errorText={OrganizationName.error}
           />
           <OrgtextInput
-            label="Address of organization"
+            placeholder="Address of organization"
             returnKeyType="next"
             value={OrganizationAddres.value}
             onChangeText={text =>
@@ -174,7 +175,7 @@ export default function OrgSignup({ navigation }) {
             errorText={OrganizationAddres.error}
           />
           <OrgtextInput
-            label="Email"
+            placeholder="Email"
             returnKeyType="next"
             value={email.value}
             onChangeText={text => setEmail({ value: text, error: '' })}
@@ -186,13 +187,22 @@ export default function OrgSignup({ navigation }) {
             keyboardType="email-address"
           />
           <OrgtextInput
-            label="Password"
-            returnKeyType="done"
+            placeholder="Password"
+            returnKeyType="next"
             value={password.value}
             onChangeText={text => setPassword({ value: text, error: '' })}
             error={!!password.error}
             errorText={password.error}
-            secureTextEntry
+            password={true}
+          />
+          <OrgtextInput
+            placeholder="Confirm Password"
+            returnKeyType="done"
+            value={confirmPassword.value}
+            onChangeText={text => setConfirmPassword({ value: text, error: '' })}
+            error={!!confirmPassword.error}
+            errorText={confirmPassword.error}
+            password={true}
           />
           {/* <Text style={{color:GREY}}>Optional</Text> */}
           {/* <TouchableOpacity

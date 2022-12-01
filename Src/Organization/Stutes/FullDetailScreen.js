@@ -8,6 +8,7 @@ import {
   Modal,
   SafeAreaView,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import { DARK, PRIMARY, WHITE } from '../Colors/Color';
 import * as Animatable from 'react-native-animatable';
@@ -20,6 +21,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { theme } from '../../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
+import moment from 'moment';
 
 export default function FullDetailScreen({ navigation, route }) {
 
@@ -27,15 +29,15 @@ export default function FullDetailScreen({ navigation, route }) {
 
   useFocusEffect(
     useCallback(() => {
-      console.log('fullDeatailsScreen');
+      console.log('fullDeatailsScreen', route.params);
     }, []),
   );
 
   const [visible, setvisible] = useState(false);
 
-  const images = [
-    { url: '', props: { source: require('../../Assets/bills.png') } },
-  ];
+  // const images = [
+  //   { url: '', props: { source: require('../../Assets/bills.png') } },
+  // ];
 
   return (
     <>
@@ -68,9 +70,9 @@ export default function FullDetailScreen({ navigation, route }) {
                   style={{ top: 5 }}
                 />
                 <View>
-                  <Text style={styles.textrupees}>1550.00</Text>
+                  <Text style={styles.textrupees}>{route.params.item.amount}</Text>
                   <>
-                    <Text style={styles.textfuelthe}>The Fuel</Text>
+                    <Text style={styles.textfuelthe}>{route.params.item.type}</Text>
                   </>
                 </View>
               </View>
@@ -82,19 +84,19 @@ export default function FullDetailScreen({ navigation, route }) {
               <View style={{ marginTop: 20 }}>
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Date</Text>
-                  <Text style={styles.textmar}>Mar 27,2022</Text>
+                  <Text style={styles.textmar}>{moment(route.params.item.date).format("MMM DD, yyyy")}</Text>
                 </View>
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Description</Text>
                   <Text style={styles.textfuel}>
-                    This is a reimbursement applied for the fuel.
+                    {route.params.item.description}
                   </Text>
                 </View>
                 <View style={styles.flexview}>
                   <Text style={styles.textdate}>Attachment</Text>
                   <TouchableOpacity onPress={() => setvisible(true)}>
                     <Image
-                      source={require('../../Assets/bills.png')}
+                      source={{ uri: route.params.item.bill_attachment }}
                       style={{
                         height: 50,
                         width: 50,
@@ -106,9 +108,11 @@ export default function FullDetailScreen({ navigation, route }) {
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Status</Text>
                   <View style={styles.pickerContainer}>
-                    <Picker
+                    {route.params.item.status == "Pending" ? <Picker
+                      enabled={route.params.item.status == "Pending"}
                       style={styles.picker}
                       selectedValue={stutes}
+                      mode='dropdown'
                       onValueChange={itemvalue => setstutes(itemvalue)}>
                       <Picker.Item
                         label="Pending"
@@ -130,7 +134,11 @@ export default function FullDetailScreen({ navigation, route }) {
                         value="Forwarded"
                         color={DARK}
                       />
-                    </Picker>
+                    </Picker> :
+                      <Text style={styles.textfuel}>
+                        {route.params.item.status}
+                      </Text>
+                    }
                   </View>
                 </View>
               </View>
@@ -140,9 +148,9 @@ export default function FullDetailScreen({ navigation, route }) {
                 <Text style={[styles.textdate, {}]}>
                   Status by
                 </Text>
-                <Text style={[styles.textmar, {}]}>Name</Text>
+                <Text style={[styles.textmar, {}]}>Admin</Text>
               </View>
-              <View
+              {/* <View
                 style={styles.flexview}>
                 <Text style={styles.textdate}>Sub Total</Text>
                 <Text style={[styles.textmar, {}]}>
@@ -153,14 +161,14 @@ export default function FullDetailScreen({ navigation, route }) {
                 style={styles.flexview}>
                 <Text style={styles.textdate}>Less Cash Advance</Text>
                 <Text style={[styles.textmar, {}]}> Amount</Text>
-              </View>
+              </View> */}
               <View
                 style={styles.flexview}>
                 <Text style={styles.textdate}>Total Reimbursement</Text>
-                <Text style={[styles.textmar, {}]}> Amount</Text>
+                <Text style={[styles.textmar, {}]}>{route.params.item.amount}</Text>
               </View>
             </View>
-            <TouchableOpacity
+            {route.params.item.status == "Pending" && <TouchableOpacity
               mode="contained"
               onPress={() => navigation.navigate('Home')}
               activeOpacity={0.9}>
@@ -171,7 +179,7 @@ export default function FullDetailScreen({ navigation, route }) {
                 style={styles.touchabltext}>
                 <Text style={styles.textstyle}>SUBMIT</Text>
               </LinearGradient>
-            </TouchableOpacity>
+            </TouchableOpacity>}
           </View>
         </Animatable.View>
       </ScrollView>
@@ -181,7 +189,7 @@ export default function FullDetailScreen({ navigation, route }) {
           <SafeAreaView style={styles.container}>
             <ImageViewer
               renderIndicator={() => null}
-              imageUrls={images}
+              imageUrls={[{ url: route.params.item.bill_attachment }]}
               index={0}
               style={[
                 styles.Imagecontainer,
@@ -295,9 +303,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: DARK,
     flex: 0.9,
-    textAlign: 'center',
-    top: 9,
-    left: 12,
+    textAlign: 'right',
+    // top: 9,
+    // left: 12,
   },
   container2: {
     marginHorizontal: 18,
@@ -319,7 +327,7 @@ const styles = StyleSheet.create({
   },
   elevationstyle: {
     backgroundColor: '#fff',
-    marginTop: 24,
+    marginVertical: 24,
     elevation: 10,
     borderRadius: 15,
     padding: 20,
@@ -351,10 +359,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   picker: {
-    width: 134,
-
+    width: Dimensions.get('window').width / 2 - 40,
     height: 20,
     color: DARK,
+    marginRight: -20,
   },
   Approved: {
     color: 'green',
@@ -383,7 +391,7 @@ const styles = StyleSheet.create({
   },
   textstyle: {
     fontSize: 18,
-    color: PRIMARY,
+    color: WHITE,
   },
   subtotal: {
     fontSize: 18,

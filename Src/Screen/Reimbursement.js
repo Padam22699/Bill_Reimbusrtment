@@ -13,7 +13,7 @@ import {
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
 import Entypo from 'react-native-vector-icons/Entypo';
-import TextInput from '../components/TextInput';
+import EmpTextInput from '../components/TextInput';
 import Imagepath from '../Assets/Images/Imagepath';
 import ImagePicker from 'react-native-image-crop-picker';
 import { Iconlist } from '../Common/VerticalData';
@@ -245,8 +245,8 @@ export default function Reimbursement({ navigation }) {
           </View>
           <View>
             <View style={{}}>
-              <TextInput
-                label="Amount "
+              <EmpTextInput
+                placeholder="Amount "
                 keyboardType={'numeric'}
                 value={amount.value}
                 onChangeText={text => {
@@ -260,8 +260,8 @@ export default function Reimbursement({ navigation }) {
                 }}
               />
             </View>
-            <TextInput
-              label="Description"
+            <EmpTextInput
+              placeholder="Description"
               value={description.value}
               onChangeText={text => {
                 setDescription({ value: text, error: '' });
@@ -269,8 +269,8 @@ export default function Reimbursement({ navigation }) {
               error={!!description.error}
               errorText={description.error}
             />
-            <TextInput
-              label="Participants"
+            <EmpTextInput
+              placeholder="Participants"
               keyboardType={'numeric'}
               value={participants.value}
               onChangeText={text => {

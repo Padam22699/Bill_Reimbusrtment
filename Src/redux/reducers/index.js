@@ -9,6 +9,7 @@ import getAllBillsReducer from "./getAllBillsReducer";
 import getBillDetailReducer from "./getBillDetailReducer";
 import isPhysicallySubmittedReducer from "./isPhysicallySubmittedReducer";
 import reminderReducer from "./reminderReducer";
+import changeStatusReducer from "./changeStatusReducer";
 
 export default combineReducers({
     registerReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
     getBillDetailReducer,
     isPhysicallySubmittedReducer,
     reminderReducer,
+    changeStatusReducer,
 });

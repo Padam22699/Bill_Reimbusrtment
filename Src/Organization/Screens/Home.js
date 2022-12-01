@@ -7,50 +7,96 @@ import {
   TouchableOpacity,
   Dimensions,
   StatusBar,
+  Image,
 } from 'react-native';
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { A, DARK, PRIMARY, B, C, WHITE } from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearGetAllBills, getAllBills } from '../../redux/actions/getAllBillsAction';
+import Imagepath from '../../Assets/Images/Imagepath';
+import LoaderOrg from '../Componets/LoaderOrg';
 
 const Deshboard = ({ navigation }) => {
-  const data = [
-    {
-      id: '1',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '2',
-      iconName: 'hamburger',
-    },
-    {
-      id: '3',
-      iconName: 'plane',
-    },
-    {
-      id: '4',
-      iconName: 'hamburger',
-    },
-    {
-      id: '5',
-      iconName: 'plane',
-    },
-    {
-      id: '6',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '7',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '8',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '9',
-      iconName: 'gas-pump',
-    },
-  ];
+
+  const [userData, setUserData] = useState(null);
+  const [data, setData] = useState([]);
+
+  const dispatch = useDispatch()
+
+  const getAllBillsResponse = useSelector(
+    state => state.getAllBillsReducer.data,
+  );
+  const loading = useSelector(state => state.getAllBillsReducer.loading);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, []),
+  );
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@user_data');
+      if (value !== null) {
+        const data = JSON.parse(value);
+        if (data != null) {
+          setUserData(data);
+        } else {
+          setUserData(null);
+        }
+      } else {
+        setUserData(null);
+      }
+    } catch (e) {
+      console.log('storage error', e);
+    }
+  };
+
+  useEffect(() => {
+    if (userData != null) {
+      fetchAllBills();
+    }
+  }, [userData]);
+
+  const fetchAllBills = () => {
+    let request = {
+      user_id: userData.user_id,
+      type: 'organization',
+      page: "1",
+      reverse: 1,
+      user_status: '',
+      search: "",
+      bill_type: "",
+      from_date: '',
+      to_date: '',
+    };
+
+    dispatch(getAllBills(request));
+  };
+
+  useEffect(() => {
+    if (getAllBillsResponse != null) {
+      console.log('getAllBillsResponse', getAllBillsResponse);
+      if (
+        Object.keys(getAllBillsResponse).length != 0 &&
+        getAllBillsResponse.statusCode != 200
+      ) {
+        alert(getAllBillsResponse.message);
+        dispatch(clearGetAllBills());
+      }
+      if (
+        Object.keys(getAllBillsResponse).length != 0 &&
+        getAllBillsResponse.statusCode == 200
+      ) {
+        let allRequest = getAllBillsResponse.data;
+        setData(allRequest);
+        dispatch(clearGetAllBills());
+      }
+    }
+  }, [getAllBillsResponse]);
 
   const MiddleContent = ({
     money,
@@ -114,16 +160,42 @@ const Deshboard = ({ navigation }) => {
     );
   };
 
+  const icon = type => {
+    switch (type) {
+      case 'Medical': {
+        return Imagepath.medicine;
+      }
+      case 'Fuel': {
+        return Imagepath.Fuel;
+      }
+      case 'Food': {
+        return Imagepath.foodfork;
+      }
+      case 'Others': {
+        return Imagepath.Others;
+      }
+      default: {
+        return Imagepath.Others;
+      }
+    }
+  };
+
   const RecentRequestList = ({ item, index }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() =>
-          navigation.navigate('DetailScreen', {
-            item: item,
-            data: data,
-            index: index,
-          })
+        onPress={() => {
+          if (item.status == "Pending") {
+            navigation.navigate('DetailScreen', {
+              data: data,
+              index: index,
+            })
+          } else {
+            navigation.navigate('UserDetail', {
+              item: item,
+            });
+          }
+        }
         }>
         <View style={styles.recentList}>
           <View
@@ -139,7 +211,7 @@ const Deshboard = ({ navigation }) => {
               borderWidth: 1,
               borderColor: '#E14D2A'
             }}>
-            <Icon name={item.iconName} size={24} color={PRIMARY} />
+            <Image source={icon(item.type)} style={{ height: 24, width: 24, tintColor: PRIMARY }} />
           </View>
           <View style={{ flex: 1, marginLeft: 12 }}>
             <Text
@@ -149,7 +221,7 @@ const Deshboard = ({ navigation }) => {
                 fontWeight: 'bold',
                 marginBottom: 8,
               }}>
-              Name of Employee
+              {item.employee}
             </Text>
             <Text
               style={{
@@ -158,7 +230,7 @@ const Deshboard = ({ navigation }) => {
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
-              Category Name
+              {item.type}
             </Text>
           </View>
           <View style={{ marginRight: 20 }}>
@@ -180,7 +252,7 @@ const Deshboard = ({ navigation }) => {
                   color: "#E14D2A",
                   fontWeight: 'bold',
                 }}>
-                200
+                {item.amount}
               </Text>
             </View>
 
@@ -194,7 +266,7 @@ const Deshboard = ({ navigation }) => {
                 textAlignVertical: 'center',
                 marginTop: 3,
               }}>
-              Status
+              {item.status}
             </Text>
           </View>
         </View>
@@ -244,6 +316,9 @@ const Deshboard = ({ navigation }) => {
           )}
         />
       </View>
+      {
+        loading && <LoaderOrg />
+      }
     </SafeAreaView>
   );
 };
