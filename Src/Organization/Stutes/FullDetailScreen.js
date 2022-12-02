@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -22,22 +22,79 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 import { theme } from '../../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { changeStatus, clearChangeStatus } from '../../redux/actions/changeStatusAction';
+import LoaderOrg from '../Componets/LoaderOrg';
 
 export default function FullDetailScreen({ navigation, route }) {
 
-  const [stutes, setstutes] = useState('Pendding');
+  const [stutes, setstutes] = useState('Pending');
+  const [visible, setvisible] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  const dispatch = useDispatch()
+
+  const changeStatusResponse = useSelector(
+    state => state.changeStatusReducer.data,
+  );
+  const loading = useSelector(state => state.changeStatusReducer.loading);
 
   useFocusEffect(
     useCallback(() => {
       console.log('fullDeatailsScreen', route.params);
+      setstutes("Pending")
+      getData();
     }, []),
   );
 
-  const [visible, setvisible] = useState(false);
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@user_data');
+      if (value !== null) {
+        const data = JSON.parse(value);
+        if (data != null) {
+          setUserData(data);
+        } else {
+          setUserData(null);
+        }
+      } else {
+        setUserData(null);
+      }
+    } catch (e) {
+      console.log('storage error', e);
+    }
+  };
 
-  // const images = [
-  //   { url: '', props: { source: require('../../Assets/bills.png') } },
-  // ];
+  const submit = () => {
+    console.log("status", stutes)
+    let request = {
+      user_id: userData.user_id,
+      bill_id: route.params.item.bill_id,
+      user_status: stutes
+    }
+    dispatch(changeStatus(request))
+  }
+
+  useEffect(() => {
+    if (changeStatusResponse != null) {
+      console.log('changeStatusResponse', changeStatusResponse);
+      if (
+        Object.keys(changeStatusResponse).length != 0 &&
+        changeStatusResponse.statusCode != 200
+      ) {
+        alert(changeStatusResponse.message);
+        dispatch(clearChangeStatus());
+      }
+      if (
+        Object.keys(changeStatusResponse).length != 0 &&
+        changeStatusResponse.statusCode == 200
+      ) {
+        dispatch(clearChangeStatus());
+        navigation.navigate('Home')
+      }
+    }
+  }, [changeStatusResponse]);
 
   return (
     <>
@@ -125,13 +182,13 @@ export default function FullDetailScreen({ navigation, route }) {
                         color={DARK}
                       />
                       <Picker.Item
-                        label="Decline"
-                        value="Decline"
+                        label="Rejected"
+                        value="Rejected"
                         color={DARK}
                       />
                       <Picker.Item
-                        label="Forwarded"
-                        value="Forwarded"
+                        label="Forward"
+                        value="Forward"
                         color={DARK}
                       />
                     </Picker> :
@@ -170,7 +227,7 @@ export default function FullDetailScreen({ navigation, route }) {
             </View>
             {route.params.item.status == "Pending" && <TouchableOpacity
               mode="contained"
-              onPress={() => navigation.navigate('Home')}
+              onPress={submit}
               activeOpacity={0.9}>
               <LinearGradient
                 colors={['#FAC898', '#E14D2A']}
@@ -215,6 +272,7 @@ export default function FullDetailScreen({ navigation, route }) {
           </SafeAreaView>
         </Modal>
       )}
+      {loading && <LoaderOrg />}
     </>
   );
 }

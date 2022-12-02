@@ -7,7 +7,7 @@ import {
   Dimensions,
   StatusBar,
 } from 'react-native';
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   DARK,
   WHITE,
@@ -18,11 +18,81 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { theme } from '../core/theme';
 import Welogo from '../Organization/Componets/Welogo';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from '../Organization/Componets/Loader'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearGetDashboardData, getDashboardData } from '../redux/actions/getDashboardDataAction';
 
 const Ehome = ({ navigation }) => {
 
+  const [userData, setUserData] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
+
+  const dispatch = useDispatch()
+
+  const getDashboardDataResponse = useSelector(state => state.getDashboardDataReducer.data);
+  const loadingDashboard = useSelector(state => state.getDashboardDataReducer.loading);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, []),
+  );
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@user_data');
+      if (value !== null) {
+        const data = JSON.parse(value);
+        if (data != null) {
+          setUserData(data);
+        } else {
+          setUserData(null);
+        }
+      } else {
+        setUserData(null);
+      }
+    } catch (e) {
+      console.log('storage error', e);
+    }
+  };
+
   useEffect(() => {
-  }, []);
+    if (userData != null) {
+      fetchDashboardData()
+    }
+  }, [userData]);
+
+  const fetchDashboardData = () => {
+    let request = {
+      user_id: userData.user_id,
+      type: 'employee',
+    };
+
+    dispatch(getDashboardData(request));
+  };
+
+  useEffect(() => {
+    if (getDashboardDataResponse != null) {
+      console.log('getDashboardDataResponse', getDashboardDataResponse);
+      if (
+        Object.keys(getDashboardDataResponse).length != 0 &&
+        getDashboardDataResponse.statusCode != 200
+      ) {
+        alert(getDashboardDataResponse.message);
+        dispatch(clearGetDashboardData());
+      }
+      if (
+        Object.keys(getDashboardDataResponse).length != 0 &&
+        getDashboardDataResponse.statusCode == 200
+      ) {
+        let allData = getDashboardDataResponse.data;
+        setDashboardData(allData);
+        dispatch(clearGetDashboardData());
+      }
+    }
+  }, [getDashboardDataResponse]);
 
   const MiddleContent = ({
     money,
@@ -96,15 +166,16 @@ const Ehome = ({ navigation }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <MiddleContent money={60} heading="This Month" backGround={A} />
+          <MiddleContent money={dashboardData != null && dashboardData.one_month_data} heading="This Month" backGround={A} />
           <MiddleContent
-            money={200}
+            money={dashboardData != null && dashboardData.six_month_data}
             heading="Last 6 Months"
             backGround={B}
           />
-          <MiddleContent money={600} heading="This Year" backGround={C} />
+          <MiddleContent money={dashboardData != null && dashboardData.one_year_data} heading="This Year" backGround={C} />
         </View>
       </View>
+      {loadingDashboard && <Loader />}
     </SafeAreaView>
   );
 };

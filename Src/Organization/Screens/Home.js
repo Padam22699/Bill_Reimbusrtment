@@ -18,17 +18,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { clearGetAllBills, getAllBills } from '../../redux/actions/getAllBillsAction';
 import Imagepath from '../../Assets/Images/Imagepath';
 import LoaderOrg from '../Componets/LoaderOrg';
+import { clearGetDashboardData, getDashboardData } from '../../redux/actions/getDashboardDataAction';
 
 const Deshboard = ({ navigation }) => {
 
   const [userData, setUserData] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
   const [data, setData] = useState([]);
 
   const dispatch = useDispatch()
 
-  const getAllBillsResponse = useSelector(
-    state => state.getAllBillsReducer.data,
-  );
+  const getDashboardDataResponse = useSelector(state => state.getDashboardDataReducer.data);
+  const loadingDashboard = useSelector(state => state.getDashboardDataReducer.loading);
+  const getAllBillsResponse = useSelector(state => state.getAllBillsReducer.data);
   const loading = useSelector(state => state.getAllBillsReducer.loading);
 
   useFocusEffect(
@@ -57,9 +59,19 @@ const Deshboard = ({ navigation }) => {
 
   useEffect(() => {
     if (userData != null) {
+      fetchDashboardData()
       fetchAllBills();
     }
   }, [userData]);
+
+  const fetchDashboardData = () => {
+    let request = {
+      user_id: userData.user_id,
+      type: 'organization',
+    };
+
+    dispatch(getDashboardData(request));
+  };
 
   const fetchAllBills = () => {
     let request = {
@@ -97,6 +109,27 @@ const Deshboard = ({ navigation }) => {
       }
     }
   }, [getAllBillsResponse]);
+
+  useEffect(() => {
+    if (getDashboardDataResponse != null) {
+      console.log('getDashboardDataResponse', getDashboardDataResponse);
+      if (
+        Object.keys(getDashboardDataResponse).length != 0 &&
+        getDashboardDataResponse.statusCode != 200
+      ) {
+        alert(getDashboardDataResponse.message);
+        dispatch(clearGetDashboardData());
+      }
+      if (
+        Object.keys(getDashboardDataResponse).length != 0 &&
+        getDashboardDataResponse.statusCode == 200
+      ) {
+        let allData = getDashboardDataResponse.data;
+        setDashboardData(allData);
+        dispatch(clearGetDashboardData());
+      }
+    }
+  }, [getDashboardDataResponse]);
 
   const MiddleContent = ({
     money,
@@ -293,13 +326,13 @@ const Deshboard = ({ navigation }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <MiddleContent money={60} heading="This Month" backGround={A} />
+          <MiddleContent money={dashboardData != null && dashboardData.one_month_data} heading="This Month" backGround={A} />
           <MiddleContent
-            money={200}
+            money={dashboardData != null && dashboardData.six_month_data}
             heading="Last 6 Months"
             backGround={B}
           />
-          <MiddleContent money={600} heading="This Year" backGround={C} />
+          <MiddleContent money={dashboardData != null && dashboardData.one_year_data} heading="This Year" backGround={C} />
         </View>
         <View style={{ marginBottom: 10 }}>
           <Text style={{ fontSize: 20, color: DARK, fontWeight: 'bold' }}>
@@ -317,7 +350,7 @@ const Deshboard = ({ navigation }) => {
         />
       </View>
       {
-        loading && <LoaderOrg />
+        (loading || loadingDashboard) && <LoaderOrg />
       }
     </SafeAreaView>
   );

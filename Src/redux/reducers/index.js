@@ -10,6 +10,7 @@ import getBillDetailReducer from "./getBillDetailReducer";
 import isPhysicallySubmittedReducer from "./isPhysicallySubmittedReducer";
 import reminderReducer from "./reminderReducer";
 import changeStatusReducer from "./changeStatusReducer";
+import getDashboardDataReducer from "./getDashboardDataReducer";
 
 export default combineReducers({
     registerReducer,
@@ -23,4 +24,5 @@ export default combineReducers({
     isPhysicallySubmittedReducer,
     reminderReducer,
     changeStatusReducer,
+    getDashboardDataReducer,
 });

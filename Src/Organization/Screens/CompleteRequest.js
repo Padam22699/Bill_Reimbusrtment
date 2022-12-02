@@ -35,6 +35,7 @@ const CompleteRequest = ({ navigation }) => {
     useCallback(() => {
       getData();
       setPage("1")
+      setData([])
     }, []),
   );
 
@@ -68,7 +69,7 @@ const CompleteRequest = ({ navigation }) => {
       type: 'organization',
       page: page,
       reverse: 1,
-      user_status: 'Approved',
+      user_status: '',
       search: searchText,
       bill_type: "",
       from_date: '',
@@ -93,7 +94,10 @@ const CompleteRequest = ({ navigation }) => {
         getAllBillsResponse.statusCode == 200
       ) {
         let allRequest = getAllBillsResponse.data;
-        setData([...data, ...allRequest]);
+        let formatedRequest = allRequest.filter(item => {
+          return (item.status == "Approved" || item.status == "Rejected");
+        });
+        setData([...data, ...formatedRequest]);
         let pageNum = parseInt(page);
         let incPage = pageNum + 1;
         console.log("pageNum", pageNum, "incPage", incPage)
@@ -128,9 +132,8 @@ const CompleteRequest = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() =>
-          navigation.navigate('DetailScreen', {
-            data: data,
-            index: index,
+          navigation.navigate('UserDetail', {
+            item: item,
           })
         }>
         <View style={styles.recentList}>

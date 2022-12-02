@@ -35,6 +35,7 @@ const PenddingRequsest = ({ navigation }) => {
     useCallback(() => {
       getData();
       setPage("1")
+      setData([])
     }, []),
   );
 

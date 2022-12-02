@@ -35,6 +35,7 @@ const ForwordedRequest = ({ navigation }) => {
     useCallback(() => {
       getData();
       setPage("1")
+      setData([])
     }, []),
   );
 
@@ -127,9 +128,8 @@ const ForwordedRequest = ({ navigation }) => {
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() =>
-          navigation.navigate('DetailScreen', {
-            data: data,
-            index: index,
+          navigation.navigate('UserDetail', {
+            item: item,
           })
         }>
         <View style={styles.recentList}>

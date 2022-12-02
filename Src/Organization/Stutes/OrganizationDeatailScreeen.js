@@ -26,11 +26,15 @@ const OrganizationDeatailScreeen = ({ navigation, route }) => {
 
   useFocusEffect(
     useCallback(() => {
+      console.log("navigation  =>>>", navigation)
       getData();
-      setCurrentIndex(null)
-      setList([])
+      return clearParams
     }, []),
   );
+
+  const clearParams = () => {
+    navigation.setParams(null)
+  }
 
   const getData = async () => {
     try {
@@ -51,11 +55,15 @@ const OrganizationDeatailScreeen = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    setCurrentIndex(route.params.index)
-    setList(route.params.data)
-    setCurrentRequest(route.params.data[route.params.index])
-    console.log('DetailsScreenss', route.params.item, "\n indexx ==>", route.params.index);
-    console.log('list', route.params.data);
+    setCurrentIndex(null)
+    setList([])
+    setCurrentRequest(null)
+    setTimeout(() => {
+      setCurrentIndex(route.params.index)
+      setList(route.params.data)
+      setCurrentRequest(route.params.data[route.params.index])
+      console.log('DetailsScreenss indexx ==>', route.params);
+    }, 10)
   }, [route])
 
   const renderCard = (card, index) => {
@@ -169,8 +177,8 @@ const OrganizationDeatailScreeen = ({ navigation, route }) => {
         </TouchableOpacity>
       </View>
 
-      {list.length > 0 && currentIndex != null && <View style={styles.swiperContainer}>
-        <Swiper
+      <View style={styles.swiperContainer}>
+        {list.length > 0 && currentIndex != null && <Swiper
           horizontalSwipe={false}
           verticalSwipe={false}
           ref={swiperRef}
@@ -220,8 +228,8 @@ const OrganizationDeatailScreeen = ({ navigation, route }) => {
               },
             },
           }}
-        />
-      </View>}
+        />}
+      </View>
       <View style={styles.bottomContainer}>
         {/* <CardDetails index={index} /> */}
         <View

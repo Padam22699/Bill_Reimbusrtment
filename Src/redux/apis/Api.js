@@ -151,3 +151,18 @@ export const changeStatus = async (requestJson) => {
     }
   }
 };
+
+export const getDashboardData = async (requestJson) => {
+  try {
+    const response = await axios.post('dashboard', requestJson, { "headers": { 'Content-Type': 'application/json', 'Authorization': store.getState().tokenReducer.data } });
+    console.log('REQUEST=> ', requestJson);
+    console.log('RESPONSE=> ', response.data);
+    return response.data;
+  } catch (err) {
+    if (err.response.data.statusCode == 400) {
+      return alert(err.response.data.message)
+    } else {
+      return alert("There is an issue in response, please try again later")
+    }
+  }
+};
