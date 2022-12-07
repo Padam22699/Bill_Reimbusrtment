@@ -2,97 +2,103 @@ import {
   SafeAreaView,
   StyleSheet,
   Text,
-  FlatList,
   View,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
+  StatusBar,
 } from 'react-native';
-import React, {useState, useEffect} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   DARK,
-  PRIMARY,
   WHITE,
   A,
   B,
   C,
-  GREY,
 } from '../Organization/Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {theme} from '../core/theme';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Heading from '../components/Heading';
+import { theme } from '../core/theme';
 import Welogo from '../Organization/Componets/Welogo';
-const Ehome = ({navigation}) => {
-  const [name, setName] = useState(null);
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from '../Organization/Componets/Loader'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearGetDashboardData, getDashboardData } from '../redux/actions/getDashboardDataAction';
 
-  useEffect(() => {
-    getUserData();
-  }, []);
+const Ehome = ({ navigation }) => {
 
-  const getUserData = async () => {
+  const [userData, setUserData] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
+
+  const dispatch = useDispatch()
+
+  const getDashboardDataResponse = useSelector(state => state.getDashboardDataReducer.data);
+  const loadingDashboard = useSelector(state => state.getDashboardDataReducer.loading);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, []),
+  );
+
+  const getData = async () => {
     try {
       const value = await AsyncStorage.getItem('@user_data');
-      console.log('value', value);
       if (value !== null) {
         const data = JSON.parse(value);
         if (data != null) {
-          setName(data.first_name + ' ' + data.last_name);
+          setUserData(data);
         } else {
-          setName(null);
+          setUserData(null);
         }
       } else {
-        setName(null);
+        setUserData(null);
       }
     } catch (e) {
       console.log('storage error', e);
     }
   };
 
-  const data = [
-    {
-      id: '1',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '2',
-      iconName: 'hamburger',
-    },
-    {
-      id: '3',
-      iconName: 'plane',
-    },
-    {
-      id: '4',
-      iconName: 'hamburger',
-    },
-    {
-      id: '5',
-      iconName: 'plane',
-    },
-    {
-      id: '6',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '7',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '8',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '9',
-      iconName: 'gas-pump',
-    },
-  ];
+  useEffect(() => {
+    if (userData != null) {
+      fetchDashboardData()
+    }
+  }, [userData]);
+
+  const fetchDashboardData = () => {
+    let request = {
+      user_id: userData.user_id,
+      type: 'employee',
+    };
+
+    dispatch(getDashboardData(request));
+  };
+
+  useEffect(() => {
+    if (getDashboardDataResponse != null) {
+      console.log('getDashboardDataResponse', getDashboardDataResponse);
+      if (
+        Object.keys(getDashboardDataResponse).length != 0 &&
+        getDashboardDataResponse.statusCode != 200
+      ) {
+        alert(getDashboardDataResponse.message);
+        dispatch(clearGetDashboardData());
+      }
+      if (
+        Object.keys(getDashboardDataResponse).length != 0 &&
+        getDashboardDataResponse.statusCode == 200
+      ) {
+        let allData = getDashboardDataResponse.data;
+        setDashboardData(allData);
+        dispatch(clearGetDashboardData());
+      }
+    }
+  }, [getDashboardDataResponse]);
+
   const MiddleContent = ({
     money,
     heading,
-    month,
     backGround,
-    onpress = () => {},
+    onpress = () => { },
   }) => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={onpress}>
@@ -102,12 +108,11 @@ const Ehome = ({navigation}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              width: deviceWidth - 255,
+              width: deviceWidth / 3 - 20,
               backgroundColor: backGround,
               height: 90,
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
-              flex: 2.4,
             }}>
             <Icon name="rupee-sign" size={20} color={WHITE} />
             <Text
@@ -125,193 +130,52 @@ const Ehome = ({navigation}) => {
 
           <View
             style={{
-              marginBottom: 10,
               alignItems: 'center',
               justifyContent: 'center',
               flex: 1,
               alignContent: 'center',
+              padding: 4
             }}>
             <Text
+              adjustsFontSizeToFit={true}
               style={{
-                fontSize: 17,
+                fontSize: 20,
                 alignSelf: 'center',
-                color: DARK,
+                color: "#5D3FD3",
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
                 textAlign: 'center',
                 justifyContent: 'center',
-                marginTop: 10,
+                margin: 5,
               }}>
               {heading}
             </Text>
-            <Text
-              style={{
-                fontSize: 17,
-                alignSelf: 'center',
-                color: DARK,
-                fontWeight: 'bold',
-                textAlignVertical: 'center',
-                textAlign: 'center',
-              }}>
-              {month}
-            </Text>
           </View>
         </View>
       </TouchableOpacity>
     );
-  };
-
-  const RecentRequestList = ({item, index}) => {
-    return (
-      <TouchableOpacity
-        activeOpacity={0.9}
-        onPress={() =>
-          navigation.navigate('DetailScreen', {
-            item: item,
-            data: data,
-            index: index,
-          })
-        }>
-        <View style={styles.recentList}>
-          <View
-            style={{alignItems: 'center', marginLeft: 10, paddingVertical: 15}}>
-            <Icon name={item.iconName} size={24} color={theme.colors.primary} />
-          </View>
-          <View style={{marginRight: 70}}>
-            <Text
-              style={{
-                fontSize: 16,
-                color: DARK,
-                fontWeight: 'bold',
-                marginBottom: 8,
-              }}>
-              Name of Employee
-            </Text>
-            <Text
-              style={{
-                fontSize: 12,
-                color: DARK,
-                fontWeight: 'bold',
-                textAlignVertical: 'center',
-              }}>
-              Category Name
-            </Text>
-          </View>
-          <View style={{marginRight: 20}}>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}>
-              <Icon
-                name="rupee-sign"
-                size={13}
-                color={DARK}
-                style={{marginRight: 2}}
-              />
-              <Text
-                style={{
-                  fontSize: 16,
-                  color: DARK,
-                  fontWeight: 'bold',
-                }}>
-                200
-              </Text>
-            </View>
-
-            <Text
-              style={{
-                fontSize: 12,
-                color: DARK,
-                fontWeight: 'bold',
-                paddingVertical: 4,
-                textAlign: 'center',
-                textAlignVertical: 'center',
-                marginTop: 3,
-              }}>
-              Status
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  const logout = async () => {
-    let data = {
-      loggedin: false,
-      loggedIntype: '',
-    };
-    try {
-      const jsonValue = JSON.stringify(data);
-      await AsyncStorage.mergeItem('@user_data', jsonValue);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'AuthStack'}],
-      });
-    } catch (e) {
-      console.log('error in saving data', e);
-    }
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
-      <View style={{marginHorizontal: 12}}>
-        {/* <View style={styles.header}>
-          <View>
-            <Text style={styles.heading}>{name}</Text>
-          </View>
-          <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity onPress={() => logout()}>
-              <Icon
-                name="sign-out-alt"
-                size={22}
-                color={ theme.colors.primary}
-                style={{paddingRight: 30}}
-              />
-            </TouchableOpacity>
-
-          </View>
-        </View> */}
-        {/* <Heading navigation={navigation}/> */}
+    <SafeAreaView style={{ flex: 1, backgroundColor: WHITE }}>
+      <StatusBar backgroundColor={theme.colors.primary} barStyle="default" />
+      <View style={{ margin: 12 }}>
         <Welogo navigation={navigation} />
-
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <MiddleContent money={60} heading="This Month" backGround={A} />
+          <MiddleContent money={dashboardData != null && dashboardData.one_month_data} heading="This Month" backGround={A} />
           <MiddleContent
-            money={200}
-            heading="Last"
-            month="6 Month"
+            money={dashboardData != null && dashboardData.six_month_data}
+            heading="Last 6 Months"
             backGround={B}
           />
-          <MiddleContent money={600} heading="This Year" backGround={C} />
+          <MiddleContent money={dashboardData != null && dashboardData.one_year_data} heading="This Year" backGround={C} />
         </View>
-        {/* <View style={{marginBottom: 20}}>
-          <Text style={{fontSize: 20, color: DARK, fontWeight: 'bold'}}>
-            Recent Request
-          </Text>
-        </View> */}
-        {/* <View
-          style={{
-            height: 400,
-          }}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom: 80,
-            }}
-            data={data}
-            renderItem={({item, index}) => (
-              <RecentRequestList item={item} index={index} />
-            )}
-          />
-        </View> */}
       </View>
+      {loadingDashboard && <Loader />}
     </SafeAreaView>
   );
 };
@@ -336,7 +200,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: WHITE,
     height: 140,
-    width: deviceWidth - 255,
+    width: deviceWidth / 3 - 20,
     borderRadius: 20,
     shadowColor: DARK,
     shadowOffset: {

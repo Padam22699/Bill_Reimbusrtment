@@ -1,23 +1,73 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import React, {createRef, useState, useEffect, useCallback} from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import React, { createRef, useState, useEffect, useCallback } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Swiper from 'react-native-deck-swiper';
-import {DARK, GREY, PRIMARY, WHITE} from '../Colors/Color';
-import {useFocusEffect} from '@react-navigation/native';
-const OrganizationDeatailScreeen = ({navigation, route}) => {
-  const data = route.params.item;
-  const list = route.params.data;
-  const indexx = route.params.index;
+import { DARK, GREY, PRIMARY, WHITE } from '../Colors/Color';
+import { useFocusEffect } from '@react-navigation/native';
+import LoaderOrg from '../Componets/LoaderOrg';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeStatus, clearChangeStatus } from '../../redux/actions/changeStatusAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+const OrganizationDeatailScreeen = ({ navigation, route }) => {
 
-  const [index, setindex] = useState(indexx);
+  const [list, setList] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(null);
+  const [userData, setUserData] = useState(null);
+  const [currentRequest, setCurrentRequest] = useState(null);
+  const [change, setChange] = useState(null)
+
+  const dispatch = useDispatch()
+
+  const changeStatusResponse = useSelector(
+    state => state.changeStatusReducer.data,
+  );
+  const loading = useSelector(state => state.changeStatusReducer.loading);
 
   useFocusEffect(
     useCallback(() => {
-      console.log('DetailsScreenss', {item: data, data: list, index: indexx});
+      console.log("navigation  =>>>", navigation)
+      getData();
+      return clearParams
     }, []),
   );
 
-  const Card = ({card, index}) => {
+  const clearParams = () => {
+    navigation.setParams(null)
+  }
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@user_data');
+      if (value !== null) {
+        const data = JSON.parse(value);
+        if (data != null) {
+          setUserData(data);
+        } else {
+          setUserData(null);
+        }
+      } else {
+        setUserData(null);
+      }
+    } catch (e) {
+      console.log('storage error', e);
+    }
+  };
+
+  useEffect(() => {
+    setCurrentIndex(null)
+    setList([])
+    setCurrentRequest(null)
+    setTimeout(() => {
+      setCurrentIndex(route.params.index)
+      setList(route.params.data)
+      setCurrentRequest(route.params.data[route.params.index])
+      console.log('DetailsScreenss indexx ==>', route.params);
+    }, 10)
+  }, [route])
+
+  const renderCard = (card, index) => {
+    console.log("card", card, "\n index", index)
     return (
       <TouchableOpacity
         activeOpacity={1}
@@ -25,14 +75,12 @@ const OrganizationDeatailScreeen = ({navigation, route}) => {
         onPress={() => {
           console.log('navigation', navigation);
           navigation.navigate('UserDetail', {
-            item: data,
-            data: list,
-            index: indexx,
+            item: card,
           });
         }}>
         <View style={[styles.imageConatiner]}>
           <Image
-            source={require('../../Assets/bills.png')}
+            source={{ uri: card.bill_attachment }}
             style={styles.billImage}
           />
         </View>
@@ -44,12 +92,12 @@ const OrganizationDeatailScreeen = ({navigation, route}) => {
             paddingBottom: 20,
           }}>
           <View style={styles.cardData}>
-            <Text style={styles.userInfo}>{list[index].id}</Text>
-            <Text style={styles.userInfo}>Bill Type </Text>
-            <Text style={styles.userInfo}>Amount </Text>
+            <Text style={styles.userInfo}>{card.employee}</Text>
+            <Text style={styles.userInfo}>{card.type}</Text>
+            <Text style={styles.userInfo}>{card.amount}</Text>
           </View>
-          <View style={{marginTop: 2}}>
-            <Text style={{color: DARK}}>01/02/2022</Text>
+          <View style={{ marginTop: 2 }}>
+            <Text style={{ color: DARK }}>{moment(card.date).format('DD/MM/YYYY')}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -57,13 +105,64 @@ const OrganizationDeatailScreeen = ({navigation, route}) => {
   };
 
   const onSwiped = () => {
-    setindex((index + 1) % list.length);
+    if ((currentIndex + 1) % list.length > 0) {
+      setCurrentIndex((currentIndex + 1) % list.length);
+      setCurrentRequest(list[(currentIndex + 1) % list.length])
+    } else {
+      navigation.goBack()
+    }
+    console.log("currentIndex", (currentIndex + 1) % list.length)
   };
   // const CardDetails = ({index}) => {
   //   return (
 
   //   );
   // };
+
+  const approve = () => {
+    setChange("Right")
+    let request = {
+      user_id: userData.user_id,
+      bill_id: currentRequest.bill_id,
+      user_status: "Approved"
+    }
+    dispatch(changeStatus(request))
+  }
+
+  const reject = () => {
+    setChange("Left")
+    let request = {
+      user_id: userData.user_id,
+      bill_id: currentRequest.bill_id,
+      user_status: "Rejected"
+    }
+    dispatch(changeStatus(request))
+  }
+
+
+  useEffect(() => {
+    if (changeStatusResponse != null) {
+      console.log('changeStatusResponse', changeStatusResponse);
+      if (
+        Object.keys(changeStatusResponse).length != 0 &&
+        changeStatusResponse.statusCode != 200
+      ) {
+        alert(changeStatusResponse.message);
+        dispatch(clearChangeStatus());
+      }
+      if (
+        Object.keys(changeStatusResponse).length != 0 &&
+        changeStatusResponse.statusCode == 200
+      ) {
+        if (change == "Left") {
+          swiperRef.current.swipeLeft()
+        } else {
+          swiperRef.current.swipeRight()
+        }
+        dispatch(clearChangeStatus());
+      }
+    }
+  }, [changeStatusResponse]);
 
   const swiperRef = createRef();
 
@@ -79,13 +178,13 @@ const OrganizationDeatailScreeen = ({navigation, route}) => {
       </View>
 
       <View style={styles.swiperContainer}>
-        <Swiper
+        {list.length > 0 && currentIndex != null && <Swiper
           horizontalSwipe={false}
           verticalSwipe={false}
           ref={swiperRef}
-          cards={data}
-          cardIndex={index}
-          renderCard={card => <Card card={card} index={index} />}
+          cards={list}
+          cardIndex={currentIndex}
+          renderCard={renderCard}
           onSwiped={onSwiped}
           stackScale={4}
           stackSeparation={9}
@@ -95,7 +194,7 @@ const OrganizationDeatailScreeen = ({navigation, route}) => {
           disableLeftSwipe
           animateOverlayLabelsOpacity
           animateCardOpacity
-          infinite
+          infinite={false}
           disableTopSwipe
           overlayLabels={{
             left: {
@@ -129,7 +228,7 @@ const OrganizationDeatailScreeen = ({navigation, route}) => {
               },
             },
           }}
-        />
+        />}
       </View>
       <View style={styles.bottomContainer}>
         {/* <CardDetails index={index} /> */}
@@ -141,16 +240,17 @@ const OrganizationDeatailScreeen = ({navigation, route}) => {
           }}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => swiperRef.current.swipeLeft()}>
+            onPress={reject}>
             <Icon name="times" size={30} color={PRIMARY} />
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => swiperRef.current.swipeRight()}>
+            onPress={approve}>
             <Icon name="check" size={30} color={PRIMARY} />
           </TouchableOpacity>
         </View>
       </View>
+      {((list.length == 0 && currentIndex == null) || loading) && <LoaderOrg />}
     </View>
   );
 };
@@ -179,7 +279,7 @@ const styles = StyleSheet.create({
     elevation: 12,
     shadowColor: '#000',
     shadowOpacity: 0.08,
-    shadowOffset: {width: 0, height: 0},
+    shadowOffset: { width: 0, height: 0 },
     backgroundColor: '#fff',
   },
   bottomContainer: {
@@ -250,7 +350,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     textShadowColor: 'rgba(0, 0, 0, 0.25)',
-    textShadowOffset: {width: -1, height: 1},
+    textShadowOffset: { width: -1, height: 1 },
     textShadowRadius: 10,
     fontSize: 24,
     color: DARK,

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,14 +6,12 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  Alert,
 } from 'react-native';
-import {Text} from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import DeviceInfo from 'react-native-device-info';
 import Logo from '../../components/Logo';
 import OrgtextInput from '../Componets/OrgtextInput';
-import {GREY, PRIMARY, WHITE} from '../Colors/Color';
-import ImagePicker from 'react-native-image-crop-picker';
+import { GREY, PRIMARY, WHITE } from '../Colors/Color';
 import {
   OrganizationNameV,
   OrganizationAddressV,
@@ -21,44 +19,17 @@ import {
   passwordValidatorV,
 } from '../Validation/OrgnizationValidation';
 import LinearGradient from 'react-native-linear-gradient';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearRegister, register } from '../../redux/actions/registerAction';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Backbtn from '../Componets/Backbtn';
+import Loader from '../Componets/Loader';
+import messaging from '@react-native-firebase/messaging';
+import { setToken } from '../../redux/actions/tokenAction';
+import LoaderOrg from '../Componets/LoaderOrg';
 
-export default function OrgSignup({navigation}) {
+export default function OrgSignup({ navigation }) {
   const dispatch = useDispatch();
-
-  const [logo, setLogo] = useState('');
-  const imageCrop = () => {
-    Alert.alert('Upload Logo', '', [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'destructive',
-      },
-      {text: 'Gallery', onPress: () => OpenGallery(), style: {color: PRIMARY}},
-      {text: 'Camera', onPress: () => OpenCamera()},
-    ]);
-    const OpenGallery = () => {
-      ImagePicker.openPicker({
-        width: 300,
-        height: 400,
-        cropping: true,
-      }).then(image => {
-        setLogo(image.path);
-      });
-    };
-    const OpenCamera = () => {
-      ImagePicker.openCamera({
-        width: 300,
-        height: 400,
-        cropping: true,
-      }).then(image => {
-        setLogo(image.path);
-      });
-    };
-  };
 
   const [OrganizationName, setOrganizationName] = useState({
     value: '',
@@ -69,8 +40,9 @@ export default function OrgSignup({navigation}) {
     error: '',
   });
 
-  const [email, setEmail] = useState({value: '', error: ''});
-  const [password, setPassword] = useState({value: '', error: ''});
+  const [email, setEmail] = useState({ value: '', error: '' });
+  const [password, setPassword] = useState({ value: '', error: '' });
+  const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' });
 
   const registerResponse = useSelector(state => state.registerReducer.data);
   const loading = useSelector(state => state.registerReducer.loading);
@@ -80,7 +52,6 @@ export default function OrgSignup({navigation}) {
     const OrganizationAddError = OrganizationAddressV(OrganizationAddres.value);
     const emailError = emailValidatorV(email.value);
     const passwordError = passwordValidatorV(password.value);
-    // const OrganizationError = OrganizationValidator(Organization.value)
 
     if (
       emailError ||
@@ -88,20 +59,40 @@ export default function OrgSignup({navigation}) {
       OrganizationNameError ||
       OrganizationAddError
     ) {
-      setOrganizationName({...OrganizationName, error: OrganizationNameError});
+      setOrganizationName({ ...OrganizationName, error: OrganizationNameError });
       setOrganizationAddres({
         ...OrganizationAddres,
         error: OrganizationAddError,
       });
-      setEmail({...email, error: emailError});
-      setPassword({...password, error: passwordError});
+      setEmail({ ...email, error: emailError });
+      setPassword({ ...password, error: passwordError });
       // setOrganization({ ...Organization, error: OrganizationError })
       return;
     }
-    signup();
+    requestUserPermission();
   };
 
-  const signup = () => {
+  const requestUserPermission = async () => {
+    const authStatus = await messaging().requestPermission();
+    const enabled =
+      authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+      authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+    if (enabled) {
+      console.log('Authorization status:', authStatus);
+      getFirebaseToken();
+    }
+  };
+
+  const getFirebaseToken = async () => {
+    await messaging()
+      .getToken()
+      .then(token => {
+        signup(token);
+      });
+  };
+
+  const signup = (firebase_token) => {
     let request = {
       'first_name': OrganizationName.value,
       'last_name': OrganizationAddres.value,
@@ -110,7 +101,7 @@ export default function OrgSignup({navigation}) {
       'confirm_password': password.value,
       'role': 'organization',
       'device_type': Platform.OS,
-      'device_token': '123456',
+      'device_token': firebase_token,
       'device_id': DeviceInfo.getDeviceId(),
     };
     dispatch(register(request));
@@ -131,20 +122,21 @@ export default function OrgSignup({navigation}) {
       ) {
         console.log('response', registerResponse.data);
         saveData(registerResponse.data);
-        dispatch(clearRegister());
+        dispatch(setToken(registerResponse.data.token));
       }
     }
   }, [registerResponse]);
 
   const saveData = async data => {
     let Organizationdata = data;
-    Organizationdata = {...Organizationdata, ...{loggedin: true}};
+    Organizationdata = { ...Organizationdata, ...{ loggedin: true, loggedIntype: 'Org' } };
     try {
       const jsonValue = JSON.stringify(Organizationdata);
       await AsyncStorage.setItem('user_data', jsonValue);
+      dispatch(clearRegister());
       navigation.reset({
         index: 0,
-        routes: [{name: 'MyTabs'}],
+        routes: [{ name: 'OrgDrawer' }],
       });
     } catch (e) {
       console.log('error in saving data', e);
@@ -154,39 +146,39 @@ export default function OrgSignup({navigation}) {
   return (
     <View style={styles.container}>
       <Backbtn goBack={navigation.goBack} />
-      <View style={{alignItems: 'center'}}>
+      <View style={{ alignItems: 'center' }}>
         <Logo />
         <Text style={styles.textcreate}>Create Account</Text>
       </View>
-      <KeyboardAvoidingView behavior="padding" style={styles.keyboarstyle}>
+      <KeyboardAvoidingView behavior="padding" style={styles.keyboarstyle} keyboardShouldPersistTaps='always'>
         <ScrollView
           nestedScrollEnabled={true}
           //scrollEnabled={this.state.openCountryDropwdown ? false : true}
           keyboardShouldPersistTaps={'handled'}
           style={styles.innerContainer}>
           <OrgtextInput
-            label="Organization Name"
+            placeholder="Organization Name"
             returnKeyType="next"
             value={OrganizationName.value}
-            onChangeText={text => setOrganizationName({value: text, error: ''})}
+            onChangeText={text => setOrganizationName({ value: text, error: '' })}
             error={!!OrganizationName.error}
             errorText={OrganizationName.error}
           />
           <OrgtextInput
-            label="Address of organization"
+            placeholder="Address of organization"
             returnKeyType="next"
             value={OrganizationAddres.value}
             onChangeText={text =>
-              setOrganizationAddres({value: text, error: ''})
+              setOrganizationAddres({ value: text, error: '' })
             }
             error={!!OrganizationAddres.error}
             errorText={OrganizationAddres.error}
           />
           <OrgtextInput
-            label="Email"
+            placeholder="Email"
             returnKeyType="next"
             value={email.value}
-            onChangeText={text => setEmail({value: text, error: ''})}
+            onChangeText={text => setEmail({ value: text, error: '' })}
             error={!!email.error}
             errorText={email.error}
             autoCapitalize="none"
@@ -195,32 +187,39 @@ export default function OrgSignup({navigation}) {
             keyboardType="email-address"
           />
           <OrgtextInput
-            label="Password"
-            returnKeyType="done"
+            placeholder="Password"
+            returnKeyType="next"
             value={password.value}
-            onChangeText={text => setPassword({value: text, error: ''})}
+            onChangeText={text => setPassword({ value: text, error: '' })}
             error={!!password.error}
             errorText={password.error}
-            secureTextEntry
+            password={true}
+          />
+          <OrgtextInput
+            placeholder="Confirm Password"
+            returnKeyType="done"
+            value={confirmPassword.value}
+            onChangeText={text => setConfirmPassword({ value: text, error: '' })}
+            error={!!confirmPassword.error}
+            errorText={confirmPassword.error}
+            password={true}
           />
           {/* <Text style={{color:GREY}}>Optional</Text> */}
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={styles.logoConatiner}
             onPress={() => imageCrop()}>
             <Text style={styles.logo}>Chose Logo</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
 
           <View style={styles.signview}>
             <TouchableOpacity
               mode="contained"
-              // onPress={onSignUpPressed}
-              onPress={() =>
-                navigation.navigate('Organization')
-                // onSignUpPressed()
-              }
+              onPress={onSignUpPressed}
               activeOpacity={0.9}>
               <LinearGradient
-                colors={[PRIMARY, PRIMARY]}
+                colors={['#FAC898', '#E14D2A']}
+                useAngle={true}
+                angle={10}
                 style={styles.touchabltext}>
                 <Text style={styles.textstyle}>Sign Up</Text>
               </LinearGradient>
@@ -234,12 +233,13 @@ export default function OrgSignup({navigation}) {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
+      {loading && <LoaderOrg />}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  cancel: {color: PRIMARY},
+  cancel: { color: PRIMARY },
   container: {
     flex: 1,
     backgroundColor: WHITE,
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
   },
-  logo: {fontSize: 18, paddingVertical: 12, color: WHITE, fontWeight: 'bold'},
+  logo: { fontSize: 18, paddingVertical: 12, color: WHITE, fontWeight: 'bold' },
   textcreate: {
     fontSize: 18,
     color: PRIMARY,
@@ -274,17 +274,15 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   touchabltext: {
+    marginVertical: 20,
     height: 45,
     justifyContent: 'center',
-    borderRadius: 7,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 20,
+    borderRadius: 15,
   },
   textstyle: {
     fontSize: 18,
+    textAlign: 'center',
     color: '#fff',
-    fontWeight: 'bold',
   },
   signview: {
     paddingHorizontal: 20,

@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
-import {View, StyleSheet, Text, ScrollView} from 'react-native';
-import {TextInput as Input} from 'react-native-paper';
-import {theme} from '../core/theme';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, TextInput } from 'react-native';
+import { theme } from '../core/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {GREY} from '../Organization/Colors/Color';
-export default function TextInput({
+
+export default function EmpTextInput({
   errorText,
   description,
   password = false,
@@ -14,12 +13,9 @@ export default function TextInput({
   return (
     <View style={styles.container}>
       <View style={styles.inputContainer}>
-        <Input
+        <TextInput
           secureTextEntry={hidePassword}
           style={styles.input}
-          underlineColor="transparent"
-          underlineColorAndroid="transparent"
-          // mode="outlined"
           {...props}
         />
         {password && (
@@ -27,7 +23,7 @@ export default function TextInput({
             onPress={() => sethidePassword(!hidePassword)}
             name={hidePassword ? 'eye-slash' : 'eye'}
             size={20}
-            style={{marginRight: 8}}
+            style={{ marginRight: 8 }}
           />
         )}
       </View>
@@ -51,7 +47,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: GREY,
+    borderColor: "#5D3FD3",
+    borderRadius: 15,
+    padding: 4,
+    backgroundColor: theme.colors.surface,
   },
   input: {
     backgroundColor: theme.colors.surface,

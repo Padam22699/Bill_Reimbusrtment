@@ -1,44 +1,105 @@
-import React, {useCallback, useRef, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   View,
   StyleSheet,
   Text,
   TouchableOpacity,
-  StatusBar,
   Image,
   Modal,
   SafeAreaView,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
-import {DARK, GREY, PRIMARY, WHITE} from '../Colors/Color';
+import { DARK, PRIMARY, WHITE } from '../Colors/Color';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {Picker} from '@react-native-picker/picker';
+import { Picker } from '@react-native-picker/picker';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Imagepath from '../../Assets/Images/Imagepath';
-import {useFocusEffect} from '@react-navigation/native';
+import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-export default function FullDetailScreen({navigation, route}) {
-  const data = route.params.item;
-  const list = route.params.data;
-  const indexx = route.params.index;
+import { theme } from '../../core/theme';
+import LinearGradient from 'react-native-linear-gradient';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { changeStatus, clearChangeStatus } from '../../redux/actions/changeStatusAction';
+import LoaderOrg from '../Componets/LoaderOrg';
 
-  const [checkbook, setcheckbook] = useState(true);
-  const [stutes, setstutes] = useState('Pendding');
+export default function FullDetailScreen({ navigation, route }) {
+
+  const [stutes, setstutes] = useState('Pending');
+  const [visible, setvisible] = useState(false);
+  const [userData, setUserData] = useState(null);
+
+  const dispatch = useDispatch()
+
+  const changeStatusResponse = useSelector(
+    state => state.changeStatusReducer.data,
+  );
+  const loading = useSelector(state => state.changeStatusReducer.loading);
 
   useFocusEffect(
     useCallback(() => {
-      console.log('fullDeatailsScreen');
+      console.log('fullDeatailsScreen', route.params);
+      setstutes("Pending")
+      getData();
     }, []),
   );
-  const [visible, setvisible] = useState(false);
-  const images = [
-    {url: '', props: {source: require('../../Assets/bills.png')}},
-  ];
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@user_data');
+      if (value !== null) {
+        const data = JSON.parse(value);
+        if (data != null) {
+          setUserData(data);
+        } else {
+          setUserData(null);
+        }
+      } else {
+        setUserData(null);
+      }
+    } catch (e) {
+      console.log('storage error', e);
+    }
+  };
+
+  const submit = () => {
+    console.log("status", stutes)
+    let request = {
+      user_id: userData.user_id,
+      bill_id: route.params.item.bill_id,
+      user_status: stutes
+    }
+    dispatch(changeStatus(request))
+  }
+
+  useEffect(() => {
+    if (changeStatusResponse != null) {
+      console.log('changeStatusResponse', changeStatusResponse);
+      if (
+        Object.keys(changeStatusResponse).length != 0 &&
+        changeStatusResponse.statusCode != 200
+      ) {
+        alert(changeStatusResponse.message);
+        dispatch(clearChangeStatus());
+      }
+      if (
+        Object.keys(changeStatusResponse).length != 0 &&
+        changeStatusResponse.statusCode == 200
+      ) {
+        dispatch(clearChangeStatus());
+        navigation.navigate('Home')
+      }
+    }
+  }, [changeStatusResponse]);
+
   return (
     <>
-      <View style={styles.container}>
-        <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
+      <ScrollView style={styles.container}>
+        <Animatable.View animation="zoomInDown" style={{ transform: 'scale' }}>
           <View style={styles.mainview}>
             <TouchableOpacity
               onPress={() => {
@@ -49,7 +110,7 @@ export default function FullDetailScreen({navigation, route}) {
                 name="close"
                 size={25}
                 color={'#fff'}
-                style={{alignSelf: 'flex-end'}}
+                style={{ alignSelf: 'flex-end' }}
               />
             </TouchableOpacity>
             <View style={styles.touchablview}>
@@ -63,12 +124,12 @@ export default function FullDetailScreen({navigation, route}) {
                   name="rupee"
                   size={18}
                   color={WHITE}
-                  style={{top: 5}}
+                  style={{ top: 5 }}
                 />
                 <View>
-                  <Text style={styles.textrupees}>1550.00</Text>
+                  <Text style={styles.textrupees}>{route.params.item.amount}</Text>
                   <>
-                    <Text style={styles.textfuelthe}>The Fuel</Text>
+                    <Text style={styles.textfuelthe}>{route.params.item.type}</Text>
                   </>
                 </View>
               </View>
@@ -77,38 +138,38 @@ export default function FullDetailScreen({navigation, route}) {
           <View style={styles.container2}>
             <View style={styles.elevationstyle}>
               <Text style={styles.textExpe}>Expense Details</Text>
-
-              <View>
-                <View style={[styles.flexview, {paddingVertical: -3}]}>
+              <View style={{ marginTop: 20 }}>
+                <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Date</Text>
-                  <Text style={styles.textmar}>Mar 27,2022</Text>
+                  <Text style={styles.textmar}>{moment(route.params.item.date).format("MMM DD, yyyy")}</Text>
                 </View>
-                <View style={[styles.flexview, {paddingVertical: -6}]}>
+                <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Description</Text>
                   <Text style={styles.textfuel}>
-                    This is a reimbursement applied for the fuel.
+                    {route.params.item.description}
                   </Text>
                 </View>
                 <View style={styles.flexview}>
                   <Text style={styles.textdate}>Attachment</Text>
                   <TouchableOpacity onPress={() => setvisible(true)}>
                     <Image
-                      source={require('../../Assets/bills.png')}
+                      source={{ uri: route.params.item.bill_attachment }}
                       style={{
-                        height: 30,
-                        width: 30,
-                        borderRadius: 15,
-                        resizeMode: 'cover',
+                        height: 50,
+                        width: 50,
+                        resizeMode: 'contain',
                       }}
                     />
                   </TouchableOpacity>
                 </View>
-                <View style={[styles.flexview, {paddingVertical: 3}]}>
+                <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Status</Text>
                   <View style={styles.pickerContainer}>
-                    <Picker
+                    {route.params.item.status == "Pending" ? <Picker
+                      enabled={route.params.item.status == "Pending"}
                       style={styles.picker}
                       selectedValue={stutes}
+                      mode='dropdown'
                       onValueChange={itemvalue => setstutes(itemvalue)}>
                       <Picker.Item
                         label="Pending"
@@ -121,84 +182,71 @@ export default function FullDetailScreen({navigation, route}) {
                         color={DARK}
                       />
                       <Picker.Item
-                        label="Decline"
-                        value="Decline"
+                        label="Rejected"
+                        value="Rejected"
                         color={DARK}
                       />
                       <Picker.Item
-                        label="Forwarded"
-                        value="Forwarded"
+                        label="Forward"
+                        value="Forward"
                         color={DARK}
                       />
-                    </Picker>
+                    </Picker> :
+                      <Text style={styles.textfuel}>
+                        {route.params.item.status}
+                      </Text>
+                    }
                   </View>
                 </View>
               </View>
 
               <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={[styles.subtotal, {marginBottom: 10}]}>
+                style={styles.flexview}>
+                <Text style={[styles.textdate, {}]}>
                   Status by
                 </Text>
-                <Text style={[styles.subtotal, {fontSize: 16}]}>Name</Text>
+                <Text style={[styles.textmar, {}]}>Admin</Text>
               </View>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={styles.subtotal}>Sub Total</Text>
-                <Text style={[styles.subtotal, {fontSize: 16}]}>
+              {/* <View
+                style={styles.flexview}>
+                <Text style={styles.textdate}>Sub Total</Text>
+                <Text style={[styles.textmar, {}]}>
                   Total Amount
                 </Text>
               </View>
               <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 10,
-                }}>
-                <Text style={styles.subtotal}>Less Cash Advance</Text>
-                <Text style={[styles.subtotal, {fontSize: 16}]}> Amount</Text>
-              </View>
+                style={styles.flexview}>
+                <Text style={styles.textdate}>Less Cash Advance</Text>
+                <Text style={[styles.textmar, {}]}> Amount</Text>
+              </View> */}
               <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 10,
-                }}>
-                <Text style={styles.subtotal}>Total Reimbursement</Text>
-                <Text style={[styles.subtotal, {fontSize: 16}]}> Amount</Text>
+                style={styles.flexview}>
+                <Text style={styles.textdate}>Total Reimbursement</Text>
+                <Text style={[styles.textmar, {}]}>{route.params.item.amount}</Text>
               </View>
-              {/* <View style={styles.flexview}>
-              <Text style={styles.textdate}>Physically submitted the bill</Text>
-              <TouchableOpacity
-                style={styles.imagetouchstyle}
-                onPress={() => {
-                  setcheckbook(!checkbook);
-                }}
-                activeOpacity={0.9}>
-                <Image
-                  source={checkbook ? Imagepath.check : Imagepath}
-                  style={styles.imageCheck}
-                />
-              </TouchableOpacity>
-            </View> */}
             </View>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => navigation.navigate('Home')}>
-              <View style={styles.submitebtnContainer}>
-                <Text style={styles.submitebtn}>Submit</Text>
-              </View>
-            </TouchableOpacity>
+            {route.params.item.status == "Pending" && <TouchableOpacity
+              mode="contained"
+              onPress={submit}
+              activeOpacity={0.9}>
+              <LinearGradient
+                colors={['#FAC898', '#E14D2A']}
+                useAngle={true}
+                angle={10}
+                style={styles.touchabltext}>
+                <Text style={styles.textstyle}>SUBMIT</Text>
+              </LinearGradient>
+            </TouchableOpacity>}
           </View>
         </Animatable.View>
-      </View>
+      </ScrollView>
 
       {visible && (
         <Modal visible={visible} animationType="fade">
           <SafeAreaView style={styles.container}>
             <ImageViewer
               renderIndicator={() => null}
-              imageUrls={images}
+              imageUrls={[{ url: route.params.item.bill_attachment }]}
               index={0}
               style={[
                 styles.Imagecontainer,
@@ -215,7 +263,7 @@ export default function FullDetailScreen({navigation, route}) {
               <Icon
                 name="times"
                 color={PRIMARY}
-                size={24}
+                size={20}
                 onPress={() => {
                   setvisible(false);
                 }}
@@ -224,13 +272,11 @@ export default function FullDetailScreen({navigation, route}) {
           </SafeAreaView>
         </Modal>
       )}
+      {loading && <LoaderOrg />}
     </>
   );
 }
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   Imagecontainer: {
     marginHorizontal: 10,
     marginVertical: 30,
@@ -238,8 +284,8 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     position: 'absolute',
-    width: 35,
-    height: 35,
+    width: 30,
+    height: 30,
     backgroundColor: 'white',
     borderRadius: 35,
     justifyContent: 'center',
@@ -276,12 +322,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   mainview: {
-    backgroundColor: PRIMARY,
+    backgroundColor: "#E14D2A",
     height: 135,
     paddingHorizontal: 18,
     paddingVertical: 8,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
+    borderBottomLeftRadius: 30,
+    borderBottomRightRadius: 30,
   },
   touchablview: {
     flexDirection: 'row',
@@ -315,12 +361,13 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: DARK,
     flex: 0.9,
-    textAlign: 'center',
-    top: 9,
-    left: 12,
+    textAlign: 'right',
+    // top: 9,
+    // left: 12,
   },
   container2: {
     marginHorizontal: 18,
+    marginTop: 20
   },
   imagetouchstyle: {
     height: 24,
@@ -337,41 +384,43 @@ const styles = StyleSheet.create({
     tintColor: DARK,
   },
   elevationstyle: {
-    height: 470,
     backgroundColor: '#fff',
-    marginTop: 24,
+    marginVertical: 24,
     elevation: 10,
-    borderRadius: 16,
-    paddingHorizontal: 14,
-    padding: 14,
+    borderRadius: 15,
+    padding: 20,
   },
   textExpe: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: DARK,
+    color: '#E14D2A',
+    textAlign: 'center'
   },
   flexview: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     marginVertical: 10,
+    paddingVertical: 2,
   },
   textdate: {
-    fontSize: 18,
-    color: DARK,
+    fontSize: 16,
+    color: theme.colors.text,
+    fontWeight: '500'
   },
   textmar: {
     fontSize: 16,
-    color: DARK,
+    color: theme.colors.text,
+    textAlign: 'right',
   },
   pickerContainer: {
     alignItems: 'center',
   },
   picker: {
-    width: 134,
-
+    width: Dimensions.get('window').width / 2 - 40,
     height: 20,
     color: DARK,
+    marginRight: -20,
   },
   Approved: {
     color: 'green',
@@ -392,15 +441,15 @@ const styles = StyleSheet.create({
     marginHorizontal: 30,
   },
   touchabltext: {
+    marginVertical: 20,
     height: 45,
     justifyContent: 'center',
-    borderRadius: 7,
+    borderRadius: 15,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   textstyle: {
     fontSize: 18,
-    color: PRIMARY,
+    color: WHITE,
   },
   subtotal: {
     fontSize: 18,

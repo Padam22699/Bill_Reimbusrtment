@@ -1,15 +1,15 @@
 import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import React from 'react';
 
-const Loader = () => {
+const LoaderOrg = () => {
   return (
     <View style={[StyleSheet.absoluteFillObject, styles.conatianer]}>
-      <ActivityIndicator size={40} color={'#5D3FD3'}/>
+      <ActivityIndicator size={40} color={'#E14D2A'}/>
     </View>
   );
 };
 
-export default Loader;
+export default LoaderOrg;
 
 const styles = StyleSheet.create({
   conatianer: {

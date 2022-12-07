@@ -58,7 +58,7 @@ const AttechedImageViewer = ({navigation}) => {
         <Icon
           name="times"
           color={PRIMARY}
-          size={24}
+          size={20}
           onPress={() =>
             {console.log('imageback')
             navigation.goBack()}

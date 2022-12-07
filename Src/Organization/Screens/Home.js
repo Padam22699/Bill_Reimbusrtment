@@ -5,59 +5,137 @@ import {
   FlatList,
   View,
   TouchableOpacity,
-  ScrollView,
   Dimensions,
+  StatusBar,
+  Image,
 } from 'react-native';
-import React from 'react';
-import {A, DARK, PRIMARY, B, C, WHITE} from '../Colors/Color';
+import React, { useCallback, useEffect, useState } from 'react';
+import { A, DARK, PRIMARY, B, C, WHITE } from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { useDispatch, useSelector } from 'react-redux';
+import { useFocusEffect } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { clearGetAllBills, getAllBills } from '../../redux/actions/getAllBillsAction';
+import Imagepath from '../../Assets/Images/Imagepath';
+import LoaderOrg from '../Componets/LoaderOrg';
+import { clearGetDashboardData, getDashboardData } from '../../redux/actions/getDashboardDataAction';
 
-const Deshboard = ({navigation}) => {
-  const data = [
-    {
-      id: '1',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '2',
-      iconName: 'hamburger',
-    },
-    {
-      id: '3',
-      iconName: 'plane',
-    },
-    {
-      id: '4',
-      iconName: 'hamburger',
-    },
-    {
-      id: '5',
-      iconName: 'plane',
-    },
-    {
-      id: '6',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '7',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '8',
-      iconName: 'gas-pump',
-    },
-    {
-      id: '9',
-      iconName: 'gas-pump',
-    },
-  ];
+const Deshboard = ({ navigation }) => {
+
+  const [userData, setUserData] = useState(null);
+  const [dashboardData, setDashboardData] = useState(null);
+  const [data, setData] = useState([]);
+
+  const dispatch = useDispatch()
+
+  const getDashboardDataResponse = useSelector(state => state.getDashboardDataReducer.data);
+  const loadingDashboard = useSelector(state => state.getDashboardDataReducer.loading);
+  const getAllBillsResponse = useSelector(state => state.getAllBillsReducer.data);
+  const loading = useSelector(state => state.getAllBillsReducer.loading);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+    }, []),
+  );
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@user_data');
+      if (value !== null) {
+        const data = JSON.parse(value);
+        if (data != null) {
+          setUserData(data);
+        } else {
+          setUserData(null);
+        }
+      } else {
+        setUserData(null);
+      }
+    } catch (e) {
+      console.log('storage error', e);
+    }
+  };
+
+  useEffect(() => {
+    if (userData != null) {
+      fetchDashboardData()
+      fetchAllBills();
+    }
+  }, [userData]);
+
+  const fetchDashboardData = () => {
+    let request = {
+      user_id: userData.user_id,
+      type: 'organization',
+    };
+
+    dispatch(getDashboardData(request));
+  };
+
+  const fetchAllBills = () => {
+    let request = {
+      user_id: userData.user_id,
+      type: 'organization',
+      page: "1",
+      reverse: 1,
+      user_status: '',
+      search: "",
+      bill_type: "",
+      from_date: '',
+      to_date: '',
+    };
+
+    dispatch(getAllBills(request));
+  };
+
+  useEffect(() => {
+    if (getAllBillsResponse != null) {
+      console.log('getAllBillsResponse', getAllBillsResponse);
+      if (
+        Object.keys(getAllBillsResponse).length != 0 &&
+        getAllBillsResponse.statusCode != 200
+      ) {
+        alert(getAllBillsResponse.message);
+        dispatch(clearGetAllBills());
+      }
+      if (
+        Object.keys(getAllBillsResponse).length != 0 &&
+        getAllBillsResponse.statusCode == 200
+      ) {
+        let allRequest = getAllBillsResponse.data;
+        setData(allRequest);
+        dispatch(clearGetAllBills());
+      }
+    }
+  }, [getAllBillsResponse]);
+
+  useEffect(() => {
+    if (getDashboardDataResponse != null) {
+      console.log('getDashboardDataResponse', getDashboardDataResponse);
+      if (
+        Object.keys(getDashboardDataResponse).length != 0 &&
+        getDashboardDataResponse.statusCode != 200
+      ) {
+        alert(getDashboardDataResponse.message);
+        dispatch(clearGetDashboardData());
+      }
+      if (
+        Object.keys(getDashboardDataResponse).length != 0 &&
+        getDashboardDataResponse.statusCode == 200
+      ) {
+        let allData = getDashboardDataResponse.data;
+        setDashboardData(allData);
+        dispatch(clearGetDashboardData());
+      }
+    }
+  }, [getDashboardDataResponse]);
+
   const MiddleContent = ({
     money,
     heading,
-    month,
     backGround,
-    onpress = () => {},
+    onpress = () => { },
   }) => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={onpress}>
@@ -67,12 +145,11 @@ const Deshboard = ({navigation}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              width: deviceWidth - 255,
+              width: deviceWidth / 3 - 20,
               backgroundColor: backGround,
               height: 90,
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
-              flex: 2.4,
             }}>
             <Icon name="rupee-sign" size={20} color={WHITE} />
             <Text
@@ -90,35 +167,25 @@ const Deshboard = ({navigation}) => {
 
           <View
             style={{
-              marginBottom: 10,
               alignItems: 'center',
               justifyContent: 'center',
               flex: 1,
               alignContent: 'center',
+              padding: 4
             }}>
             <Text
+              adjustsFontSizeToFit={true}
               style={{
-                fontSize: 17,
+                fontSize: 20,
                 alignSelf: 'center',
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
                 textAlign: 'center',
                 justifyContent: 'center',
-                marginTop: 10,
+                margin: 5,
               }}>
               {heading}
-            </Text>
-            <Text
-              style={{
-                fontSize: 17,
-                alignSelf: 'center',
-                color: DARK,
-                fontWeight: 'bold',
-                textAlignVertical: 'center',
-                textAlign: 'center',
-              }}>
-              {month}
             </Text>
           </View>
         </View>
@@ -126,43 +193,80 @@ const Deshboard = ({navigation}) => {
     );
   };
 
-  const RecentRequestList = ({item, index}) => {
+  const icon = type => {
+    switch (type) {
+      case 'Medical': {
+        return Imagepath.medicine;
+      }
+      case 'Fuel': {
+        return Imagepath.Fuel;
+      }
+      case 'Food': {
+        return Imagepath.foodfork;
+      }
+      case 'Others': {
+        return Imagepath.Others;
+      }
+      default: {
+        return Imagepath.Others;
+      }
+    }
+  };
+
+  const RecentRequestList = ({ item, index }) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
-        onPress={() =>
-          navigation.navigate('DetailScreen', {
-            item: item,
-            data: data,
-            index: index,
-          })
+        onPress={() => {
+          if (item.status == "Pending") {
+            navigation.navigate('DetailScreen', {
+              data: data,
+              index: index,
+            })
+          } else {
+            navigation.navigate('UserDetail', {
+              item: item,
+            });
+          }
+        }
         }>
         <View style={styles.recentList}>
           <View
-            style={{alignItems: 'center', marginLeft: 10, paddingVertical: 15}}>
-            <Icon name={item.iconName} size={24} color={PRIMARY} />
+            style={{
+              height: 48,
+              width: 48,
+              backgroundColor: '#fff',
+              borderRadius: 40,
+              alignItems: 'center',
+              justifyContent: 'center',
+              elevation: 2,
+              marginLeft: -30,
+              borderWidth: 1,
+              borderColor: '#E14D2A'
+            }}>
+            <Image source={icon(item.type)} style={{ height: 24, width: 24, tintColor: PRIMARY }} />
           </View>
-          <View style={{marginRight: 70}}>
+          <View style={{ flex: 1, marginLeft: 12 }}>
             <Text
               style={{
                 fontSize: 16,
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 marginBottom: 8,
               }}>
-              Name of Employee
+              {item.employee}
             </Text>
             <Text
               style={{
                 fontSize: 12,
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
-              Category Name
+              {item.type}
             </Text>
           </View>
-          <View style={{marginRight: 20}}>
+          <View style={{ marginRight: 20 }}>
             <View
               style={{
                 flexDirection: 'row',
@@ -172,30 +276,30 @@ const Deshboard = ({navigation}) => {
               <Icon
                 name="rupee-sign"
                 size={13}
-                color={DARK}
-                style={{marginRight: 2}}
+                color={"#E14D2A"}
+                style={{ marginRight: 2 }}
               />
               <Text
                 style={{
                   fontSize: 16,
-                  color: DARK,
+                  color: "#E14D2A",
                   fontWeight: 'bold',
                 }}>
-                200
+                {item.amount}
               </Text>
             </View>
 
             <Text
               style={{
                 fontSize: 12,
-                color: DARK,
+                color: "#E14D2A",
                 fontWeight: 'bold',
                 paddingVertical: 4,
                 textAlign: 'center',
                 textAlignVertical: 'center',
                 marginTop: 3,
               }}>
-              Status
+              {item.status}
             </Text>
           </View>
         </View>
@@ -203,83 +307,51 @@ const Deshboard = ({navigation}) => {
     );
   };
 
-  const logout = async () => {
-    let data = {
-      loggedin: false,
-      loggedIntype:''
-    };
-    try {
-      const jsonValue = JSON.stringify(data);
-      await AsyncStorage.mergeItem('@user_data', jsonValue);
-      navigation.reset({
-        index: 0,
-        routes: [{name: 'AuthStack'}],
-      });
-    } catch (e) {
-      console.log('error in saving data', e);
-    }
-  };
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
-      <View style={{marginHorizontal: 12}}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: WHITE }}>
+      <StatusBar backgroundColor={"#E14D2A"} barStyle="default" />
+      <View style={{ margin: 12, flex: 1 }}>
         <View style={styles.header}>
           <View>
             <Text style={styles.heading}>WEDIGTECH</Text>
           </View>
-          <View style={{flexDirection: 'row'}}>
-            <TouchableOpacity onPress={() => logout()}>
-              <Icon
-                name="sign-out-alt"
-                size={22}
-                color={PRIMARY}
-                style={{paddingRight: 30}}
-              />
-            </TouchableOpacity>
-
-            <Icon
-              name="bell"
-              size={22}
-              color={PRIMARY}
-              style={{paddingRight: 20}}
-            />
-          </View>
+          <Icon
+            name="bell"
+            size={24}
+            color={PRIMARY}
+          />
         </View>
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
-            marginTop: 20,
           }}>
-          <MiddleContent money={60} heading="This Month" backGround={A} />
+          <MiddleContent money={dashboardData != null && dashboardData.one_month_data} heading="This Month" backGround={A} />
           <MiddleContent
-            money={200}
-            heading="Last"
-            month="6 Month"
+            money={dashboardData != null && dashboardData.six_month_data}
+            heading="Last 6 Months"
             backGround={B}
           />
-          <MiddleContent money={600} heading="This Year" backGround={C} />
+          <MiddleContent money={dashboardData != null && dashboardData.one_year_data} heading="This Year" backGround={C} />
         </View>
-        <View style={{marginBottom: 20}}>
-          <Text style={{fontSize: 20, color: DARK, fontWeight: 'bold'}}>
+        <View style={{ marginBottom: 10 }}>
+          <Text style={{ fontSize: 20, color: DARK, fontWeight: 'bold' }}>
             Recent Request
           </Text>
         </View>
-        <View
-          style={{
-            height: 400,
-          }}>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingBottom: 80,
-            }}
-            data={data}
-            renderItem={({item, index}) => (
-              <RecentRequestList item={item} index={index} />
-            )}
-          />
-        </View>
+        <FlatList
+          contentContainerStyle={{ flexGrow: 1 }}
+          showsVerticalScrollIndicator={false}
+          style={{ marginBottom: 55 }}
+          data={data}
+          renderItem={({ item, index }) => (
+            <RecentRequestList item={item} index={index} />
+          )}
+        />
       </View>
+      {
+        (loading || loadingDashboard) && <LoaderOrg />
+      }
     </SafeAreaView>
   );
 };
@@ -292,19 +364,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-
     marginTop: 12,
   },
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: PRIMARY,
+    color: "#E14D2A",
   },
   Container: {
     marginTop: 20,
     backgroundColor: WHITE,
     height: 140,
-    width: deviceWidth - 255,
+    width: deviceWidth / 3 - 20,
     borderRadius: 20,
     shadowColor: DARK,
     shadowOffset: {
@@ -318,19 +389,15 @@ const styles = StyleSheet.create({
   },
   RecordContainer: {},
   recentList: {
-    backgroundColor: WHITE,
-    shadowOffset: {
-      width: 5,
-      height: 5,
-    },
-    elevation: 4,
-    shadowRadius: 5,
-    shadowOpacity: 0.75,
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
-    borderRadius: 8,
-    marginTop: 20,
+    backgroundColor: "#FAC898",
+    marginVertical: 10,
+    elevation: 5,
+    marginHorizontal: 22,
+    padding: 10,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#E14D2A'
   },
 });

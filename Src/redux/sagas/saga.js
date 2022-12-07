@@ -2,9 +2,11 @@ import { put, call, takeEvery } from 'redux-saga/effects';
 import { types } from '../actions/types';
 import {
     addBill,
+    changeStatus,
     forgotPassword,
     getAllBills,
     getBillDetail,
+    getDashboardData,
     getNotification,
     isPhysicallySubmitted,
     login, register, reminder
@@ -154,6 +156,38 @@ function* reminderSaga({ payload, error }) {
     }
 }
 
+function* changeStatusSaga({ payload, error }) {
+    try {
+        const response = yield call(changeStatus, payload);
+        yield put({
+            type: types.SEND_REQUEST_CHANGE_STATUS_SUCCESS,
+            payload: response
+        });
+    } catch (err) {
+        yield put({
+            type: types.SEND_REQUEST_CHANGE_STATUS_FAILURE,
+            payload: error
+        });
+        console.log(err);
+    }
+}
+
+function* getDashboardDataSaga({ payload, error }) {
+    try {
+        const response = yield call(getDashboardData, payload);
+        yield put({
+            type: types.SEND_REQUEST_GET_DASHBOARD_DATA_SUCCESS,
+            payload: response
+        });
+    } catch (err) {
+        yield put({
+            type: types.SEND_REQUEST_GET_DASHBOARD_DATA_FAILURE,
+            payload: error
+        });
+        console.log(err);
+    }
+}
+
 export default function* saga() {
     yield takeEvery(types.SEND_REQUEST_REGISTER, registerSaga);
     yield takeEvery(types.SEND_REQUEST_LOGIN, loginSaga);
@@ -164,4 +198,6 @@ export default function* saga() {
     yield takeEvery(types.SEND_REQUEST_GET_BILL_DETAIL, getBillDetailSaga);
     yield takeEvery(types.SEND_REQUEST_IS_PHYSICALLY_SUBMITTED, isPhysicallySubmittedSaga);
     yield takeEvery(types.SEND_REQUEST_REMINDER, reminderSaga);
+    yield takeEvery(types.SEND_REQUEST_CHANGE_STATUS, changeStatusSaga);
+    yield takeEvery(types.SEND_REQUEST_GET_DASHBOARD_DATA, getDashboardDataSaga);
 }

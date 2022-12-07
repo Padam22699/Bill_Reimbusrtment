@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   TouchableOpacity,
   StatusBar,
@@ -8,33 +8,30 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import {ActivityIndicator, Text} from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
-import TextInput from '../components/TextInput';
+import EmpTextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
-import {theme} from '../core/theme';
-import {emailValidator} from '../helpers/emailValidator';
-import {passwordValidator} from '../helpers/passwordValidator';
+import { theme } from '../core/theme';
+import { emailValidator } from '../helpers/emailValidator';
+import { passwordValidator } from '../helpers/passwordValidator';
 import LinearGradient from 'react-native-linear-gradient';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
-import {clearLogin, login} from '../redux/actions/loginAction';
-import {useEffect} from 'react';
+import { clearLogin, login } from '../redux/actions/loginAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {
   clearForgotPassword,
   forgotPassword,
 } from '../redux/actions/forgotPasswordAction';
-import {setToken} from '../redux/actions/tokenAction';
 import Loader from '../Organization/Componets/Loader';
-import {WHITE} from '../Organization/Colors/Color';
 
-export default function LoginScreen({navigation}) {
+export default function LoginScreen({ navigation }) {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState({value: '', error: ''});
-  const [password, setPassword] = useState({value: '', error: ''});
+  const [email, setEmail] = useState({ value: '', error: '' });
+  const [password, setPassword] = useState({ value: '', error: '' });
 
   const loginResponse = useSelector(state => state.loginReducer.data);
   const loading = useSelector(state => state.loginReducer.loading);
@@ -49,13 +46,14 @@ export default function LoginScreen({navigation}) {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
     if (emailError || passwordError) {
-      setEmail({...email, error: emailError});
-      setPassword({...password, error: passwordError});
+      setEmail({ ...email, error: emailError });
+      setPassword({ ...password, error: passwordError });
       return;
     }
     requestUserPermission();
     // saveData()
   };
+
   const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission();
     const enabled =
@@ -78,14 +76,14 @@ export default function LoginScreen({navigation}) {
 
   const saveData = async newData => {
     let userData = newData;
-    userData = {...userData, ...{loggedin: true, loggedIntype: 'Emp'}};
+    userData = { ...userData, ...{ loggedin: true, loggedIntype: 'Emp' } };
     try {
       const jsonValue = JSON.stringify(userData);
       await AsyncStorage.setItem('@user_data', jsonValue);
 
       navigation.reset({
         index: 0,
-        routes: [{name: 'MyDrawer'}],
+        routes: [{ name: 'MyDrawer' }],
       });
     } catch (e) {
       console.log('error in saving data', e);
@@ -97,7 +95,7 @@ export default function LoginScreen({navigation}) {
       password: password.value,
       role: 'employee',
       device_type: Platform.OS,
-      device_token: '123456',
+      device_token: firebase_token,
       device_id: DeviceInfo.getDeviceId(),
     };
     dispatch(login(request));
@@ -127,7 +125,7 @@ export default function LoginScreen({navigation}) {
   const forgotPasswordPress = () => {
     const emailError = emailValidator(email.value);
     if (emailError) {
-      setEmail({...email, error: emailError});
+      setEmail({ ...email, error: emailError });
       return;
     }
     forgotPasswordAPI();
@@ -176,11 +174,11 @@ export default function LoginScreen({navigation}) {
         <KeyboardAvoidingView style={styles.keyboar}>
           <Logo />
           <Header>LOGIN</Header>
-          <TextInput
-            label="Email id"
+          <EmpTextInput
+            placeholder="Email id"
             returnKeyType="next"
             value={email.value}
-            onChangeText={text => setEmail({value: text, error: ''})}
+            onChangeText={text => setEmail({ value: text, error: '' })}
             error={!!email.error}
             errorText={email.error}
             autoCapitalize="none"
@@ -188,11 +186,11 @@ export default function LoginScreen({navigation}) {
             textContentType="emailAddress"
             keyboardType="email-address"
           />
-          <TextInput
-            label="Password"
+          <EmpTextInput
+            placeholder="Password"
             returnKeyType="done"
             value={password.value}
-            onChangeText={text => setPassword({value: text, error: ''})}
+            onChangeText={text => setPassword({ value: text, error: '' })}
             error={!!password.error}
             errorText={password.error}
             password={true}
@@ -203,13 +201,15 @@ export default function LoginScreen({navigation}) {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
-        <View style={{paddingHorizontal: 20, width: '100%', maxWidth: '100%'}}>
+        <View style={{ paddingHorizontal: 20, width: '100%', maxWidth: '100%' }}>
           <TouchableOpacity
             mode="contained"
             onPress={onLoginPressed}
             activeOpacity={0.9}>
             <LinearGradient
-              colors={['#7426f2', '#3d0891']}
+              colors={['#CF9FFF', '#5D3FD3']}
+              useAngle={true}
+              angle={10}
               style={styles.touchabltext}>
               <Text style={styles.textstyle}>Login</Text>
             </LinearGradient>
@@ -223,7 +223,7 @@ export default function LoginScreen({navigation}) {
           </View>
         </View>
       </ScrollView>
-      {loading || (forgetloading && <Loader />)}
+      {(loading || forgetloading) && <Loader />}
     </>
   );
 }
@@ -260,9 +260,8 @@ const styles = StyleSheet.create({
   touchabltext: {
     height: 45,
     justifyContent: 'center',
-    borderRadius: 7,
+    borderRadius: 15,
     alignItems: 'center',
-    justifyContent: 'center',
   },
   textstyle: {
     fontSize: 18,
