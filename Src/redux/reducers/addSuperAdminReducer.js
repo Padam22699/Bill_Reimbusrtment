@@ -1,32 +1,34 @@
 import {types} from '../actions/types';
-
 const initialState = {
   loading: false,
   data: {},
   error: {},
 };
 
-export default registerReducer = (state = initialState, {type, payload}) => {
+export default addSuperAdminReducer = (
+  state = initialState,
+  {type, payload},
+) => {
   switch (type) {
-    case types.SEND_REQUEST_REGISTER:
+    case types.SEND_REQUEST_ADD_SUPER_ADMIN:
       return {
         ...state,
         loading: true,
       };
-    case types.SEND_REQUEST_REGISTER_SUCCESS:
+
+    case types.SEND_REQUEST_ADD_SUPER_ADMIN_SUCCESS:
       return {
         ...state,
         data: payload,
         loading: false,
       };
-    case types.SEND_REQUEST_REGISTER_FAILURE:
+    case types.SEND_REQUEST_ADD_SUPER_ADMIN_FAILURE:
       return {
         ...state,
-        data: {},
         error: payload,
         loading: false,
       };
-    case types.CLEAR_REQUEST_REGISTER:
+    case types.CLEAR_REQUEST_ADD_SUPER_ADMIN:
       return {
         ...state,
         data: {},

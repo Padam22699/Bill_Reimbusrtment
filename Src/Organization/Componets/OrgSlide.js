@@ -127,6 +127,19 @@ export const OrgSlide = ({navigation}) => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.screenCiantainer}
+          onPress={() => navigation.navigate('AddSuperAdmin')}>
+          <View style={styles.manuconatiner}>
+          <Icon
+              name="user"
+              size={20}
+              style={{marginRight: 10}}
+              color="#000"
+            />
+            <Text style={styles.heading}>Add Super Admin</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.screenCiantainer}
           onPress={() => logout()}>
           <View style={styles.manuconatiner}>
             <Icon
