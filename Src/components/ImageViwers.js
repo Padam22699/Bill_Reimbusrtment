@@ -1,4 +1,4 @@
-import {SafeAreaView, StyleSheet, View} from 'react-native';
+import {Platform, SafeAreaView, StyleSheet, View} from 'react-native';
 import React, {useCallback} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {PRIMARY} from '../Organization/Colors/Color';
@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   iconContainer: {
+    marginTop :Platform.OS ==='ios' ?60 :0 ,
     position: 'absolute',
     width: 30,
     height: 30,

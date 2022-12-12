@@ -9,7 +9,7 @@ import AttechedImageViewer from '../Organization/Stutes/AttechedImageViewer';
 import FullDetailScreen from '../Organization/Stutes/FullDetailScreen';
 import OrganizationDeatailScreeen from '../Organization/Stutes/OrganizationDeatailScreeen';
 import OrgSlide from '../Organization/Componets/OrgSlide';
-import { Dimensions } from 'react-native';
+import {Dimensions, Platform} from 'react-native';
 import AddSuperAdmin from '../Organization/Screens/AddSuperAdmin';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -23,7 +23,15 @@ export const MyDrawer = () => {
       <Drawer.Screen
         name="BottomTab"
         component={BottomTab}
-        options={{headerShown: false, drawerType: 'front', drawerStyle: {backgroundColor: 'transparent', marginBottom: 62, width: Dimensions.get('window').width / 2}}}
+        options={{
+          headerShown: false,
+          drawerType: 'front',
+          drawerStyle: {
+            backgroundColor: 'transparent',
+            marginBottom: Platform.OS === 'ios' ? 97 : 62,
+            width: Dimensions.get('window').width / 2,
+          },
+        }}
       />
     </Drawer.Navigator>
   );
@@ -32,31 +40,71 @@ export const OrgDrawer = () => {
   return (
     <orgDrawer.Navigator
       screenOptions={{drawerPosition: 'right'}}
-      drawerContent={props => <OrgSlide navigation={props.navigation}/>}>
+      drawerContent={props => <OrgSlide navigation={props.navigation} />}>
       <orgDrawer.Screen
         name="Tabs"
         component={Tabs}
-        options={{headerShown: false, drawerType: 'front', drawerStyle: {backgroundColor: 'transparent', marginBottom: 62, width: Dimensions.get('window').width / 2}}}
+        options={{
+          headerShown: false,
+          drawerType: 'front',
+          drawerStyle: {
+            backgroundColor: 'transparent',
+            marginBottom: 62,
+            width: Dimensions.get('window').width / 2,
+          },
+        }}
       />
-        <orgDrawer.Screen
+      <orgDrawer.Screen
         name="ImageView"
         component={AttechedImageViewer}
-        options={{headerShown: false, drawerType: 'front', drawerStyle: {backgroundColor: 'transparent', marginBottom: 62, width: Dimensions.get('window').width / 2}}}
+        options={{
+          headerShown: false,
+          drawerType: 'front',
+          drawerStyle: {
+            backgroundColor: 'transparent',
+            marginBottom: 62,
+            width: Dimensions.get('window').width / 2,
+          },
+        }}
       />
       <orgDrawer.Screen
         name="UserDetail"
         component={FullDetailScreen}
-        options={{headerShown: false, drawerType: 'front', drawerStyle: {backgroundColor: 'transparent', marginBottom: 62, width: Dimensions.get('window').width / 2}}}
+        options={{
+          headerShown: false,
+          drawerType: 'front',
+          drawerStyle: {
+            backgroundColor: 'transparent',
+            marginBottom: 62,
+            width: Dimensions.get('window').width / 2,
+          },
+        }}
       />
-       <orgDrawer.Screen
+      <orgDrawer.Screen
         name="DetailScreen"
         component={OrganizationDeatailScreeen}
-        options={{headerShown: false, drawerType: 'front', drawerStyle: {backgroundColor: 'transparent', marginBottom: 62, width: Dimensions.get('window').width / 2}}}
+        options={{
+          headerShown: false,
+          drawerType: 'front',
+          drawerStyle: {
+            backgroundColor: 'transparent',
+            marginBottom: 62,
+            width: Dimensions.get('window').width / 2,
+          },
+        }}
       />
-       <orgDrawer.Screen
+      <orgDrawer.Screen
         name="AddSuperAdmin"
         component={AddSuperAdmin}
-        options={{headerShown: false, drawerType: 'front', drawerStyle: {backgroundColor: 'transparent', marginBottom: 62, width: Dimensions.get('window').width / 2}}}
+        options={{
+          headerShown: false,
+          drawerType: 'front',
+          drawerStyle: {
+            backgroundColor: 'transparent',
+            marginBottom: 62,
+            width: Dimensions.get('window').width / 2,
+          },
+        }}
       />
       {/* <orgDrawer.Screen
         name="Profile"
@@ -88,7 +136,7 @@ function Routes({loggedin, loggedIntype}) {
         component={AuthStack}
         options={{headerShown: false}}
       />
- 
+
       <Stack.Screen
         name="OrgDrawer"
         component={OrgDrawer}

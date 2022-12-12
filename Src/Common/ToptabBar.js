@@ -1,6 +1,6 @@
 import React from 'react';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { View, StyleSheet, StatusBar } from 'react-native';
+import { View, StyleSheet, StatusBar, Platform } from 'react-native';
 import Current from '../Screen/Current';
 import Past from '../Screen/Past';
 import { theme } from '../core/theme';
@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.white,
+    marginTop:Platform.OS ==='ios' ? 45 :0
   },
 });
 export default ToptabBar;

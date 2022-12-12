@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,32 +8,35 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Text } from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import Logo from '../components/Logo';
 import EmpTextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
-import { theme } from '../core/theme';
-import { emailValidator } from '../helpers/emailValidator';
-import { passwordValidator } from '../helpers/passwordValidator';
-import { nameValidator } from '../helpers/nameValidator';
-import { LastnameValidator } from '../helpers/LastnameValidator';
+import {theme} from '../core/theme';
+import {emailValidator} from '../helpers/emailValidator';
+import {passwordValidator} from '../helpers/passwordValidator';
+import {nameValidator} from '../helpers/nameValidator';
+import {LastnameValidator} from '../helpers/LastnameValidator';
 import LinearGradient from 'react-native-linear-gradient';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
-import { clearRegister, register } from '../redux/actions/registerAction';
-import { setToken } from '../redux/actions/tokenAction';
+import {clearRegister, register} from '../redux/actions/registerAction';
+import {setToken} from '../redux/actions/tokenAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import Loader from '../Organization/Componets/Loader';
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({navigation}) {
   const dispatch = useDispatch();
 
-  const [name, setName] = useState({ value: '', error: '' });
-  const [Lastname, setLastname] = useState({ value: '', error: '' });
-  const [email, setEmail] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
-  const [ConfirmPassword, setConfirmPassword] = useState({ value: '', error: '' });
+  const [name, setName] = useState({value: '', error: ''});
+  const [Lastname, setLastname] = useState({value: '', error: ''});
+  const [email, setEmail] = useState({value: '', error: ''});
+  const [password, setPassword] = useState({value: '', error: ''});
+  const [ConfirmPassword, setConfirmPassword] = useState({
+    value: '',
+    error: '',
+  });
   const [Organization, setOrganization] = useState({
     value: 'Wedig335431',
     error: '',
@@ -49,14 +52,17 @@ export default function RegisterScreen({ navigation }) {
     const passwordError = passwordValidator(password.value);
 
     if (emailError || passwordError || nameError || lastnameError) {
-      setName({ ...name, error: nameError });
-      setLastname({ ...Lastname, error: lastnameError });
-      setEmail({ ...email, error: emailError });
-      setPassword({ ...password, error: passwordError });
+      setName({...name, error: nameError});
+      setLastname({...Lastname, error: lastnameError});
+      setEmail({...email, error: emailError});
+      setPassword({...password, error: passwordError});
       return;
     }
     if (password.value != ConfirmPassword.value) {
-      setConfirmPassword({ ...ConfirmPassword, error: "Confirm Password do not match with Password" });
+      setConfirmPassword({
+        ...ConfirmPassword,
+        error: 'Confirm Password do not match with Password',
+      });
       return;
     }
     requestUserPermission();
@@ -122,14 +128,14 @@ export default function RegisterScreen({ navigation }) {
 
   const saveData = async data => {
     let userData = data;
-    userData = { ...userData, ...{ loggedin: true, loggedIntype: 'Emp' } };
+    userData = {...userData, ...{loggedin: true, loggedIntype: 'Emp'}};
     try {
       const jsonValue = JSON.stringify(userData);
       await AsyncStorage.setItem('@user_data', jsonValue);
       dispatch(clearRegister());
       navigation.reset({
         index: 0,
-        routes: [{ name: 'MyDrawer' }],
+        routes: [{name: 'MyDrawer'}],
       });
     } catch (e) {
       console.log('error in saving data', e);
@@ -143,8 +149,11 @@ export default function RegisterScreen({ navigation }) {
           backgroundColor={theme.colors.surface}
           barStyle="dark-content"
         />
-        <BackButton goBack={navigation.goBack} />
-        <View style={{ alignItems: 'center' }}>
+        <View style={{marginTop:Platform.OS ? 50:0}}> 
+          <BackButton goBack={navigation.goBack} />
+        </View>
+
+        <View style={{alignItems: 'center'}}>
           <Logo />
           <Text style={styles.textcreate}>Create Account</Text>
         </View>
@@ -158,7 +167,7 @@ export default function RegisterScreen({ navigation }) {
               placeholder="First Name"
               returnKeyType="next"
               value={name.value}
-              onChangeText={text => setName({ value: text, error: '' })}
+              onChangeText={text => setName({value: text, error: ''})}
               error={!!name.error}
               errorText={name.error}
             />
@@ -166,7 +175,7 @@ export default function RegisterScreen({ navigation }) {
               placeholder="Last Name"
               returnKeyType="next"
               value={Lastname.value}
-              onChangeText={text => setLastname({ value: text, error: '' })}
+              onChangeText={text => setLastname({value: text, error: ''})}
               error={!!Lastname.error}
               errorText={Lastname.error}
             />
@@ -174,7 +183,7 @@ export default function RegisterScreen({ navigation }) {
               placeholder="Email"
               returnKeyType="next"
               value={email.value}
-              onChangeText={text => setEmail({ value: text, error: '' })}
+              onChangeText={text => setEmail({value: text, error: ''})}
               error={!!email.error}
               errorText={email.error}
               autoCapitalize="none"
@@ -186,7 +195,7 @@ export default function RegisterScreen({ navigation }) {
               placeholder="Password"
               returnKeyType="done"
               value={password.value}
-              onChangeText={text => setPassword({ value: text, error: '' })}
+              onChangeText={text => setPassword({value: text, error: ''})}
               error={!!password.error}
               errorText={password.error}
               password={true}
@@ -195,7 +204,9 @@ export default function RegisterScreen({ navigation }) {
               placeholder="Confirm Password"
               returnKeyType="done"
               value={ConfirmPassword.value}
-              onChangeText={text => setConfirmPassword({ value: text, error: '' })}
+              onChangeText={text =>
+                setConfirmPassword({value: text, error: ''})
+              }
               error={!!ConfirmPassword.error}
               errorText={ConfirmPassword.error}
               password={true}
@@ -205,7 +216,7 @@ export default function RegisterScreen({ navigation }) {
               placeholder="Organization id"
               returnKeyType="done"
               value={Organization.value}
-              onChangeText={text => setOrganization({ value: text, error: '' })}
+              onChangeText={text => setOrganization({value: text, error: ''})}
               error={!!Organization.error}
               errorText={Organization.error}
             />

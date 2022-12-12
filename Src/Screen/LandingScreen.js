@@ -6,12 +6,13 @@ import {
   StatusBar,
   Image,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import { theme } from '../core/theme';
+import {theme} from '../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
 
-const LandingScreen = ({ navigation }) => {
+const LandingScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <StatusBar
@@ -34,7 +35,7 @@ const LandingScreen = ({ navigation }) => {
             <Text style={styles.textstyle}>Employee</Text>
           </TouchableOpacity>
         </LinearGradient>
-        <View style={{ marginTop: 45 }}>
+        <View style={{marginTop: 45}}>
           <LinearGradient
             colors={['#FAC898', '#E14D2A']}
             useAngle={true}
@@ -61,6 +62,7 @@ export const styles = StyleSheet.create({
   imageview: {
     // backgroundColor: theme.colors.violet,
     // width: '100%',
+    marginTop: Platform.OS === 'ios' ? 80 : 0,
   },
   imagestyle: {
     height: 330,

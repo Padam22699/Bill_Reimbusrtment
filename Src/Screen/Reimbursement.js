@@ -9,6 +9,7 @@ import {
   Image,
   Alert,
   FlatList,
+  Platform,
 } from 'react-native';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import moment from 'moment';
@@ -27,6 +28,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useDispatch, useSelector } from 'react-redux';
 import { addBill, clearAddBill } from '../redux/actions/addBillAction';
 import Loader from '../Organization/Componets/Loader';
+import * as permissions from 'react-native-permissions'
 
 export default function Reimbursement({ navigation }) {
   const dispatch = useDispatch();
@@ -217,6 +219,7 @@ export default function Reimbursement({ navigation }) {
               fontSize: 18,
               fontWeight: '700',
               marginVertical: 10,
+              marginBottom:Platform.OS ==='ios' ? 30 : 0
             }}>
             Add Expense
           </Text>
@@ -257,6 +260,7 @@ export default function Reimbursement({ navigation }) {
                 style={{
                   backgroundColor: theme.colors.surface,
                   width: '100%',
+                  height :Platform.OS ==='ios'? 40 :0
                 }}
               />
             </View>
@@ -312,7 +316,7 @@ export default function Reimbursement({ navigation }) {
               />
             </View>
             <View
-              style={{ marginTop: 30, marginBottom: 50 }}>
+              style={{ marginTop:Platform.OS ==='ios' ? 60 : 30, marginBottom: 50 }}>
               <TouchableOpacity
                 mode="contained"
                 onPress={onSubmitPress}
@@ -356,8 +360,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 2,
     marginHorizontal: 16,
-    marginTop: 20,
-    marginBottom: 80,
+    marginTop: Platform.OS ? 70 :  20,
+    marginBottom: 115,
     borderRadius: 15,
   },
   attachview: {

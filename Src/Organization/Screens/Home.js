@@ -8,6 +8,7 @@ import {
   Dimensions,
   StatusBar,
   Image,
+  Platform,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { A, DARK, PRIMARY, B, C, WHITE } from '../Colors/Color';
@@ -176,7 +177,7 @@ const Deshboard = ({ navigation }) => {
             <Text
               adjustsFontSizeToFit={true}
               style={{
-                fontSize: 20,
+                fontSize: 15,
                 alignSelf: 'center',
                 color: "#E14D2A",
                 fontWeight: 'bold',
@@ -382,9 +383,9 @@ const styles = StyleSheet.create({
       width: 5,
       height: 5,
     },
-    elevation: 4,
+    elevation:Platform.OS === 'ios' ? 0: 4,
     shadowRadius: 5,
-    shadowOpacity: 0.75,
+    shadowOpacity: Platform.OS === 'ios' ? 0.25 : 0.75,
     marginBottom: 20,
   },
   RecordContainer: {},

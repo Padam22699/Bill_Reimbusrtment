@@ -145,7 +145,10 @@ export default function OrgSignup({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <Backbtn goBack={navigation.goBack} />
+       <View style={{marginTop:Platform.OS ?50:0}}>
+       <Backbtn goBack={navigation.goBack} />
+       </View>
+    
       <View style={{ alignItems: 'center' }}>
         <Logo />
         <Text style={styles.textcreate}>Create Account</Text>

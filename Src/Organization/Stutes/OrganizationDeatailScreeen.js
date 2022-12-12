@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, Platform } from 'react-native';
 import React, { createRef, useState, useEffect, useCallback } from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Swiper from 'react-native-deck-swiper';
@@ -347,6 +347,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 14,
+    marginTop:Platform.OS === 'ios' ? 50 :0
   },
   heading: {
     textShadowColor: 'rgba(0, 0, 0, 0.25)',

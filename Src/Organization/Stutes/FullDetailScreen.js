@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,31 +9,34 @@ import {
   SafeAreaView,
   ScrollView,
   Dimensions,
+  Platform,
 } from 'react-native';
-import { DARK, PRIMARY, WHITE } from '../Colors/Color';
+import {DARK, PRIMARY, WHITE} from '../Colors/Color';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Picker } from '@react-native-picker/picker';
+import {Picker} from '@react-native-picker/picker';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Imagepath from '../../Assets/Images/Imagepath';
-import { useFocusEffect } from '@react-navigation/native';
+import {useFocusEffect} from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { theme } from '../../core/theme';
+import {theme} from '../../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
 import moment from 'moment';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { changeStatus, clearChangeStatus } from '../../redux/actions/changeStatusAction';
+import {
+  changeStatus,
+  clearChangeStatus,
+} from '../../redux/actions/changeStatusAction';
 import LoaderOrg from '../Componets/LoaderOrg';
 
-export default function FullDetailScreen({ navigation, route }) {
-
+export default function FullDetailScreen({navigation, route}) {
   const [stutes, setstutes] = useState('Pending');
   const [visible, setvisible] = useState(false);
   const [userData, setUserData] = useState(null);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const changeStatusResponse = useSelector(
     state => state.changeStatusReducer.data,
@@ -43,7 +46,7 @@ export default function FullDetailScreen({ navigation, route }) {
   useFocusEffect(
     useCallback(() => {
       console.log('fullDeatailsScreen', route.params);
-      setstutes("Pending")
+      setstutes('Pending');
       getData();
     }, []),
   );
@@ -67,14 +70,14 @@ export default function FullDetailScreen({ navigation, route }) {
   };
 
   const submit = () => {
-    console.log("status", stutes)
+    console.log('status', stutes);
     let request = {
       user_id: userData.user_id,
       bill_id: route.params.item.bill_id,
-      user_status: stutes
-    }
-    dispatch(changeStatus(request))
-  }
+      user_status: stutes,
+    };
+    dispatch(changeStatus(request));
+  };
 
   useEffect(() => {
     if (changeStatusResponse != null) {
@@ -91,7 +94,7 @@ export default function FullDetailScreen({ navigation, route }) {
         changeStatusResponse.statusCode == 200
       ) {
         dispatch(clearChangeStatus());
-        navigation.navigate('Home')
+        navigation.navigate('Home');
       }
     }
   }, [changeStatusResponse]);
@@ -99,9 +102,10 @@ export default function FullDetailScreen({ navigation, route }) {
   return (
     <>
       <ScrollView style={styles.container}>
-        <Animatable.View animation="zoomInDown" style={{ transform: 'scale' }}>
+        <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
           <View style={styles.mainview}>
             <TouchableOpacity
+            style={{marginTop:Platform.OS==='ios'? 50 :0}}
               onPress={() => {
                 navigation.goBack();
               }}
@@ -110,7 +114,7 @@ export default function FullDetailScreen({ navigation, route }) {
                 name="close"
                 size={25}
                 color={'#fff'}
-                style={{ alignSelf: 'flex-end' }}
+                style={{alignSelf: 'flex-end',marginTop:Platform.OS ? 10: 0}}
               />
             </TouchableOpacity>
             <View style={styles.touchablview}>
@@ -124,12 +128,16 @@ export default function FullDetailScreen({ navigation, route }) {
                   name="rupee"
                   size={18}
                   color={WHITE}
-                  style={{ top: 5 }}
+                  style={{top: 5}}
                 />
                 <View>
-                  <Text style={styles.textrupees}>{route.params.item.amount}</Text>
+                  <Text style={styles.textrupees}>
+                    {route.params.item.amount}
+                  </Text>
                   <>
-                    <Text style={styles.textfuelthe}>{route.params.item.type}</Text>
+                    <Text style={styles.textfuelthe}>
+                      {route.params.item.type}
+                    </Text>
                   </>
                 </View>
               </View>
@@ -138,10 +146,12 @@ export default function FullDetailScreen({ navigation, route }) {
           <View style={styles.container2}>
             <View style={styles.elevationstyle}>
               <Text style={styles.textExpe}>Expense Details</Text>
-              <View style={{ marginTop: 20 }}>
+              <View style={{marginTop: 20}}>
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Date</Text>
-                  <Text style={styles.textmar}>{moment(route.params.item.date).format("MMM DD, yyyy")}</Text>
+                  <Text style={styles.textmar}>
+                    {moment(route.params.item.date).format('MMM DD, yyyy')}
+                  </Text>
                 </View>
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Description</Text>
@@ -153,7 +163,7 @@ export default function FullDetailScreen({ navigation, route }) {
                   <Text style={styles.textdate}>Attachment</Text>
                   <TouchableOpacity onPress={() => setvisible(true)}>
                     <Image
-                      source={{ uri: route.params.item.bill_attachment }}
+                      source={{uri: route.params.item.bill_attachment}}
                       style={{
                         height: 50,
                         width: 50,
@@ -165,46 +175,45 @@ export default function FullDetailScreen({ navigation, route }) {
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Status</Text>
                   <View style={styles.pickerContainer}>
-                    {route.params.item.status == "Pending" ? <Picker
-                      enabled={route.params.item.status == "Pending"}
-                      style={styles.picker}
-                      selectedValue={stutes}
-                      mode='dropdown'
-                      onValueChange={itemvalue => setstutes(itemvalue)}>
-                      <Picker.Item
-                        label="Pending"
-                        value="Pending"
-                        color={DARK}
-                      />
-                      <Picker.Item
-                        label="Approved"
-                        value="Approved"
-                        color={DARK}
-                      />
-                      <Picker.Item
-                        label="Rejected"
-                        value="Rejected"
-                        color={DARK}
-                      />
-                      <Picker.Item
-                        label="Forward"
-                        value="Forward"
-                        color={DARK}
-                      />
-                    </Picker> :
+                    {route.params.item.status == 'Pending' ? (
+                      <Picker
+                        enabled={route.params.item.status == 'Pending'}
+                        style={styles.picker}
+                        selectedValue={stutes}
+                        mode="dropdown"
+                        onValueChange={itemvalue => setstutes(itemvalue)}>
+                        <Picker.Item
+                          label="Pending"
+                          value="Pending"
+                          color={DARK}
+                        />
+                        <Picker.Item
+                          label="Approved"
+                          value="Approved"
+                          color={DARK}
+                        />
+                        <Picker.Item
+                          label="Rejected"
+                          value="Rejected"
+                          color={DARK}
+                        />
+                        <Picker.Item
+                          label="Forward"
+                          value="Forward"
+                          color={DARK}
+                        />
+                      </Picker>
+                    ) : (
                       <Text style={styles.textfuel}>
                         {route.params.item.status}
                       </Text>
-                    }
+                    )}
                   </View>
                 </View>
               </View>
 
-              <View
-                style={styles.flexview}>
-                <Text style={[styles.textdate, {}]}>
-                  Status by
-                </Text>
+              <View style={styles.flexview}>
+                <Text style={[styles.textdate, {}]}>Status by</Text>
                 <Text style={[styles.textmar, {}]}>Admin</Text>
               </View>
               {/* <View
@@ -219,24 +228,27 @@ export default function FullDetailScreen({ navigation, route }) {
                 <Text style={styles.textdate}>Less Cash Advance</Text>
                 <Text style={[styles.textmar, {}]}> Amount</Text>
               </View> */}
-              <View
-                style={styles.flexview}>
+              <View style={styles.flexview}>
                 <Text style={styles.textdate}>Total Reimbursement</Text>
-                <Text style={[styles.textmar, {}]}>{route.params.item.amount}</Text>
+                {/* <Text style={[styles.textmar, {}]}>
+                  {route.params.item.amount}
+                </Text> */}
               </View>
             </View>
-            {route.params.item.status == "Pending" && <TouchableOpacity
-              mode="contained"
-              onPress={submit}
-              activeOpacity={0.9}>
-              <LinearGradient
-                colors={['#FAC898', '#E14D2A']}
-                useAngle={true}
-                angle={10}
-                style={styles.touchabltext}>
-                <Text style={styles.textstyle}>SUBMIT</Text>
-              </LinearGradient>
-            </TouchableOpacity>}
+            {route.params.item.status == 'Pending' && (
+              <TouchableOpacity
+                mode="contained"
+                onPress={submit}
+                activeOpacity={0.9}>
+                <LinearGradient
+                  colors={['#FAC898', '#E14D2A']}
+                  useAngle={true}
+                  angle={10}
+                  style={styles.touchabltext}>
+                  <Text style={styles.textstyle}>SUBMIT</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
           </View>
         </Animatable.View>
       </ScrollView>
@@ -246,7 +258,7 @@ export default function FullDetailScreen({ navigation, route }) {
           <SafeAreaView style={styles.container}>
             <ImageViewer
               renderIndicator={() => null}
-              imageUrls={[{ url: route.params.item.bill_attachment }]}
+              imageUrls={[{url: route.params.item.bill_attachment}]}
               index={0}
               style={[
                 styles.Imagecontainer,
@@ -301,6 +313,7 @@ const styles = StyleSheet.create({
 
     top: 15,
     right: 5,
+    marginTop:Platform.OS ? 60 :0
   },
   container: {
     flex: 1,
@@ -322,8 +335,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   mainview: {
-    backgroundColor: "#E14D2A",
-    height: 135,
+    backgroundColor: '#E14D2A',
+    height: 190,
     paddingHorizontal: 18,
     paddingVertical: 8,
     borderBottomLeftRadius: 30,
@@ -367,7 +380,7 @@ const styles = StyleSheet.create({
   },
   container2: {
     marginHorizontal: 18,
-    marginTop: 20
+    marginTop: 20,
   },
   imagetouchstyle: {
     height: 24,
@@ -394,7 +407,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#E14D2A',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   flexview: {
     flexDirection: 'row',
@@ -406,7 +419,7 @@ const styles = StyleSheet.create({
   textdate: {
     fontSize: 16,
     color: theme.colors.text,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   textmar: {
     fontSize: 16,

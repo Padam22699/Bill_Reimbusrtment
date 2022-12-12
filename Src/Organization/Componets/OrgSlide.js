@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
+  Platform,
 } from 'react-native';
 import {DARK} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const OrgSlide = ({navigation}) => {
-
   const [email, setemail] = useState(null);
 
   useEffect(() => {
@@ -55,12 +55,28 @@ export const OrgSlide = ({navigation}) => {
   };
 
   return (
-    <View style={{flex: 1, borderLeftWidth: 2, borderColor: '#E14D2A'}}>
+    <View
+      style={{
+        flex: 1,
+        borderLeftWidth: 2,
+        borderColor: '#E14D2A',
+        marginBottom: Platform.OS === 'ios' ? 38 : 0,
+      }}>
       <View
-      style={{borderBottomColor: '#E14D2A', borderBottomWidth: 1, padding: 20, backgroundColor: "#FAC898",}}
-      >
+        style={{
+          borderBottomColor: '#E14D2A',
+          borderBottomWidth: 1,
+          padding: 20,
+          backgroundColor: '#FAC898',
+        }}>
         <Text style={styles.text}>Admin</Text>
-        <Text adjustsFontSizeToFit={true} allowFontScaling={true} numberOfLines={1} style={{color:'#E14D2A'}}>{email}</Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          allowFontScaling={true}
+          numberOfLines={1}
+          style={{color: '#E14D2A'}}>
+          {email}
+        </Text>
       </View>
       <View style={{backgroundColor: 'white', flex: 1, paddingTop: 20}}>
         <TouchableOpacity
@@ -86,8 +102,8 @@ export const OrgSlide = ({navigation}) => {
               style={{
                 width: 20,
                 height: 20,
-                tintColor: "#000",
-                marginRight: 10
+                tintColor: '#000',
+                marginRight: 10,
               }}
             />
             <Text style={styles.heading}>Completed</Text>
@@ -102,8 +118,8 @@ export const OrgSlide = ({navigation}) => {
               style={{
                 width: 20,
                 height: 20,
-                tintColor: "#000",
-                marginRight: 10
+                tintColor: '#000',
+                marginRight: 10,
               }}
             />
             <Text style={styles.heading}>Forwarded</Text>
@@ -118,8 +134,8 @@ export const OrgSlide = ({navigation}) => {
               style={{
                 width: 20,
                 height: 20,
-                tintColor: "#000",
-                marginRight: 10
+                tintColor: '#000',
+                marginRight: 10,
               }}
             />
             <Text style={styles.heading}>Pending</Text>
@@ -129,7 +145,7 @@ export const OrgSlide = ({navigation}) => {
           style={styles.screenCiantainer}
           onPress={() => navigation.navigate('AddSuperAdmin')}>
           <View style={styles.manuconatiner}>
-          <Icon
+            <Icon
               name="user"
               size={20}
               style={{marginRight: 10}}
@@ -148,7 +164,7 @@ export const OrgSlide = ({navigation}) => {
               style={{marginRight: 10}}
               color="#000"
             />
-            <Text style={[styles.heading,{marginLeft:1,}]}>Logout</Text>
+            <Text style={[styles.heading, {marginLeft: 1}]}>Logout</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -161,13 +177,14 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   text: {
+    marginTop: Platform.OS === 'ios' ? 30 : 0,
     color: '#E14D2A',
     fontSize: 22,
     fontWeight: '700',
     marginVertical: 5,
   },
   options: {
-    color: "#E14D2A",
+    color: '#E14D2A',
     fontSize: 16,
     marginVertical: 5,
   },
@@ -183,8 +200,8 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     // borderBottomWidth: 1,
-    paddingHorizontal: 20, 
-    paddingVertical: 5
+    paddingHorizontal: 20,
+    paddingVertical: 5,
   },
   screenCiantainer: {
     marginBottom: 10,
@@ -197,7 +214,7 @@ export const styles = StyleSheet.create({
   },
   logout: {
     textShadowColor: 'rgba(0, 0, 0, 0.23)',
-    textShadowOffset: { width: -1, height: 1 },
+    textShadowOffset: {width: -1, height: 1},
     textShadowRadius: 10,
     fontSize: 24,
     fontWeight: 'bold',

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, TextInput } from 'react-native';
-import { theme } from '../core/theme';
+import React, {useState} from 'react';
+import {View, StyleSheet, Text, TextInput, Platform} from 'react-native';
+import {theme} from '../core/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
 export default function EmpTextInput({
@@ -23,7 +23,7 @@ export default function EmpTextInput({
             onPress={() => sethidePassword(!hidePassword)}
             name={hidePassword ? 'eye-slash' : 'eye'}
             size={20}
-            style={{ marginRight: 8 }}
+            style={{marginRight: 8}}
           />
         )}
       </View>
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderWidth: 1,
-    borderColor: "#5D3FD3",
+    borderColor: '#5D3FD3',
     borderRadius: 15,
     padding: 4,
     backgroundColor: theme.colors.surface,
@@ -55,6 +55,8 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: theme.colors.surface,
     flex: 1,
+    height: Platform.OS === 'ios' ? 40 : 0,
+    marginTop: Platform.OS === 'ios' ? 3 : 0,
   },
   description: {
     fontSize: 13,

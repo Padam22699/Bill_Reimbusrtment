@@ -239,6 +239,7 @@ const PenddingRequsest = ({ navigation }) => {
             onChangeText={text => {
               setSearchText(text);
             }}
+            style={{ height:Platform.OS ==='ios' ?50: 0}}
           />
         </View>
         <FlatList

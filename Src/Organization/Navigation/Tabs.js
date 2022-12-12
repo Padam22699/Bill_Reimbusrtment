@@ -1,4 +1,4 @@
-import {Image} from 'react-native';
+import {Image, Platform} from 'react-native';
 import React from 'react';
 import Home from '../Screens/Home';
 import CompleteRequest from '../Screens/CompleteRequest';
@@ -15,7 +15,7 @@ export const Tabs = () => {
         tabBarActiveTintColor: PRIMARY,
         tabBarInactiveTintColor: 'black',
         tabBarStyle: {
-          height: 60,
+          height: Platform.OS === 'ios' ? 100 : 60,
           position: 'absolute',
           backgroundColor: "#FAC898",
           borderTopLeftRadius: 30,

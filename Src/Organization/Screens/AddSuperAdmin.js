@@ -144,7 +144,10 @@ const AddSuperAdmin = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <Backbtn goBack={navigation.goBack} />
+      <View style={{marginTop:Platform.OS === 'ios'? 40 :0}}>
+        <Backbtn goBack={navigation.goBack} />
+      </View>
+
       <View style={{alignItems: 'center'}}>
         <Logo />
         <Text style={styles.textcreate}>Add Super Admin</Text>
@@ -282,6 +285,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: '100%',
     maxWidth: '100%',
+    marginTop:Platform.OS === 'ios' ?20 :0
   },
   innerContainer: {
     flex: 1,

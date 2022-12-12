@@ -1,5 +1,5 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Image } from 'react-native';
+import { Image, Platform } from 'react-native';
 import Notification from '../Screen/Notification';
 import { theme } from '../core/theme';
 import Reimbursement from '../Screen/Reimbursement';
@@ -17,7 +17,7 @@ function BottomTab() {
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: 'black',
         tabBarStyle: {
-          height: 60,
+          height:  Platform.OS === 'ios' ? 95 : 60,
           position: 'absolute',
           backgroundColor: "#E6E6FA",
           borderTopLeftRadius: 30,

@@ -6,33 +6,34 @@ import {
   TouchableOpacity,
   Dimensions,
   StatusBar,
+  Platform,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import {
-  DARK,
-  WHITE,
-  A,
-  B,
-  C,
-} from '../Organization/Colors/Color';
+import React, {useCallback, useEffect, useState} from 'react';
+import {DARK, WHITE, A, B, C} from '../Organization/Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { theme } from '../core/theme';
+import {theme} from '../core/theme';
 import Welogo from '../Organization/Componets/Welogo';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
-import Loader from '../Organization/Componets/Loader'
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
+import Loader from '../Organization/Componets/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { clearGetDashboardData, getDashboardData } from '../redux/actions/getDashboardDataAction';
+import {
+  clearGetDashboardData,
+  getDashboardData,
+} from '../redux/actions/getDashboardDataAction';
 
-const Ehome = ({ navigation }) => {
-
+const Ehome = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const getDashboardDataResponse = useSelector(state => state.getDashboardDataReducer.data);
-  const loadingDashboard = useSelector(state => state.getDashboardDataReducer.loading);
+  const getDashboardDataResponse = useSelector(
+    state => state.getDashboardDataReducer.data,
+  );
+  const loadingDashboard = useSelector(
+    state => state.getDashboardDataReducer.loading,
+  );
 
   useFocusEffect(
     useCallback(() => {
@@ -60,7 +61,7 @@ const Ehome = ({ navigation }) => {
 
   useEffect(() => {
     if (userData != null) {
-      fetchDashboardData()
+      fetchDashboardData();
     }
   }, [userData]);
 
@@ -94,12 +95,7 @@ const Ehome = ({ navigation }) => {
     }
   }, [getDashboardDataResponse]);
 
-  const MiddleContent = ({
-    money,
-    heading,
-    backGround,
-    onpress = () => { },
-  }) => {
+  const MiddleContent = ({money, heading, backGround, fontSize , onpress = () => {}}) => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={onpress}>
         <View style={styles.Container}>
@@ -134,20 +130,23 @@ const Ehome = ({ navigation }) => {
               justifyContent: 'center',
               flex: 1,
               alignContent: 'center',
-              padding: 4
+              padding: 4,
             }}>
             <Text
               adjustsFontSizeToFit={true}
-              style={{
-                fontSize: 20,
-                alignSelf: 'center',
-                color: "#5D3FD3",
-                fontWeight: 'bold',
-                textAlignVertical: 'center',
-                textAlign: 'center',
-                justifyContent: 'center',
-                margin: 5,
-              }}>
+              style={[
+                {
+                  fontSize: Platform.OS === 'ios' ? fontSize : 20,
+                  alignSelf: 'center',
+                  color: '#5D3FD3',
+                  fontWeight: 'bold',
+                  textAlignVertical: 'center',
+                  textAlign: 'center',
+                  justifyContent: 'center',
+                  margin: 5,
+                },
+            
+              ]}>
               {heading}
             </Text>
           </View>
@@ -157,22 +156,33 @@ const Ehome = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: WHITE }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
       <StatusBar backgroundColor={theme.colors.primary} barStyle="default" />
-      <View style={{ margin: 12 }}>
+      <View style={{margin: 12}}>
         <Welogo navigation={navigation} />
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <MiddleContent money={dashboardData != null && dashboardData.one_month_data} heading="This Month" backGround={A} />
+          <MiddleContent
+            money={dashboardData != null && dashboardData.one_month_data}
+            heading="This Month"
+            backGround={A}
+            fontSize={16}
+          />
           <MiddleContent
             money={dashboardData != null && dashboardData.six_month_data}
             heading="Last 6 Months"
             backGround={B}
+            fontSize={14}
           />
-          <MiddleContent money={dashboardData != null && dashboardData.one_year_data} heading="This Year" backGround={C} />
+          <MiddleContent
+            money={dashboardData != null && dashboardData.one_year_data}
+            heading="This Year"
+            backGround={C}
+            fontSize={16}
+          />
         </View>
       </View>
       {loadingDashboard && <Loader />}
@@ -204,12 +214,12 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     shadowColor: DARK,
     shadowOffset: {
-      width: 5,
-      height: 5,
+      width: 3,
+      height: 3,
     },
-    elevation: 4,
+    elevation: 2,
     shadowRadius: 5,
-    shadowOpacity: 0.75,
+    shadowOpacity: 0.25,
     marginBottom: 20,
   },
   RecordContainer: {},

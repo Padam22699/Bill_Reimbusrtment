@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   TouchableOpacity,
   StatusBar,
@@ -8,18 +8,18 @@ import {
   ScrollView,
   Platform,
 } from 'react-native';
-import { Text } from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import Logo from '../components/Logo';
 import Header from '../components/Header';
 import EmpTextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
-import { theme } from '../core/theme';
-import { emailValidator } from '../helpers/emailValidator';
-import { passwordValidator } from '../helpers/passwordValidator';
+import {theme} from '../core/theme';
+import {emailValidator} from '../helpers/emailValidator';
+import {passwordValidator} from '../helpers/passwordValidator';
 import LinearGradient from 'react-native-linear-gradient';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import DeviceInfo from 'react-native-device-info';
-import { clearLogin, login } from '../redux/actions/loginAction';
+import {clearLogin, login} from '../redux/actions/loginAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import {
@@ -28,10 +28,10 @@ import {
 } from '../redux/actions/forgotPasswordAction';
 import Loader from '../Organization/Componets/Loader';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
+  const [email, setEmail] = useState({value: '', error: ''});
+  const [password, setPassword] = useState({value: '', error: ''});
 
   const loginResponse = useSelector(state => state.loginReducer.data);
   const loading = useSelector(state => state.loginReducer.loading);
@@ -46,8 +46,8 @@ export default function LoginScreen({ navigation }) {
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
     if (emailError || passwordError) {
-      setEmail({ ...email, error: emailError });
-      setPassword({ ...password, error: passwordError });
+      setEmail({...email, error: emailError});
+      setPassword({...password, error: passwordError});
       return;
     }
     requestUserPermission();
@@ -76,14 +76,14 @@ export default function LoginScreen({ navigation }) {
 
   const saveData = async newData => {
     let userData = newData;
-    userData = { ...userData, ...{ loggedin: true, loggedIntype: 'Emp' } };
+    userData = {...userData, ...{loggedin: true, loggedIntype: 'Emp'}};
     try {
       const jsonValue = JSON.stringify(userData);
       await AsyncStorage.setItem('@user_data', jsonValue);
 
       navigation.reset({
         index: 0,
-        routes: [{ name: 'MyDrawer' }],
+        routes: [{name: 'MyDrawer'}],
       });
     } catch (e) {
       console.log('error in saving data', e);
@@ -125,7 +125,7 @@ export default function LoginScreen({ navigation }) {
   const forgotPasswordPress = () => {
     const emailError = emailValidator(email.value);
     if (emailError) {
-      setEmail({ ...email, error: emailError });
+      setEmail({...email, error: emailError});
       return;
     }
     forgotPasswordAPI();
@@ -170,7 +170,10 @@ export default function LoginScreen({ navigation }) {
           backgroundColor={theme.colors.surface}
           barStyle="dark-content"
         />
-        <BackButton goBack={navigation.goBack} />
+        <View style={{marginTop:Platform.OS === 'ios' ? 60 :0}}>
+          <BackButton goBack={navigation.goBack} />
+        </View>
+
         <KeyboardAvoidingView style={styles.keyboar}>
           <Logo />
           <Header>LOGIN</Header>
@@ -178,7 +181,7 @@ export default function LoginScreen({ navigation }) {
             placeholder="Email id"
             returnKeyType="next"
             value={email.value}
-            onChangeText={text => setEmail({ value: text, error: '' })}
+            onChangeText={text => setEmail({value: text, error: ''})}
             error={!!email.error}
             errorText={email.error}
             autoCapitalize="none"
@@ -190,7 +193,7 @@ export default function LoginScreen({ navigation }) {
             placeholder="Password"
             returnKeyType="done"
             value={password.value}
-            onChangeText={text => setPassword({ value: text, error: '' })}
+            onChangeText={text => setPassword({value: text, error: ''})}
             error={!!password.error}
             errorText={password.error}
             password={true}
@@ -201,7 +204,7 @@ export default function LoginScreen({ navigation }) {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
-        <View style={{ paddingHorizontal: 20, width: '100%', maxWidth: '100%' }}>
+        <View style={{paddingHorizontal: 20, width: '100%', maxWidth: '100%' , marginTop:Platform.OS === 'ios' ?20 :0}}>
           <TouchableOpacity
             mode="contained"
             onPress={onLoginPressed}

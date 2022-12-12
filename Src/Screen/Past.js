@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   Modal,
+  Platform,
 } from 'react-native';
 import { theme } from '../core/theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -287,6 +288,7 @@ export default function Past({ navigation }) {
                     textAlignVertical: 'center',
                     fontSize: 24,
                     color: GREY,
+                    marginTop  :Platform .OS === 'ios' ? 250 :0
                   }}>
                   Result not found
                 </Text>
@@ -384,13 +386,22 @@ const styles = StyleSheet.create({
   },
   searchinput: {
     marginHorizontal: 22,
-    elevation: 5,
+
     backgroundColor: '#fff',
+    shadowOffset: {
+      width: 3,
+      height: 3,
+    },
+    elevation: 5,
+    shadowRadius: 5,
+    shadowOpacity: 0.25,
     paddingHorizontal: 10,
     marginVertical: 7,
     flexDirection: 'row',
     alignItems: 'center',
-    borderRadius: 15
+    borderRadius: 15,
+    marginTop: Platform.OS === 'ios' ? -40 : 0,
+    height: Platform.OS === 'ios' ? 43 : 0,
   },
   iconstyle: {
     right: 0,

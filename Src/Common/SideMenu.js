@@ -5,6 +5,7 @@ import {
   Text,
   StyleSheet,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { theme } from '../core/theme';
 import { DARK } from '../Organization/Colors/Color';
@@ -141,6 +142,7 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   text: {
+    marginTop :Platform.OS === 'ios' ? 33 :0 ,
     color: '#5D3FD3',
     fontSize: 22,
     fontWeight: '700',

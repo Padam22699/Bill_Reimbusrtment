@@ -163,7 +163,10 @@ export default function OrgSignin({ navigation }) {
           backgroundColor={theme.colors.surface}
           barStyle="dark-content"
         />
+        <View style={styles.backbtncontiner}>
         <Backbtn goBack={navigation.goBack} />
+        </View>
+       
         <ScrollView style={{ flex: 1, padding: 20 }} contentContainerStyle={{alignItems: 'center'}} keyboardShouldPersistTaps='always'>
           <Logo />
           <Text style={{ fontSize: 22, fontWeight: 'bold', color: PRIMARY, marginVertical: 20 }}>
@@ -245,6 +248,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 12,
     justifyContent: 'center',
+    marginBottom:Platform.OS ==='ios' ?20:0
   },
   forgot: {
     fontSize: 13,
@@ -265,4 +269,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#fff',
   },
+  backbtncontiner:{
+    marginTop:Platform.OS === 'ios' ? 50: 0
+  }
 });

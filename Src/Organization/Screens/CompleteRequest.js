@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Image,
   TextInput,
+  Platform,
 } from 'react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { GREY, PRIMARY } from '../Colors/Color';
@@ -243,6 +244,7 @@ const CompleteRequest = ({ navigation }) => {
               console.log(text);
               setSearchText(text);
             }}
+            style={styles.searchBar}
           />
         </View>
         <FlatList
@@ -304,4 +306,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#E14D2A'
   },
+  searchBar:{
+    height:Platform.OS ==='ios' ?50: 0
+  }
 });

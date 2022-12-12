@@ -1,6 +1,6 @@
 import {useFocusEffect} from '@react-navigation/native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {View, Text, StyleSheet, FlatList} from 'react-native';
+import {View, Text, StyleSheet, FlatList, Platform} from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import {Headers} from '../Common/Headers';
 import Heading from '../components/Heading';
@@ -77,6 +77,7 @@ const Notification = ({navigation}) => {
                   flex: 1,
                   alignItems: 'center',
                   justifyContent: 'center',
+                  marginTop : Platform.OS === 'ios' ? 80 :0
                 }}>
                 <Text style={styles.text}>Notifications</Text>
               </View>
