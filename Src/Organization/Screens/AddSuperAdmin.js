@@ -101,7 +101,7 @@ const AddSuperAdminS = ({navigation}) => {
       device_token: firebase_token,
       device_id: DeviceInfo.getDeviceId(),
     };
- dispatch(addSuperAdmin(request));
+    dispatch(addSuperAdmin(request));
   };
 
   useEffect(() => {
@@ -127,16 +127,18 @@ const AddSuperAdminS = ({navigation}) => {
 
   const saveData = async data => {
     let userData = data;
-    userData = {...userData, ...{addAdmin: true, addAdminType:'Super'}};
+    userData = {...userData, ...{addAdmin: true, addAdminType: 'Super'}};
 
     try {
       const jsonValue = JSON.stringify(userData);
       await AsyncStorage.setItem('@super_Admin_data', jsonValue);
       dispatch(clearSuperAdmin());
-      navigation.reset({
-        index: 0,
-        rautes: [{name: 'Tabs'}],
-      });
+      // navigation.navigate('Tabs');
+      // navigation.reset({
+      //   index: 0,
+      //   rautes: [{name: 'Tabs'}],
+      // });
+      navigation.goBack()
     } catch (e) {
       console.log('error in saving data', e);
     }
