@@ -78,7 +78,7 @@ export default function DetailScreen({ navigation }) {
 
   const fetchBillDetail = () => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       bill_id: routes.params.bill_id,
       type: 'employee',
     };
@@ -129,7 +129,7 @@ export default function DetailScreen({ navigation }) {
 
   const handlePhysicallySubmit = submitted => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       bill_id: routes.params.bill_id,
       is_phy_submitted: submitted,
     };
@@ -165,7 +165,7 @@ export default function DetailScreen({ navigation }) {
 
   const sendReminder = () => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       bill_id: routes.params.bill_id,
       message: 'Your bill still to be approve.',
     };

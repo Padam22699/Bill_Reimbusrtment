@@ -29,7 +29,7 @@ import {emailValidator} from '../../helpers/emailValidator';
 import {passwordValidator} from '../../helpers/passwordValidator';
 import {nameValidator} from '../../helpers/nameValidator';
 import {LastnameValidator} from '../../helpers/LastnameValidator';
-const AddSuperAdmin = ({navigation}) => {
+const AddSuperAdminS = ({navigation}) => {
   const dispatch = useDispatch();
 
   const [name, setName] = useState({value: '', error: ''});
@@ -85,11 +85,11 @@ const AddSuperAdmin = ({navigation}) => {
     await messaging()
       .getToken()
       .then(token => {
-        addSuperAdmin(token);
+        addSuperAdminApi(token);
       });
   };
 
-  const addSuperAdmin = firebase_token => {
+  const addSuperAdminApi = firebase_token => {
     let request = {
       first_name: name.value,
       last_name: Lastname.value,
@@ -101,7 +101,7 @@ const AddSuperAdmin = ({navigation}) => {
       device_token: firebase_token,
       device_id: DeviceInfo.getDeviceId(),
     };
-    dispatch(addSuperAdmin(request));
+ dispatch(addSuperAdmin(request));
   };
 
   useEffect(() => {
@@ -127,7 +127,7 @@ const AddSuperAdmin = ({navigation}) => {
 
   const saveData = async data => {
     let userData = data;
-    userData = {...userData, ...{addAdmin: true, addAdminType: 'Super'}};
+    userData = {...userData, ...{addAdmin: true, addAdminType:'Super'}};
 
     try {
       const jsonValue = JSON.stringify(userData);
@@ -144,7 +144,7 @@ const AddSuperAdmin = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={{marginTop:Platform.OS === 'ios'? 40 :0}}>
+      <View style={{marginTop: Platform.OS === 'ios' ? 40 : 0}}>
         <Backbtn goBack={navigation.goBack} />
       </View>
 
@@ -210,12 +210,7 @@ const AddSuperAdmin = ({navigation}) => {
           <View style={styles.signview}>
             <TouchableOpacity
               mode="contained"
-              onPress={
-                // AddadminPressed
-                () => {
-                  navigation.navigate('Tabs');
-                }
-              }
+              onPress={AddadminPressed}
               activeOpacity={0.9}>
               <LinearGradient
                 colors={['#FAC898', '#E14D2A']}
@@ -233,7 +228,7 @@ const AddSuperAdmin = ({navigation}) => {
   );
 };
 
-export default AddSuperAdmin;
+export default AddSuperAdminS;
 
 const styles = StyleSheet.create({
   cancel: {color: PRIMARY},
@@ -285,7 +280,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     width: '100%',
     maxWidth: '100%',
-    marginTop:Platform.OS === 'ios' ?20 :0
+    marginTop: Platform.OS === 'ios' ? 20 : 0,
   },
   innerContainer: {
     flex: 1,

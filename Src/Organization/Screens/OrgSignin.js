@@ -25,6 +25,7 @@ import messaging from '@react-native-firebase/messaging';
 import { clearForgotPassword, forgotPassword } from '../../redux/actions/forgotPasswordAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoaderOrg from '../Componets/LoaderOrg';
+import { setToken } from '../../redux/actions/tokenAction';
 
 export default function OrgSignin({ navigation }) {
   const dispatch = useDispatch();
@@ -88,6 +89,7 @@ export default function OrgSignin({ navigation }) {
     try {
       const jsonValue = JSON.stringify(Organizationdata);
       await AsyncStorage.setItem('@user_data', jsonValue);
+      dispatch(setToken(newData.token))
       navigation.reset({
         index: 0,
         routes: [{ name: 'OrgDrawer' }],

@@ -75,7 +75,7 @@ export default function Current({navigation}) {
 
   const fetchAllBills = (search, type) => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       type: 'employee',
       page: '1',
       reverse: 1,
@@ -412,8 +412,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 15,
-    marginTop: Platform.OS === 'ios' ? -40 : 0,
-    height: Platform.OS === 'ios' ? 43 : 0,
+    marginTop: Platform.OS === 'ios' ? -40 : 10,
+    height: Platform.OS === 'ios' ? 43 : 43,
   },
   iconstyle: {
     right: 0,

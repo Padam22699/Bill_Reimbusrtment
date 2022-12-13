@@ -72,7 +72,7 @@ export default function FullDetailScreen({navigation, route}) {
   const submit = () => {
     console.log('status', stutes);
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       bill_id: route.params.item.bill_id,
       user_status: stutes,
     };
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
 
     top: 15,
     right: 5,
-    marginTop:Platform.OS ? 60 :0
+    marginTop:Platform.OS === 'ios' ? 60 :20
   },
   container: {
     flex: 1,

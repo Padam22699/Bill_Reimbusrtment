@@ -122,7 +122,7 @@ const OrganizationDeatailScreeen = ({ navigation, route }) => {
   const approve = () => {
     setChange("Right")
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       bill_id: currentRequest.bill_id,
       user_status: "Approved"
     }
@@ -132,7 +132,7 @@ const OrganizationDeatailScreeen = ({ navigation, route }) => {
   const reject = () => {
     setChange("Left")
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       bill_id: currentRequest.bill_id,
       user_status: "Rejected"
     }

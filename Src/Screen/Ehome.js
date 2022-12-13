@@ -18,6 +18,13 @@ import {useFocusEffect} from '@react-navigation/native';
 import Loader from '../Organization/Componets/Loader';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
+  VictoryBar,
+  VictoryChart,
+  VictoryPie,
+  VictoryTheme,
+  VictoryTooltip,
+} from 'victory-native';
+import {
   clearGetDashboardData,
   getDashboardData,
 } from '../redux/actions/getDashboardDataAction';
@@ -61,13 +68,13 @@ const Ehome = ({navigation}) => {
 
   useEffect(() => {
     if (userData != null) {
-      fetchDashboardData();
+    fetchDashboardData();
     }
   }, [userData]);
 
   const fetchDashboardData = () => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       type: 'employee',
     };
 
@@ -95,7 +102,13 @@ const Ehome = ({navigation}) => {
     }
   }, [getDashboardDataResponse]);
 
-  const MiddleContent = ({money, heading, backGround, fontSize , onpress = () => {}}) => {
+  const MiddleContent = ({
+    money,
+    heading,
+    backGround,
+    fontSize,
+    onpress = () => {},
+  }) => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={onpress}>
         <View style={styles.Container}>
@@ -145,7 +158,6 @@ const Ehome = ({navigation}) => {
                   justifyContent: 'center',
                   margin: 5,
                 },
-            
               ]}>
               {heading}
             </Text>
@@ -184,6 +196,43 @@ const Ehome = ({navigation}) => {
             fontSize={16}
           />
         </View>
+
+        {/* <View style={styles.pieDesboard}>
+          <VictoryPie
+            height={280}
+            events={[
+              {
+                target: 'data',
+
+                eventHandlers: {
+                  onClick: () => {
+                    return [
+                      {
+                        target: 'data',
+                        mutation: ({style}) => {
+                          return style.fill === '#c43a31'
+                            ? null
+                            : {style: {fill: '#c43a31'}};
+                        },
+                      },
+                      {
+                        target: 'labels',
+                        mutation: ({text}) => {
+                          return text === 'clicked' ? null : {text: 'clicked'};
+                        },
+                      },
+                    ];
+                  },
+                },
+              },
+            ]}
+            data={[
+              {x: 1, y: 2, label: 'this Month'},
+              {x: 2, y: 3, label: 'Last 6 Month'},
+              {x: 3, y: 5, label: 'This Year'},
+            ]}
+          />
+        </View> */}
       </View>
       {loadingDashboard && <Loader />}
     </SafeAreaView>
@@ -194,6 +243,10 @@ export default Ehome;
 const deviceWidth = Math.round(Dimensions.get('window').width);
 
 const styles = StyleSheet.create({
+  pieDesboard: {
+    marginTop: 40,
+   
+  },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',

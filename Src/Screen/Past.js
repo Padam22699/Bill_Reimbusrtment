@@ -75,7 +75,7 @@ export default function Past({ navigation }) {
 
   const fetchAllBills = (search, type) => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       type: 'employee',
       page: '1',
       reverse: 1,
@@ -288,7 +288,7 @@ export default function Past({ navigation }) {
                     textAlignVertical: 'center',
                     fontSize: 24,
                     color: GREY,
-                    marginTop  :Platform .OS === 'ios' ? 250 :0
+                    marginTop  :Platform .OS === 'ios' ? 250 :250
                   }}>
                   Result not found
                 </Text>
@@ -400,8 +400,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 15,
-    marginTop: Platform.OS === 'ios' ? -40 : 0,
-    height: Platform.OS === 'ios' ? 43 : 0,
+    marginTop: Platform.OS === 'ios' ? -40 : 10,
+    height: Platform.OS === 'ios' ? 43 : 43,
   },
   iconstyle: {
     right: 0,

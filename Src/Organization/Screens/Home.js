@@ -67,7 +67,7 @@ const Deshboard = ({ navigation }) => {
 
   const fetchDashboardData = () => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       type: 'organization',
     };
 
@@ -76,7 +76,7 @@ const Deshboard = ({ navigation }) => {
 
   const fetchAllBills = () => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       type: 'organization',
       page: "1",
       reverse: 1,

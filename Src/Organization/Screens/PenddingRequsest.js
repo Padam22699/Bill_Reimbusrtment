@@ -65,7 +65,7 @@ const PenddingRequsest = ({ navigation }) => {
 
   const fetchAllBills = (page, searchText) => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       type: 'organization',
       page: page,
       reverse: 1,
@@ -239,7 +239,7 @@ const PenddingRequsest = ({ navigation }) => {
             onChangeText={text => {
               setSearchText(text);
             }}
-            style={{ height:Platform.OS ==='ios' ?50: 0}}
+            style={{ height:Platform.OS ==='ios' ?50: 50}}
           />
         </View>
         <FlatList

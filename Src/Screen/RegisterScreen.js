@@ -149,7 +149,7 @@ export default function RegisterScreen({navigation}) {
           backgroundColor={theme.colors.surface}
           barStyle="dark-content"
         />
-        <View style={{marginTop:Platform.OS ? 50:0}}> 
+        <View style={{marginTop: Platform.OS === 'ios' ? 50 : 0}}>
           <BackButton goBack={navigation.goBack} />
         </View>
 

@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: theme.colors.surface,
     flex: 1,
-    height: Platform.OS === 'ios' ? 40 : 0,
+    height: Platform.OS === 'ios' ? 40 : 40,
     marginTop: Platform.OS === 'ios' ? 3 : 0,
   },
   description: {

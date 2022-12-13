@@ -66,7 +66,7 @@ const CompleteRequest = ({ navigation }) => {
 
   const fetchAllBills = (page, searchText) => {
     let request = {
-      user_id: userData.user_id,
+      // user_id: userData.user_id,
       type: 'organization',
       page: page,
       reverse: 1,
@@ -307,6 +307,6 @@ const styles = StyleSheet.create({
     borderColor: '#E14D2A'
   },
   searchBar:{
-    height:Platform.OS ==='ios' ?50: 0
+    height:Platform.OS ==='ios' ?50: 50
   }
 });

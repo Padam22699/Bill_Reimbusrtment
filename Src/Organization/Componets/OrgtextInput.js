@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 4,
     backgroundColor: theme.colors.surface,
-    height: Platform.OS === 'ios' ? 50 : 0,
+     height: Platform.OS === 'ios' ? 50 : 50,
     marginTop: Platform.OS === 'ios' ? 10 : 0,
   },
   input: {

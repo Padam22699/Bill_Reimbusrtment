@@ -138,7 +138,7 @@ export default function Reimbursement({ navigation }) {
 
   const addBillApi = () => {
     let request = new FormData();
-    request.append('user_id', userData.user_id);
+    //  request.append('user_id', userData.user_id);
     request.append('date', date);
     request.append('description', description.value);
     request.append('amount', amount.value);
@@ -219,7 +219,7 @@ export default function Reimbursement({ navigation }) {
               fontSize: 18,
               fontWeight: '700',
               marginVertical: 10,
-              marginBottom:Platform.OS ==='ios' ? 30 : 0
+              marginBottom:Platform.OS ==='ios' ? 30 : 10
             }}>
             Add Expense
           </Text>
@@ -260,7 +260,7 @@ export default function Reimbursement({ navigation }) {
                 style={{
                   backgroundColor: theme.colors.surface,
                   width: '100%',
-                  height :Platform.OS ==='ios'? 40 :0
+                  height :Platform.OS ==='ios'? 40 :40
                 }}
               />
             </View>
@@ -360,8 +360,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 2,
     marginHorizontal: 16,
-    marginTop: Platform.OS ? 70 :  20,
-    marginBottom: 115,
+    marginTop: Platform.OS === 'ios'? 70 :  20,
+    marginBottom:Platform.OS === 'ios' ? 115 : 85,
     borderRadius: 15,
   },
   attachview: {

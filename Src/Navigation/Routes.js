@@ -10,7 +10,7 @@ import FullDetailScreen from '../Organization/Stutes/FullDetailScreen';
 import OrganizationDeatailScreeen from '../Organization/Stutes/OrganizationDeatailScreeen';
 import OrgSlide from '../Organization/Componets/OrgSlide';
 import {Dimensions, Platform} from 'react-native';
-import AddSuperAdmin from '../Organization/Screens/AddSuperAdmin';
+import AddSuperAdminS from '../Organization/Screens/AddSuperAdmin';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const orgDrawer = createDrawerNavigator();
@@ -95,7 +95,7 @@ export const OrgDrawer = () => {
       />
       <orgDrawer.Screen
         name="AddSuperAdmin"
-        component={AddSuperAdmin}
+        component={AddSuperAdminS}
         options={{
           headerShown: false,
           drawerType: 'front',

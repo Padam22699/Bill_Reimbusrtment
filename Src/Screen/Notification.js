@@ -26,7 +26,8 @@ const Notification = ({navigation}) => {
 
   const fetchNotifications = page => {
     let request = {
-      user_id: '636122b24ddcaf16082448ff',
+      type: 'employee',
+      // user_id: '636122b24ddcaf16082448ff',
       reverse: -1,
       page: page,
     };
