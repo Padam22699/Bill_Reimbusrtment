@@ -132,7 +132,9 @@ export default function OrgSignup({ navigation }) {
     Organizationdata = { ...Organizationdata, ...{ loggedin: true, loggedIntype: 'Org' } };
     try {
       const jsonValue = JSON.stringify(Organizationdata);
-      await AsyncStorage.setItem('user_data', jsonValue);
+      console.log('Register',jsonValue)
+      await AsyncStorage.setItem('@user_data', jsonValue);
+      dispatch(setToken(data.token))
       dispatch(clearRegister());
       navigation.reset({
         index: 0,

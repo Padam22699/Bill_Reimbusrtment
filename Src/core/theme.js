@@ -14,3 +14,8 @@ export const theme = {
     skyblue: '#73ebeb',
   },
 };
+
+export const pi1 = '#439A97';
+export const pi2 = '#62B6B7';
+export const pi3 = '#97DECE';
+export const pi4 = '#678983';

@@ -11,7 +11,7 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import {DARK, PRIMARY, WHITE} from '../Colors/Color';
+import {DARK, GREY, PRIMARY, WHITE} from '../Colors/Color';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -33,8 +33,11 @@ import LoaderOrg from '../Componets/LoaderOrg';
 
 export default function FullDetailScreen({navigation, route}) {
   const [stutes, setstutes] = useState('Pending');
+  const [Sstutes, setSstutes] = useState('Forward');
   const [visible, setvisible] = useState(false);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState('');
+
+  console.log('SuperAdmin1', userData.role_type);
 
   const dispatch = useDispatch();
 
@@ -47,6 +50,7 @@ export default function FullDetailScreen({navigation, route}) {
     useCallback(() => {
       console.log('fullDeatailsScreen', route.params);
       setstutes('Pending');
+      setSstutes('Forward');
       getData();
     }, []),
   );
@@ -99,13 +103,109 @@ export default function FullDetailScreen({navigation, route}) {
     }
   }, [changeStatusResponse]);
 
+  const picker = () => {
+    if (userData.role_type === 'super_admin') {
+      if (route.params.item.status == 'Forward') {
+        return (
+          <Picker
+            enabled={route.params.item.status == 'Forward'}
+            style={[styles.picker]}
+            selectedValue={Sstutes}
+            mode="dropdown"
+            itemStyle={{backgroundColor: WHITE}}
+            dropdownIconRippleColor={'black'}
+            dropdownIconColor={'black'}
+            onValueChange={itemvalue => setstutes(itemvalue)}>
+            <Picker.Item label="Pending" value="Pending" color={DARK} />
+            <Picker.Item label="Approved" value="Approved" color={DARK} />
+            <Picker.Item label="Rejected" value="Rejected" color={DARK} />
+            <Picker.Item label="Forward" value="Forward" color={DARK} />
+          </Picker>
+        );
+      }
+    }
+
+    if (route.params.item.status == 'Pending') {
+      return (
+        <Picker
+          enabled={route.params.item.status == 'Pending'}
+          style={[styles.picker]}
+          selectedValue={stutes}
+          mode="dropdown"
+          itemStyle={{backgroundColor: WHITE}}
+          dropdownIconRippleColor={'black'}
+          dropdownIconColor={'black'}
+          onValueChange={itemvalue => setstutes(itemvalue)}>
+          <Picker.Item label="Pending" value="Pending" color={DARK} />
+          <Picker.Item label="Approved" value="Approved" color={DARK} />
+          <Picker.Item label="Rejected" value="Rejected" color={DARK} />
+          <Picker.Item label="Forward" value="Forward" color={DARK} />
+        </Picker>
+      );
+    }
+    return <Text style={styles.textfuel}>{route.params.item.status}</Text>;
+  };
+
+  const submitbtnShow = () => {
+    if (userData.role_type === 'super_admin') {
+      if (route.params.item.status == 'Pending') {
+        return (
+          <TouchableOpacity
+            mode="contained"
+            onPress={submit}
+            activeOpacity={0.9}>
+            <LinearGradient
+              colors={['#FAC898', '#E14D2A']}
+              useAngle={true}
+              angle={10}
+              style={styles.touchabltext}>
+              <Text style={styles.textstyle}>SUBMIT</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        );
+      }
+    }
+    if (userData.role_type === 'super_admin') {
+      if (route.params.item.status == 'Forward') {
+        return (
+          <TouchableOpacity
+            mode="contained"
+            onPress={submit}
+            activeOpacity={0.9}>
+            <LinearGradient
+              colors={['#FAC898', '#E14D2A']}
+              useAngle={true}
+              angle={10}
+              style={styles.touchabltext}>
+              <Text style={styles.textstyle}>SUBMIT</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        );
+      }
+    }
+
+    if (route.params.item.status == 'Pending') {
+      return (
+        <TouchableOpacity mode="contained" onPress={submit} activeOpacity={0.9}>
+          <LinearGradient
+            colors={['#FAC898', '#E14D2A']}
+            useAngle={true}
+            angle={10}
+            style={styles.touchabltext}>
+            <Text style={styles.textstyle}>SUBMIT</Text>
+          </LinearGradient>
+        </TouchableOpacity>
+      );
+    }
+  };
+
   return (
     <>
       <ScrollView style={styles.container}>
         <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
           <View style={styles.mainview}>
             <TouchableOpacity
-            style={{marginTop:Platform.OS==='ios'? 50 :0}}
+              style={{marginTop: Platform.OS === 'ios' ? 50 : 0}}
               onPress={() => {
                 navigation.goBack();
               }}
@@ -114,7 +214,7 @@ export default function FullDetailScreen({navigation, route}) {
                 name="close"
                 size={25}
                 color={'#fff'}
-                style={{alignSelf: 'flex-end',marginTop:Platform.OS ? 10: 0}}
+                style={{alignSelf: 'flex-end', marginTop: Platform.OS ? 10 : 0}}
               />
             </TouchableOpacity>
             <View style={styles.touchablview}>
@@ -174,41 +274,7 @@ export default function FullDetailScreen({navigation, route}) {
                 </View>
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Status</Text>
-                  <View style={styles.pickerContainer}>
-                    {route.params.item.status == 'Pending' ? (
-                      <Picker
-                        enabled={route.params.item.status == 'Pending'}
-                        style={styles.picker}
-                        selectedValue={stutes}
-                        mode="dropdown"
-                        onValueChange={itemvalue => setstutes(itemvalue)}>
-                        <Picker.Item
-                          label="Pending"
-                          value="Pending"
-                          color={DARK}
-                        />
-                        <Picker.Item
-                          label="Approved"
-                          value="Approved"
-                          color={DARK}
-                        />
-                        <Picker.Item
-                          label="Rejected"
-                          value="Rejected"
-                          color={DARK}
-                        />
-                        <Picker.Item
-                          label="Forward"
-                          value="Forward"
-                          color={DARK}
-                        />
-                      </Picker>
-                    ) : (
-                      <Text style={styles.textfuel}>
-                        {route.params.item.status}
-                      </Text>
-                    )}
-                  </View>
+                  <View style={styles.pickerContainer}>{picker()}</View>
                 </View>
               </View>
 
@@ -230,12 +296,13 @@ export default function FullDetailScreen({navigation, route}) {
               </View> */}
               <View style={styles.flexview}>
                 <Text style={styles.textdate}>Total Reimbursement</Text>
-                {/* <Text style={[styles.textmar, {}]}>
+                <Text style={[styles.textmar, {}]} numberOfLines={1}>
                   {route.params.item.amount}
-                </Text> */}
+                </Text>
               </View>
             </View>
-            {route.params.item.status == 'Pending' && (
+            {submitbtnShow()}
+            {/* {route.params.item.status == 'Pending' && (
               <TouchableOpacity
                 mode="contained"
                 onPress={submit}
@@ -248,7 +315,7 @@ export default function FullDetailScreen({navigation, route}) {
                   <Text style={styles.textstyle}>SUBMIT</Text>
                 </LinearGradient>
               </TouchableOpacity>
-            )}
+            )} */}
           </View>
         </Animatable.View>
       </ScrollView>
@@ -313,7 +380,7 @@ const styles = StyleSheet.create({
 
     top: 15,
     right: 5,
-    marginTop:Platform.OS === 'ios' ? 60 :20
+    marginTop: Platform.OS === 'ios' ? 60 : 20,
   },
   container: {
     flex: 1,
@@ -425,13 +492,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: theme.colors.text,
     textAlign: 'right',
+    width: 100,
   },
   pickerContainer: {
     alignItems: 'center',
   },
   picker: {
     width: Dimensions.get('window').width / 2 - 40,
-    height: 20,
+    height: 24,
     color: DARK,
     marginRight: -20,
   },

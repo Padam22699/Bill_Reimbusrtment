@@ -78,7 +78,7 @@ export default function Current({navigation}) {
       // user_id: userData.user_id,
       type: 'employee',
       page: '1',
-      reverse: 1,
+      reverse: -1,
       user_status: '',
       search: search,
       bill_type: type,
@@ -87,6 +87,7 @@ export default function Current({navigation}) {
     };
 
     dispatch(getAllBills(request));
+    console.log('req',request)
   };
 
   useEffect(() => {
@@ -179,11 +180,14 @@ export default function Current({navigation}) {
                 style={{
                   ...styles.textapprove,
                   color:
-                    item.status == 'Approved'
-                      ? theme.colors.green
-                      : item.status == 'Pending'
-                      ? 'orange'
-                      : 'red',
+                  item.status == 'Approved'
+                  ? theme.colors.green
+                  : item.status == 'Pending'
+                  ? 'orange'
+                  : item.status == 'Forward'
+                  ? '#282A3A'
+                  : 'red'
+
                 }}>
                 {item.status}
               </Text>

@@ -10,28 +10,46 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { A, DARK, PRIMARY, B, C, WHITE } from '../Colors/Color';
+import React, {useCallback, useEffect, useState} from 'react';
+import {A, DARK, PRIMARY, B, C, WHITE} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { clearGetAllBills, getAllBills } from '../../redux/actions/getAllBillsAction';
+import {
+  clearGetAllBills,
+  getAllBills,
+} from '../../redux/actions/getAllBillsAction';
 import Imagepath from '../../Assets/Images/Imagepath';
 import LoaderOrg from '../Componets/LoaderOrg';
-import { clearGetDashboardData, getDashboardData } from '../../redux/actions/getDashboardDataAction';
+import {
+  clearGetDashboardData,
+  getDashboardData,
+} from '../../redux/actions/getDashboardDataAction';
 
-const Deshboard = ({ navigation }) => {
-
+const Deshboard = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [data, setData] = useState([]);
+  // const [superAdmin,setSuperAdmin]=useState(false)
 
-  const dispatch = useDispatch()
+  // console.log('Super' , userData.role_type)
+  const dispatch = useDispatch();
 
-  const getDashboardDataResponse = useSelector(state => state.getDashboardDataReducer.data);
-  const loadingDashboard = useSelector(state => state.getDashboardDataReducer.loading);
-  const getAllBillsResponse = useSelector(state => state.getAllBillsReducer.data);
+  // useEffect(()=>{
+  //    if(userData.role_type === 'super_admin' )
+  //    {setSuperAdmin(true)}
+  // },[superAdmin])
+
+  const getDashboardDataResponse = useSelector(
+    state => state.getDashboardDataReducer.data,
+  );
+  const loadingDashboard = useSelector(
+    state => state.getDashboardDataReducer.loading,
+  );
+  const getAllBillsResponse = useSelector(
+    state => state.getAllBillsReducer.data,
+  );
   const loading = useSelector(state => state.getAllBillsReducer.loading);
 
   useFocusEffect(
@@ -60,7 +78,7 @@ const Deshboard = ({ navigation }) => {
 
   useEffect(() => {
     if (userData != null) {
-      fetchDashboardData()
+      fetchDashboardData();
       fetchAllBills();
     }
   }, [userData]);
@@ -78,11 +96,11 @@ const Deshboard = ({ navigation }) => {
     let request = {
       // user_id: userData.user_id,
       type: 'organization',
-      page: "1",
-      reverse: 1,
+      page: '1',
+      reverse: -1,
       user_status: '',
-      search: "",
-      bill_type: "",
+      search: '',
+      bill_type: '',
       from_date: '',
       to_date: '',
     };
@@ -132,12 +150,7 @@ const Deshboard = ({ navigation }) => {
     }
   }, [getDashboardDataResponse]);
 
-  const MiddleContent = ({
-    money,
-    heading,
-    backGround,
-    onpress = () => { },
-  }) => {
+  const MiddleContent = ({money, heading, backGround, onpress = () => {}}) => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={onpress}>
         <View style={styles.Container}>
@@ -152,10 +165,12 @@ const Deshboard = ({ navigation }) => {
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
             }}>
-            <Icon name="rupee-sign" size={20} color={WHITE} />
+            <Icon name="rupee-sign" size={16} color={WHITE} />
             <Text
+              numberOfLines={1}
               style={{
-                fontSize: 24,
+                width: 80,
+                fontSize: 16,
                 marginLeft: 5,
                 color: WHITE,
                 alignContent: 'center',
@@ -172,14 +187,14 @@ const Deshboard = ({ navigation }) => {
               justifyContent: 'center',
               flex: 1,
               alignContent: 'center',
-              padding: 4
+              padding: 4,
             }}>
             <Text
-              adjustsFontSizeToFit={true}
+              // adjustsFontSizeToFit={true}
               style={{
-                fontSize: 15,
+                fontSize: 12,
                 alignSelf: 'center',
-                color: "#E14D2A",
+                color: '#E14D2A',
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
                 textAlign: 'center',
@@ -214,23 +229,22 @@ const Deshboard = ({ navigation }) => {
     }
   };
 
-  const RecentRequestList = ({ item, index }) => {
+  const RecentRequestList = ({item, index}) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
         onPress={() => {
-          if (item.status == "Pending") {
+          if (item.status == 'Pending') {
             navigation.navigate('DetailScreen', {
               data: data,
               index: index,
-            })
+            });
           } else {
             navigation.navigate('UserDetail', {
               item: item,
             });
           }
-        }
-        }>
+        }}>
         <View style={styles.recentList}>
           <View
             style={{
@@ -243,15 +257,18 @@ const Deshboard = ({ navigation }) => {
               elevation: 2,
               marginLeft: -30,
               borderWidth: 1,
-              borderColor: '#E14D2A'
+              borderColor: '#E14D2A',
             }}>
-            <Image source={icon(item.type)} style={{ height: 24, width: 24, tintColor: PRIMARY }} />
+            <Image
+              source={icon(item.type)}
+              style={{height: 24, width: 24, tintColor: PRIMARY}}
+            />
           </View>
-          <View style={{ flex: 1, marginLeft: 12 }}>
+          <View style={{flex: 1, marginLeft: 12}}>
             <Text
               style={{
                 fontSize: 16,
-                color: "#E14D2A",
+                color: '#E14D2A',
                 fontWeight: 'bold',
                 marginBottom: 8,
               }}>
@@ -260,14 +277,14 @@ const Deshboard = ({ navigation }) => {
             <Text
               style={{
                 fontSize: 12,
-                color: "#E14D2A",
+                color: '#E14D2A',
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
               {item.type}
             </Text>
           </View>
-          <View style={{ marginRight: 20 }}>
+          <View style={{marginRight: 20}}>
             <View
               style={{
                 flexDirection: 'row',
@@ -277,13 +294,13 @@ const Deshboard = ({ navigation }) => {
               <Icon
                 name="rupee-sign"
                 size={13}
-                color={"#E14D2A"}
-                style={{ marginRight: 2 }}
+                color={'#E14D2A'}
+                style={{marginRight: 2}}
               />
               <Text
                 style={{
                   fontSize: 16,
-                  color: "#E14D2A",
+                  color: '#E14D2A',
                   fontWeight: 'bold',
                 }}>
                 {item.amount}
@@ -293,7 +310,7 @@ const Deshboard = ({ navigation }) => {
             <Text
               style={{
                 fontSize: 12,
-                color: "#E14D2A",
+                color: '#E14D2A',
                 fontWeight: 'bold',
                 paddingVertical: 4,
                 textAlign: 'center',
@@ -309,9 +326,9 @@ const Deshboard = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: WHITE }}>
-      <StatusBar backgroundColor={"#E14D2A"} barStyle="default" />
-      <View style={{ margin: 12, flex: 1 }}>
+    <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
+      <StatusBar backgroundColor={'#E14D2A'} barStyle="default" />
+      <View style={{margin: 12, flex: 1}}>
         <View style={styles.header}>
           <View>
             <Text style={styles.heading}>WEDIGTECH</Text>
@@ -320,6 +337,9 @@ const Deshboard = ({ navigation }) => {
             name="bell"
             size={24}
             color={PRIMARY}
+            onPress={() => {
+              navigation.navigate('OrgNotification');
+            }}
           />
         </View>
         <View
@@ -327,32 +347,38 @@ const Deshboard = ({ navigation }) => {
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
-          <MiddleContent money={dashboardData != null && dashboardData.one_month_data} heading="This Month" backGround={A} />
+          <MiddleContent
+            money={dashboardData != null && dashboardData.one_month_data}
+            heading="This Month"
+            backGround={A}
+          />
           <MiddleContent
             money={dashboardData != null && dashboardData.six_month_data}
             heading="Last 6 Months"
             backGround={B}
           />
-          <MiddleContent money={dashboardData != null && dashboardData.one_year_data} heading="This Year" backGround={C} />
+          <MiddleContent
+            money={dashboardData != null && dashboardData.one_year_data}
+            heading="This Year"
+            backGround={C}
+          />
         </View>
-        <View style={{ marginBottom: 10 }}>
-          <Text style={{ fontSize: 20, color: DARK, fontWeight: 'bold' }}>
+        <View style={{marginBottom: 10}}>
+          <Text style={{fontSize: 20, color: DARK, fontWeight: 'bold'}}>
             Recent Request
           </Text>
         </View>
         <FlatList
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}
-          style={{ marginBottom: 55 }}
+          style={{marginBottom: 55}}
           data={data}
-          renderItem={({ item, index }) => (
+          renderItem={({item, index}) => (
             <RecentRequestList item={item} index={index} />
           )}
         />
       </View>
-      {
-        (loading || loadingDashboard) && <LoaderOrg />
-      }
+      {(loading || loadingDashboard) && <LoaderOrg />}
     </SafeAreaView>
   );
 };
@@ -370,7 +396,7 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: "#E14D2A",
+    color: '#E14D2A',
   },
   Container: {
     marginTop: 20,
@@ -383,7 +409,7 @@ const styles = StyleSheet.create({
       width: 5,
       height: 5,
     },
-    elevation:Platform.OS === 'ios' ? 0: 4,
+    elevation: Platform.OS === 'ios' ? 0 : 4,
     shadowRadius: 5,
     shadowOpacity: Platform.OS === 'ios' ? 0.25 : 0.75,
     marginBottom: 20,
@@ -392,13 +418,13 @@ const styles = StyleSheet.create({
   recentList: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: "#FAC898",
+    backgroundColor: '#FAC898',
     marginVertical: 10,
     elevation: 5,
     marginHorizontal: 22,
     padding: 10,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: '#E14D2A'
+    borderColor: '#E14D2A',
   },
 });

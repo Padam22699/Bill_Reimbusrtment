@@ -68,7 +68,7 @@ const ForwordedRequest = ({ navigation }) => {
       // user_id: userData.user_id,
       type: 'organization',
       page: page,
-      reverse: 1,
+      reverse:-1,
       user_status: 'Forward',
       search: searchText,
       bill_type: "",
@@ -238,7 +238,7 @@ const ForwordedRequest = ({ navigation }) => {
             onChangeText={text => {
               setSearchText(text);
             }}
-            style={{ height:Platform.OS ==='ios' ?50: 50}}
+            style={{ height:Platform.OS ==='ios' ?50: 50,width:'100%'}}
           />
         </View>
         <FlatList

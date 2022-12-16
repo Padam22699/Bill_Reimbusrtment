@@ -29,6 +29,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addBill, clearAddBill } from '../redux/actions/addBillAction';
 import Loader from '../Organization/Componets/Loader';
 import * as permissions from 'react-native-permissions'
+import { DARK } from '../Organization/Colors/Color';
 
 export default function Reimbursement({ navigation }) {
   const dispatch = useDispatch();
@@ -250,6 +251,7 @@ export default function Reimbursement({ navigation }) {
             <View style={{}}>
               <EmpTextInput
                 placeholder="Amount "
+                maxLength={6}
                 keyboardType={'numeric'}
                 value={amount.value}
                 onChangeText={text => {
@@ -257,11 +259,12 @@ export default function Reimbursement({ navigation }) {
                 }}
                 error={!!amount.error}
                 errorText={amount.error}
-                style={{
-                  backgroundColor: theme.colors.surface,
-                  width: '100%',
-                  height :Platform.OS ==='ios'? 40 :40
-                }}
+                // style={{
+                //   backgroundColor: theme.colors.surface,
+                //   width: '100%',
+                //   height :Platform.OS ==='ios'? 40 :40
+                // ,color:DARK
+                // }}
               />
             </View>
             <EmpTextInput

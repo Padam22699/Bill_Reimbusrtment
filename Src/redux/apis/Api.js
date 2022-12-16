@@ -96,6 +96,8 @@ export const getAllBills = async (requestJson) => {
     const response = await axios.post('bill/getAll', requestJson, { "headers": { 'Content-Type': 'application/json', 'Authorization': store.getState().tokenReducer.data } });
     console.log('REQUEST=> ', requestJson);
     console.log('RESPONSE GETBILLS=> ', response.data);
+    console.log('Store', store.getState().tokenReducer.data );
+   
     return response.data;
   } catch (err) {
     if (err.response.data.statusCode == 400) {

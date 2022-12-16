@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,11 +10,11 @@ import {
   Modal,
   Platform,
 } from 'react-native';
-import { theme } from '../core/theme';
+import {theme} from '../core/theme';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   clearGetAllBills,
@@ -22,12 +22,12 @@ import {
 } from '../redux/actions/getAllBillsAction';
 import Imagepath from '../Assets/Images/Imagepath';
 import moment from 'moment';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { DARK, GREY } from '../Organization/Colors/Color';
+import {DARK, GREY} from '../Organization/Colors/Color';
 
-export default function Past({ navigation }) {
+export default function Past({navigation}) {
   const dispatch = useDispatch();
 
   const [userData, setUserData] = useState(null);
@@ -78,7 +78,7 @@ export default function Past({ navigation }) {
       // user_id: userData.user_id,
       type: 'employee',
       page: '1',
-      reverse: 1,
+      reverse: -1,
       user_status: '',
       search: search,
       bill_type: type,
@@ -103,8 +103,9 @@ export default function Past({ navigation }) {
         Object.keys(getAllBillsResponse).length != 0 &&
         getAllBillsResponse.statusCode == 200
       ) {
+        let allRequest = getAllBillsResponse.data;
         console.log('response', getAllBillsResponse);
-        setCurrent(getAllBillsResponse.data);
+        setCurrent(allRequest);
         dispatch(clearGetAllBills());
         setModalOpen(false);
       }
@@ -147,14 +148,14 @@ export default function Past({ navigation }) {
     }
   }, [searchText, selectedType]);
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     return (
       <View style={styles.mainView}>
         <TouchableOpacity
           activeOpacity={0.9}
-          style={{ flexDirection: 'row', alignItems: 'center' }}
+          style={{flexDirection: 'row', alignItems: 'center'}}
           onPress={() => {
-            navigation.navigate('DetailScreen', { bill_id: item.bill_id });
+            navigation.navigate('DetailScreen', {bill_id: item.bill_id});
           }}>
           <View style={styles.imageView}>
             <View
@@ -165,7 +166,7 @@ export default function Past({ navigation }) {
               <Image source={icon(item.type)} style={styles.imagestyle} />
             </View>
           </View>
-          <View style={{ flex: 1, marginLeft: -30 }}>
+          <View style={{flex: 1, marginLeft: -30}}>
             <View style={styles.textview}>
               <Text style={styles.textblood}>
                 {moment(item.date).format('MMM DD, yyyy')}
@@ -177,20 +178,26 @@ export default function Past({ navigation }) {
                     item.status == 'Approved'
                       ? theme.colors.green
                       : item.status == 'Pending'
-                        ? 'orange'
-                        : 'red',
+                      ? 'orange'
+                      : item.status == 'Forward'
+                      ? '#282A3A'
+                      : 'red'
+
                 }}>
                 {item.status}
               </Text>
             </View>
             <View style={styles.texticon}>
-              <Text numberOfLines={1} style={styles.textmar}>{item.description}</Text>
+              <Text numberOfLines={1} style={styles.textmar}>
+                {item.description}
+              </Text>
               <View style={styles.rupeestyle}>
                 <FontAwesome
                   name="rupee"
                   size={15}
-                  color={"#5D3FD3"}
-                  style={styles.fontstyle} />
+                  color={'#5D3FD3'}
+                  style={styles.fontstyle}
+                />
                 <Text style={styles.textrupees}>{item.amount}</Text>
               </View>
             </View>
@@ -227,28 +234,32 @@ export default function Past({ navigation }) {
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                setSelectedType('Medical'); setModalOpen(false);
+                setSelectedType('Medical');
+                setModalOpen(false);
               }}>
               <Text style={styles.textstyle}>Medical</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                setSelectedType('Food'); setModalOpen(false);
+                setSelectedType('Food');
+                setModalOpen(false);
               }}>
               <Text style={styles.textstyle}>Food</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                setSelectedType('Fuel'); setModalOpen(false);
+                setSelectedType('Fuel');
+                setModalOpen(false);
               }}>
               <Text style={styles.textstyle}>Fuel</Text>
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => {
-                setSelectedType('Other'); setModalOpen(false);
+                setSelectedType('Others');
+                setModalOpen(false);
               }}>
               <Text style={styles.textstyle}>Others</Text>
             </TouchableOpacity>
@@ -262,7 +273,7 @@ export default function Past({ navigation }) {
             }}>
             <AntDesign name="filter" size={25} color={theme.colors.text} />
           </TouchableOpacity>
-          <View style={{ flex: 0.8 }}>
+          <View style={{flex: 0.8}}>
             <TextInput
               placeholder="Search"
               onChangeText={text => {
@@ -288,14 +299,14 @@ export default function Past({ navigation }) {
                     textAlignVertical: 'center',
                     fontSize: 24,
                     color: GREY,
-                    marginTop  :Platform .OS === 'ios' ? 250 :250
+                    marginTop: Platform.OS === 'ios' ? 250 : 250,
                   }}>
                   Result not found
                 </Text>
               </View>
             );
           }}
-          style={{ marginBottom: 55 }}
+          style={{marginBottom: 55}}
           data={current}
           keyExtractor={item => item.id}
           renderItem={renderItem}
@@ -321,7 +332,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: '#5D3FD3'
+    borderColor: '#5D3FD3',
   },
   imagetype: {
     height: 40,
@@ -340,7 +351,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginLeft: -30,
     borderWidth: 1,
-    borderColor: '#5D3FD3'
+    borderColor: '#5D3FD3',
   },
   imagestyle: {
     height: 30,
@@ -356,7 +367,7 @@ const styles = StyleSheet.create({
   textblood: {
     left: 32,
     fontSize: 16,
-    color: "#5D3FD3",
+    color: '#5D3FD3',
     fontWeight: 'bold',
   },
   textapprove: {
@@ -375,14 +386,14 @@ const styles = StyleSheet.create({
     left: 32,
     marginTop: 12,
     fontSize: 14,
-    color: "#5D3FD3",
+    color: '#5D3FD3',
     width: '50%',
   },
   textrupees: {
     marginTop: 12,
     fontSize: 18,
-    color: "#5D3FD3",
-    fontWeight: '700'
+    color: '#5D3FD3',
+    fontWeight: '700',
   },
   searchinput: {
     marginHorizontal: 22,
@@ -420,7 +431,7 @@ const styles = StyleSheet.create({
   fontstyle: {
     marginTop: 14,
     right: 4,
-    fontWeight: '700'
+    fontWeight: '700',
   },
   modalView: {
     backgroundColor: theme.colors.white,

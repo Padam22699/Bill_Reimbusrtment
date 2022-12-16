@@ -8,23 +8,25 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
-import { GREY, PRIMARY } from '../Colors/Color';
+import React, {useCallback, useEffect, useState} from 'react';
+import {GREY, PRIMARY} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { useDispatch, useSelector } from 'react-redux';
-import { useFocusEffect } from '@react-navigation/native';
+import {useDispatch, useSelector} from 'react-redux';
+import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { clearGetAllBills, getAllBills } from '../../redux/actions/getAllBillsAction';
+import {
+  clearGetAllBills,
+  getAllBills,
+} from '../../redux/actions/getAllBillsAction';
 import Imagepath from '../../Assets/Images/Imagepath';
 import LoaderOrg from '../Componets/LoaderOrg';
-const PenddingRequsest = ({ navigation }) => {
-
+const PenddingRequsest = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [data, setData] = useState([]);
-  const [page, setPage] = useState("1");
-  const [searchText, setSearchText] = useState("");
+  const [page, setPage] = useState('1');
+  const [searchText, setSearchText] = useState('');
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const getAllBillsResponse = useSelector(
     state => state.getAllBillsReducer.data,
@@ -34,8 +36,8 @@ const PenddingRequsest = ({ navigation }) => {
   useFocusEffect(
     useCallback(() => {
       getData();
-      setPage("1")
-      setData([])
+      setPage('1');
+      setData([]);
     }, []),
   );
 
@@ -59,7 +61,7 @@ const PenddingRequsest = ({ navigation }) => {
 
   useEffect(() => {
     if (userData != null) {
-      fetchAllBills("1", searchText);
+      fetchAllBills('1', searchText);
     }
   }, [userData]);
 
@@ -68,10 +70,10 @@ const PenddingRequsest = ({ navigation }) => {
       // user_id: userData.user_id,
       type: 'organization',
       page: page,
-      reverse: 1,
+      reverse: -1,
       user_status: 'Pending',
       search: searchText,
-      bill_type: "",
+      bill_type: '',
       from_date: '',
       to_date: '',
     };
@@ -97,7 +99,7 @@ const PenddingRequsest = ({ navigation }) => {
         setData([...data, ...allRequest]);
         let pageNum = parseInt(page);
         let incPage = pageNum + 1;
-        setPage(incPage.toString())
+        setPage(incPage.toString());
         dispatch(clearGetAllBills());
       }
     }
@@ -123,7 +125,7 @@ const PenddingRequsest = ({ navigation }) => {
     }
   };
 
-  const RecentRequestList = ({ item, index }) => {
+  const RecentRequestList = ({item, index}) => {
     return (
       <TouchableOpacity
         activeOpacity={0.9}
@@ -145,15 +147,18 @@ const PenddingRequsest = ({ navigation }) => {
               elevation: 2,
               marginLeft: -30,
               borderWidth: 1,
-              borderColor: '#E14D2A'
+              borderColor: '#E14D2A',
             }}>
-            <Image source={icon(item.type)} style={{ height: 24, width: 24, tintColor: PRIMARY }} />
+            <Image
+              source={icon(item.type)}
+              style={{height: 24, width: 24, tintColor: PRIMARY}}
+            />
           </View>
-          <View style={{ flex: 1, marginLeft: 12 }}>
+          <View style={{flex: 1, marginLeft: 12}}>
             <Text
               style={{
                 fontSize: 16,
-                color: "#E14D2A",
+                color: '#E14D2A',
                 fontWeight: 'bold',
                 marginBottom: 8,
               }}>
@@ -162,14 +167,14 @@ const PenddingRequsest = ({ navigation }) => {
             <Text
               style={{
                 fontSize: 12,
-                color: "#E14D2A",
+                color: '#E14D2A',
                 fontWeight: 'bold',
                 textAlignVertical: 'center',
               }}>
               {item.type}
             </Text>
           </View>
-          <View style={{ marginRight: 20 }}>
+          <View style={{marginRight: 20}}>
             <View
               style={{
                 flexDirection: 'row',
@@ -179,13 +184,13 @@ const PenddingRequsest = ({ navigation }) => {
               <Icon
                 name="rupee-sign"
                 size={13}
-                color={"#E14D2A"}
-                style={{ marginRight: 2 }}
+                color={'#E14D2A'}
+                style={{marginRight: 2}}
               />
               <Text
                 style={{
                   fontSize: 16,
-                  color: "#E14D2A",
+                  color: '#E14D2A',
                   fontWeight: 'bold',
                 }}>
                 {item.amount}
@@ -195,7 +200,7 @@ const PenddingRequsest = ({ navigation }) => {
             <Text
               style={{
                 fontSize: 12,
-                color: "#E14D2A",
+                color: '#E14D2A',
                 fontWeight: 'bold',
                 paddingVertical: 4,
                 textAlign: 'center',
@@ -212,11 +217,11 @@ const PenddingRequsest = ({ navigation }) => {
 
   useEffect(() => {
     if (userData != null) {
-      setData([])
-      setPage("1")
-      fetchAllBills("1", searchText)
+      setData([]);
+      setPage('1');
+      fetchAllBills('1', searchText);
     }
-  }, [searchText])
+  }, [searchText]);
 
   return (
     <>
@@ -224,34 +229,43 @@ const PenddingRequsest = ({ navigation }) => {
         <View style={styles.headingContianer}>
           <Text style={styles.heading}>Pending Requests </Text>
         </View>
-        <View style={{
-          marginHorizontal: 10,
-          elevation: 5,
-          backgroundColor: '#fff',
-          paddingHorizontal: 10,
-          marginVertical: 7,
-          flexDirection: 'row',
-          alignItems: 'center',
-          borderRadius: 15
-        }}>
+        <View
+          style={{
+            marginHorizontal: 10,
+            elevation: 5,
+            backgroundColor: '#fff',
+            paddingHorizontal: 10,
+            marginVertical: 7,
+            flexDirection: 'row',
+            alignItems: 'center',
+            borderRadius: 15,
+          }}>
           <TextInput
             placeholder="Search"
             onChangeText={text => {
               setSearchText(text);
             }}
-            style={{ height:Platform.OS ==='ios' ?50: 50}}
+            style={{height: Platform.OS === 'ios' ? 50 : 50 ,width:'100%'}}
           />
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{flexGrow: 1}}
           data={data}
+          style={{marginBottom: 55}}
           renderItem={RecentRequestList}
-          onEndReached={() => { fetchAllBills(page, searchText) }}
+          onEndReached={() => {
+            fetchAllBills(page, searchText);
+          }}
           onEndReachedThreshold={0.1}
           ListEmptyComponent={() => {
             return (
-              <View style={{ flex: 1, alignItems: "center", justifyContent: 'center' }}>
+              <View
+                style={{
+                  flex: 1,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}>
                 <Text
                   style={{
                     marginBottom: 120,
@@ -262,7 +276,6 @@ const PenddingRequsest = ({ navigation }) => {
                   }}>
                   Result not found
                 </Text>
-
               </View>
             );
           }}
@@ -282,22 +295,22 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: "#E14D2A",
+    color: '#E14D2A',
   },
   container: {
     flex: 1,
-    margin: 12
+    margin: 12,
   },
   recentList: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: "#FAC898",
+    backgroundColor: '#FAC898',
     marginVertical: 10,
     elevation: 5,
     marginHorizontal: 22,
     padding: 10,
     borderRadius: 15,
     borderWidth: 1,
-    borderColor: '#E14D2A'
+    borderColor: '#E14D2A',
   },
 });

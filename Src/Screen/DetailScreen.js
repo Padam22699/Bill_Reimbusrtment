@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import {useFocusEffect, useRoute} from '@react-navigation/native';
 import moment from 'moment';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -13,28 +13,36 @@ import {
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useDispatch, useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import Imagepath from '../Assets/Images/Imagepath';
-import { theme } from '../core/theme';
+import {theme} from '../core/theme';
 import {
   clearGetBillDetail,
   getBillDetail,
 } from '../redux/actions/getBillDetailAction';
-import { clearReminder, reminder } from '../redux/actions/reminderAction';
+import {clearReminder, reminder} from '../redux/actions/reminderAction';
 import {
   clearIsPhysicallySubmitted,
   isPhysicallySubmitted,
 } from '../redux/actions/isPhysicallySubmittedAction';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import {SafeAreaView} from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
 
-export default function DetailScreen({ navigation }) {
+export default function DetailScreen({navigation}) {
   const dispatch = useDispatch();
   const routes = useRoute();
 
   const [userData, setUserData] = useState(null);
-  const [billDetail, setBillDetail] = useState(null);
+  const [billDetail, setBillDetail] = useState('');
   const [checkbook, setcheckbook] = useState(false);
+  const [Clicked, setClicked] = useState(false);
+
+  const statuscolor = () => {
+    if (billDetail.status == 'Pending') return '#FFA500';
+    if (billDetail.status == 'Rejected') return 'red';
+    if (billDetail.status == 'Approved') return 'green';
+    if (billDetail.status == 'Forward') return 'red';
+  };
 
   const getBillDetailResponse = useSelector(
     state => state.getBillDetailReducer.data,
@@ -159,7 +167,9 @@ export default function DetailScreen({ navigation }) {
 
   useEffect(() => {
     if (userData != null) {
-      handlePhysicallySubmit(checkbook);
+      if (Clicked == true) {
+        handlePhysicallySubmit(checkbook);
+      }
     }
   }, [checkbook]);
 
@@ -195,7 +205,7 @@ export default function DetailScreen({ navigation }) {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Animatable.View animation="zoomInDown" style={{ transform: 'scale' }}>
+      <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
         <StatusBar backgroundColor={theme.colors.primary} barStyle="default" />
         <View style={styles.mainview}>
           <TouchableOpacity
@@ -207,7 +217,7 @@ export default function DetailScreen({ navigation }) {
               name="close"
               size={25}
               color={'#fff'}
-              style={{ alignSelf: 'flex-end' }}
+              style={{alignSelf: 'flex-end'}}
             />
           </TouchableOpacity>
           <View style={styles.touchablview}>
@@ -224,7 +234,7 @@ export default function DetailScreen({ navigation }) {
                 name="rupee"
                 size={18}
                 color={theme.colors.white}
-                style={{ top: 5 }}
+                style={{top: 5}}
               />
               <View>
                 <Text style={styles.textrupees}>
@@ -238,7 +248,7 @@ export default function DetailScreen({ navigation }) {
           <View style={styles.elevationstyle}>
             <Text style={styles.textExpe}>Expense Details</Text>
 
-            <View style={{ marginTop: 20 }}>
+            <View style={{marginTop: 20}}>
               <View style={styles.flexview}>
                 <Text style={styles.textdate}>Date</Text>
                 <Text style={styles.textmar}>
@@ -265,17 +275,17 @@ export default function DetailScreen({ navigation }) {
                   <Image
                     source={
                       billDetail != null
-                        ? { uri: billDetail.bill_attachment }
+                        ? {uri: billDetail.bill_attachment}
                         : Imagepath.Fuel
                     }
-                    style={{ height: 50, width: 50, resizeMode: 'contain' }}
+                    style={{height: 50, width: 50, resizeMode: 'contain'}}
                   />
                 </TouchableOpacity>
               </View>
               <View style={styles.flexview}>
                 <Text style={styles.textdate}>Status</Text>
                 <View style={styles.flexapproved}>
-                  <Text style={styles.Approved}>
+                  <Text style={[styles.Approved, {color: statuscolor()}]}>
                     {billDetail != null && billDetail.status}{' '}
                   </Text>
                 </View>
@@ -285,14 +295,21 @@ export default function DetailScreen({ navigation }) {
                   Physically submitted the bill
                 </Text>
                 <TouchableOpacity
-                  style={[styles.imagetouchstyle, {backgroundColor: checkbook ? '#5D3FD3' : '#fff' }]}
+                  style={[
+                    styles.imagetouchstyle,
+                    {backgroundColor: checkbook ? '#5D3FD3' : '#fff'},
+                  ]}
                   onPress={() => {
                     setcheckbook(!checkbook);
+                    setClicked(true);
                   }}
                   activeOpacity={0.9}>
                   <Image
                     source={checkbook ? Imagepath.check : Imagepath}
-                    style={[styles.imageCheck, {tintColor: checkbook ? 'white' : '#E6E6FA'}]}
+                    style={[
+                      styles.imageCheck,
+                      {tintColor: checkbook ? 'white' : '#E6E6FA'},
+                    ]}
                   />
                 </TouchableOpacity>
               </View>
@@ -368,7 +385,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderColor: '#5D3FD3',
-    padding:2
+    padding: 2,
   },
   imageCheck: {
     height: 15,
@@ -388,7 +405,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#5D3FD3',
-    textAlign: 'center'
+    textAlign: 'center',
   },
   flexview: {
     flexDirection: 'row',
@@ -400,7 +417,7 @@ const styles = StyleSheet.create({
   textdate: {
     fontSize: 16,
     color: theme.colors.text,
-    fontWeight: '500'
+    fontWeight: '500',
   },
   textmar: {
     fontSize: 16,
@@ -412,7 +429,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   Approved: {
-    color: 'orange',
     fontSize: 16,
     fontWeight: '500',
   },

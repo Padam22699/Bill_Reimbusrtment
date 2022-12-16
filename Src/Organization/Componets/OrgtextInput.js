@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Text, TextInput, Platform} from 'react-native';
 import {theme} from '../../core/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {DARK, GREY} from '../Colors/Color';
 
 export default function OrgtextInput({
   errorText,
@@ -14,6 +15,7 @@ export default function OrgtextInput({
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
+          placeholderTextColor={GREY}
           secureTextEntry={hidePassword}
           style={styles.input}
           {...props}
@@ -51,12 +53,13 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 4,
     backgroundColor: theme.colors.surface,
-     height: Platform.OS === 'ios' ? 50 : 50,
+    height: Platform.OS === 'ios' ? 50 : 50,
     marginTop: Platform.OS === 'ios' ? 10 : 0,
   },
   input: {
     backgroundColor: theme.colors.surface,
     flex: 1,
+    color: DARK,
   },
   description: {
     fontSize: 13,

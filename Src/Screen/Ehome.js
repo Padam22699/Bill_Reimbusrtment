@@ -8,14 +8,16 @@ import {
   StatusBar,
   Platform,
 } from 'react-native';
+
 import React, {useCallback, useEffect, useState} from 'react';
-import {DARK, WHITE, A, B, C} from '../Organization/Colors/Color';
+import {DARK, WHITE, A, B, C, GREY} from '../Organization/Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {theme} from '../core/theme';
 import Welogo from '../Organization/Componets/Welogo';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
 import Loader from '../Organization/Componets/Loader';
+import {pi1, pi2, pi3, pi4} from '../core/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   VictoryBar,
@@ -28,6 +30,7 @@ import {
   clearGetDashboardData,
   getDashboardData,
 } from '../redux/actions/getDashboardDataAction';
+import {Item} from 'react-native-paper/lib/typescript/components/List/List';
 
 const Ehome = ({navigation}) => {
   const [userData, setUserData] = useState(null);
@@ -68,7 +71,7 @@ const Ehome = ({navigation}) => {
 
   useEffect(() => {
     if (userData != null) {
-    fetchDashboardData();
+      fetchDashboardData();
     }
   }, [userData]);
 
@@ -117,16 +120,19 @@ const Ehome = ({navigation}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
-              width: deviceWidth / 3 - 20,
+              width: deviceWidth / 3 - 14,
               backgroundColor: backGround,
               height: 90,
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
             }}>
-            <Icon name="rupee-sign" size={20} color={WHITE} />
+            <Icon name="rupee-sign" size={16} color={WHITE} />
             <Text
+              adjustsFontSizeToFit={true}
+              numberOfLines={1}
               style={{
-                fontSize: 24,
+                fontSize: 16,
+
                 marginLeft: 5,
                 color: WHITE,
                 alignContent: 'center',
@@ -149,7 +155,7 @@ const Ehome = ({navigation}) => {
               adjustsFontSizeToFit={true}
               style={[
                 {
-                  fontSize: Platform.OS === 'ios' ? fontSize : 20,
+                  fontSize: Platform.OS === 'ios' ? fontSize : 13,
                   alignSelf: 'center',
                   color: '#5D3FD3',
                   fontWeight: 'bold',
@@ -166,6 +172,31 @@ const Ehome = ({navigation}) => {
       </TouchableOpacity>
     );
   };
+
+  const Expence1 = [
+    {
+      id: 1,
+      name: 'Medical',
+      color: pi1,
+    },
+    {
+      id: 2,
+      name: 'Fuel',
+      color: pi2,
+    },
+  ];
+  const Expence2 = [
+    {
+      id: 3,
+      name: 'Food',
+      color: pi3,
+    },
+    {
+      id: 4,
+      name: 'Other',
+      color: pi4,
+    },
+  ];
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
@@ -197,42 +228,92 @@ const Ehome = ({navigation}) => {
           />
         </View>
 
-        {/* <View style={styles.pieDesboard}>
+        <View style={styles.pieDesboard}>
           <VictoryPie
-            height={280}
-            events={[
-              {
-                target: 'data',
-
-                eventHandlers: {
-                  onClick: () => {
-                    return [
-                      {
-                        target: 'data',
-                        mutation: ({style}) => {
-                          return style.fill === '#c43a31'
-                            ? null
-                            : {style: {fill: '#c43a31'}};
-                        },
-                      },
-                      {
-                        target: 'labels',
-                        mutation: ({text}) => {
-                          return text === 'clicked' ? null : {text: 'clicked'};
-                        },
-                      },
-                    ];
-                  },
-                },
-              },
-            ]}
+            height={300}
+            width={400}
+            radius={100}
+            innerRadius={0}
+            padAngle={0}
+            cornerRadius={3}
+            colorScale={[pi1, pi2, pi3, pi4]}
+            style={{marginTop: 30}}
             data={[
-              {x: 1, y: 2, label: 'this Month'},
-              {x: 2, y: 3, label: 'Last 6 Month'},
-              {x: 3, y: 5, label: 'This Year'},
+              {x: 1, y: 2, label: '10%'},
+              {x: 2, y: 3, label: '20%'},
+              {x: 3, y: 6, label: '30%'},
+              {x: 4, y: 5, label: '60%'},
             ]}
           />
-        </View> */}
+        </View>
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginHorizontal: 50,
+              marginTop: 20,
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View
+                style={{
+                  width: 30,
+                  height: 17,
+                  borderRadius: 10,
+                  marginRight: 7,
+                  backgroundColor: pi1,
+                }}></View>
+              <Text style={{color: GREY}}>Medical</Text>
+            </View>
+
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View
+                style={{
+                  width: 30,
+                  height: 17,
+                  borderRadius: 10,
+                  marginRight: 7,
+
+                  backgroundColor: pi2,
+                }}></View>
+              <Text style={{color: GREY, paddingRight: 16}}>Fuel</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              marginHorizontal: 50,
+              marginTop: 20,
+            }}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View
+                style={{
+                  width: 30,
+                  height: 17,
+                  borderRadius: 10,
+                  marginRight: 7,
+                  backgroundColor: pi3,
+                }}></View>
+              <Text style={{color: GREY}}>Food</Text>
+            </View>
+
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <View
+                style={{
+                  width: 30,
+                  height: 17,
+                  borderRadius: 10,
+                  marginRight: 7,
+                  marginLeft: 1,
+                  backgroundColor: pi4,
+                }}></View>
+              <Text style={{color: GREY, paddingRight: 10}}>Other</Text>
+            </View>
+          </View>
+        </View>
       </View>
       {loadingDashboard && <Loader />}
     </SafeAreaView>
@@ -244,8 +325,8 @@ const deviceWidth = Math.round(Dimensions.get('window').width);
 
 const styles = StyleSheet.create({
   pieDesboard: {
-    marginTop: 40,
-   
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   header: {
     flexDirection: 'row',
@@ -263,7 +344,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor: WHITE,
     height: 140,
-    width: deviceWidth / 3 - 20,
+    width: deviceWidth / 3 - 14,
     borderRadius: 20,
     shadowColor: DARK,
     shadowOffset: {

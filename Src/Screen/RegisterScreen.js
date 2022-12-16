@@ -132,6 +132,7 @@ export default function RegisterScreen({navigation}) {
     try {
       const jsonValue = JSON.stringify(userData);
       await AsyncStorage.setItem('@user_data', jsonValue);
+      dispatch(setToken(data.token));
       dispatch(clearRegister());
       navigation.reset({
         index: 0,

@@ -120,6 +120,11 @@ const AddSuperAdminS = ({navigation}) => {
       ) {
         console.log('addSuperAdminResponce', addSuperAdminResponce.data);
         saveData(addSuperAdminResponce.data);
+        setName({value: ''});
+        setEmail({value: ''});
+        setLastmame({value: ''});
+        setpassword({value: ''});
+        setConfiirmpassword({value: ''});
         dispatch(setToken(addSuperAdminResponce.data.token));
       }
     }
@@ -138,7 +143,7 @@ const AddSuperAdminS = ({navigation}) => {
       //   index: 0,
       //   rautes: [{name: 'Tabs'}],
       // });
-      navigation.goBack()
+      navigation.goBack();
     } catch (e) {
       console.log('error in saving data', e);
     }

@@ -14,6 +14,7 @@ import Header from '../components/Header';
 import EmpTextInput from '../components/TextInput';
 import BackButton from '../components/BackButton';
 import {theme} from '../core/theme';
+import {setToken} from '../redux/actions/tokenAction';
 import {emailValidator} from '../helpers/emailValidator';
 import {passwordValidator} from '../helpers/passwordValidator';
 import LinearGradient from 'react-native-linear-gradient';
@@ -27,6 +28,7 @@ import {
   forgotPassword,
 } from '../redux/actions/forgotPasswordAction';
 import Loader from '../Organization/Componets/Loader';
+import { DARK } from '../Organization/Colors/Color';
 
 export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
@@ -80,7 +82,7 @@ export default function LoginScreen({navigation}) {
     try {
       const jsonValue = JSON.stringify(userData);
       await AsyncStorage.setItem('@user_data', jsonValue);
-
+      dispatch(setToken(newData.token));
       navigation.reset({
         index: 0,
         routes: [{name: 'MyDrawer'}],
@@ -170,7 +172,7 @@ export default function LoginScreen({navigation}) {
           backgroundColor={theme.colors.surface}
           barStyle="dark-content"
         />
-        <View style={{marginTop:Platform.OS === 'ios' ? 60 :0}}>
+        <View style={{marginTop: Platform.OS === 'ios' ? 60 : 0}}>
           <BackButton goBack={navigation.goBack} />
         </View>
 
@@ -188,6 +190,7 @@ export default function LoginScreen({navigation}) {
             autoCompleteType="email"
             textContentType="emailAddress"
             keyboardType="email-address"
+            // style={{color:DARK}}
           />
           <EmpTextInput
             placeholder="Password"
@@ -197,6 +200,7 @@ export default function LoginScreen({navigation}) {
             error={!!password.error}
             errorText={password.error}
             password={true}
+            // style={{color:DARK}}
           />
           <View style={styles.forgotPassword}>
             <TouchableOpacity activeOpacity={0.8} onPress={forgotPasswordPress}>
@@ -204,7 +208,13 @@ export default function LoginScreen({navigation}) {
             </TouchableOpacity>
           </View>
         </KeyboardAvoidingView>
-        <View style={{paddingHorizontal: 20, width: '100%', maxWidth: '100%' , marginTop:Platform.OS === 'ios' ?20 :0}}>
+        <View
+          style={{
+            paddingHorizontal: 20,
+            width: '100%',
+            maxWidth: '100%',
+            marginTop: Platform.OS === 'ios' ? 20 : 0,
+          }}>
           <TouchableOpacity
             mode="contained"
             onPress={onLoginPressed}
@@ -218,7 +228,7 @@ export default function LoginScreen({navigation}) {
             </LinearGradient>
           </TouchableOpacity>
           <View style={styles.row}>
-            <Text>Don’t have an account? </Text>
+            <Text>Don't have an account? </Text>
             <TouchableOpacity
               onPress={() => navigation.replace('RegisterScreen')}>
               <Text style={styles.link}>Sign Up</Text>

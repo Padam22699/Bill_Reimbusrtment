@@ -10,13 +10,21 @@ import {
 import {DARK} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useFocusEffect} from '@react-navigation/native';
+import {useCallback} from 'react';
 
 export const OrgSlide = ({navigation}) => {
   const [email, setemail] = useState(null);
+  const [superAdmin, setSuperAdmin] = useState('');
 
   useEffect(() => {
-    getUserData();
+    console.log('Super1', superAdmin.role_type);
   }, []);
+  useFocusEffect(
+    useCallback(() => {
+      getUserData();
+    }, []),
+  );
 
   const getUserData = async () => {
     try {
@@ -26,6 +34,7 @@ export const OrgSlide = ({navigation}) => {
         const data = JSON.parse(value);
         if (data != null) {
           setemail(data.email);
+          setSuperAdmin(data);
         } else {
           setemail(null);
         }
@@ -69,7 +78,11 @@ export const OrgSlide = ({navigation}) => {
           padding: 20,
           backgroundColor: '#FAC898',
         }}>
-        <Text style={styles.text}>Admin</Text>
+        {superAdmin.role_type === 'super_admin' ? (
+          <Text style={styles.text}>SuperAdmin</Text>
+        ) : (
+          <Text style={styles.text}>Admin</Text>
+        )}
         <Text
           adjustsFontSizeToFit={true}
           allowFontScaling={true}
@@ -141,19 +154,21 @@ export const OrgSlide = ({navigation}) => {
             <Text style={styles.heading}>Pending</Text>
           </View>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.screenCiantainer}
-          onPress={() => navigation.navigate('AddSuperAdmin')}>
-          <View style={styles.manuconatiner}>
-            <Icon
-              name="user"
-              size={20}
-              style={{marginRight: 10}}
-              color="#000"
-            />
-            <Text style={styles.heading}>Add Super Admin</Text>
-          </View>
-        </TouchableOpacity>
+        {superAdmin.role_type != 'super_admin' && (
+          <TouchableOpacity
+            style={styles.screenCiantainer}
+            onPress={() => navigation.navigate('AddSuperAdmin')}>
+            <View style={styles.manuconatiner}>
+              <Icon
+                name="user"
+                size={20}
+                style={{marginRight: 10}}
+                color="#000"
+              />
+              <Text style={styles.heading}>Add Super Admin</Text>
+            </View>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity
           style={styles.screenCiantainer}
           onPress={() => logout()}>

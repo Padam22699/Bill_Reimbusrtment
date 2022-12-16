@@ -11,6 +11,7 @@ import OrganizationDeatailScreeen from '../Organization/Stutes/OrganizationDeata
 import OrgSlide from '../Organization/Componets/OrgSlide';
 import {Dimensions, Platform} from 'react-native';
 import AddSuperAdminS from '../Organization/Screens/AddSuperAdmin';
+import OrgNotification from '../Organization/Screens/OrgNotification';
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 const orgDrawer = createDrawerNavigator();
@@ -96,6 +97,19 @@ export const OrgDrawer = () => {
       <orgDrawer.Screen
         name="AddSuperAdmin"
         component={AddSuperAdminS}
+        options={{
+          headerShown: false,
+          drawerType: 'front',
+          drawerStyle: {
+            backgroundColor: 'transparent',
+            marginBottom: 62,
+            width: Dimensions.get('window').width / 2,
+          },
+        }}
+      />
+      <orgDrawer.Screen
+        name="OrgNotification"
+        component={OrgNotification}
         options={{
           headerShown: false,
           drawerType: 'front',

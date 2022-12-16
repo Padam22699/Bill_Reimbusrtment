@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Text, TextInput, Platform} from 'react-native';
 import {theme} from '../core/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import {DARK, GREY} from '../Organization/Colors/Color';
 
 export default function EmpTextInput({
   errorText,
@@ -14,6 +15,8 @@ export default function EmpTextInput({
     <View style={styles.container}>
       <View style={styles.inputContainer}>
         <TextInput
+      
+          placeholderTextColor={GREY}
           secureTextEntry={hidePassword}
           style={styles.input}
           {...props}
@@ -53,10 +56,12 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.surface,
   },
   input: {
+    width:'100%',
     backgroundColor: theme.colors.surface,
     flex: 1,
     height: Platform.OS === 'ios' ? 40 : 40,
     marginTop: Platform.OS === 'ios' ? 3 : 0,
+    color: DARK,
   },
   description: {
     fontSize: 13,
