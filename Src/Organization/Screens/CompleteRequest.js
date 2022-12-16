@@ -256,7 +256,7 @@ const CompleteRequest = ({navigation}) => {
         <FlatList
           contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}
-          style={{marginBottom: 55}}
+          style={{height: Platform.OS === 'ios' ? 50 : 50 ,width:'100%'}}
           data={data}
           renderItem={RecentRequestList}
           onEndReached={() => {

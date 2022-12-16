@@ -7,6 +7,7 @@ import {
   SafeAreaView,
   Image,
   TextInput,
+  Platform,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
 import {GREY, PRIMARY} from '../Colors/Color';
@@ -252,7 +253,7 @@ const PenddingRequsest = ({navigation}) => {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}
           data={data}
-          style={{marginBottom: 55}}
+          style={{marginBottom:Platform.OS === 'ios' ? 70 : 55}}
           renderItem={RecentRequestList}
           onEndReached={() => {
             fetchAllBills(page, searchText);

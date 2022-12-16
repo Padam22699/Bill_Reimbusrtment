@@ -246,6 +246,7 @@ const ForwordedRequest = ({ navigation }) => {
           data={data}
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={RecentRequestList}
+          style={{height: Platform.OS === 'ios' ? 50 : 50 ,width:'100%'}}
           onEndReached={() => { fetchAllBills(page, searchText) }}
           onEndReachedThreshold={0.1}
           ListEmptyComponent={() => {

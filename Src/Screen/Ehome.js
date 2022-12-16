@@ -218,7 +218,7 @@ const Ehome = ({navigation}) => {
             money={dashboardData != null && dashboardData.six_month_data}
             heading="Last 6 Months"
             backGround={B}
-            fontSize={14}
+            fontSize={16}
           />
           <MiddleContent
             money={dashboardData != null && dashboardData.one_year_data}
@@ -306,7 +306,7 @@ const Ehome = ({navigation}) => {
                   width: 30,
                   height: 17,
                   borderRadius: 10,
-                  marginRight: 7,
+                  marginRight: Platform.OS === 'ios' ? 3 : 7,
                   marginLeft: 1,
                   backgroundColor: pi4,
                 }}></View>

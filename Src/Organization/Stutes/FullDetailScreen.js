@@ -115,7 +115,7 @@ export default function FullDetailScreen({navigation, route}) {
             itemStyle={{backgroundColor: WHITE}}
             dropdownIconRippleColor={'black'}
             dropdownIconColor={'black'}
-            onValueChange={itemvalue => setstutes(itemvalue)}>
+            onValueChange={itemvalue => setSstutes(itemvalue)}>
             <Picker.Item label="Pending" value="Pending" color={DARK} />
             <Picker.Item label="Approved" value="Approved" color={DARK} />
             <Picker.Item label="Rejected" value="Rejected" color={DARK} />
@@ -274,6 +274,7 @@ export default function FullDetailScreen({navigation, route}) {
                 </View>
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Status</Text>
+
                   <View style={styles.pickerContainer}>{picker()}</View>
                 </View>
               </View>
@@ -469,6 +470,13 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 15,
     padding: 20,
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 5,
+    },
+    shadowRadius: 10,
+    shadowOpacity: 0.3,
   },
   textExpe: {
     fontSize: 20,
@@ -496,11 +504,13 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     alignItems: 'center',
+    //  marginBottom:Platform.OS && 180 ,
   },
   picker: {
     width: Dimensions.get('window').width / 2 - 40,
     height: 24,
     color: DARK,
+    // marginBottom:Platform.OS && 180 ,
     marginRight: -20,
   },
   Approved: {

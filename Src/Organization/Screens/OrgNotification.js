@@ -1,11 +1,16 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {Platform, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {GREY, WHITE} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 const OrgNotification = ({navigation}) => {
   return (
     <View style={{flex: 1, backgroundColor: WHITE}}>
-      <View style={{alignItems: 'center', marginTop: 20, flexDirection: 'row'}}>
+      <View
+        style={{
+          alignItems: 'center',
+          marginTop: Platform.OS === 'ios' ? 70 : 20,
+          flexDirection: 'row',
+        }}>
         <Icon
           name="arrow-left"
           size={28}
