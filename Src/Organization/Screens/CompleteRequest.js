@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {GREY, PRIMARY} from '../Colors/Color';
+import {DARK, GREY, PRIMARY} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -250,13 +250,18 @@ const CompleteRequest = ({navigation}) => {
               console.log(text);
               setSearchText(text);
             }}
-            style={styles.searchBar}
+            placeholderTextColor={GREY}
+            style={{
+              height: Platform.OS === 'ios' ? 50 : 50,
+              width: '100%',
+              color: DARK,
+            }}
           />
         </View>
         <FlatList
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
           showsVerticalScrollIndicator={false}
-          style={{height: Platform.OS === 'ios' ? 50 : 50 ,width:'100%'}}
+          style={{marginBottom: Platform.OS === 'ios' ? 70 : 55}}
           data={data}
           renderItem={RecentRequestList}
           onEndReached={() => {

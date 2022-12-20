@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   StatusBar,
   Image,
+  ScrollView,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -27,6 +28,7 @@ import {
 } from '../redux/actions/isPhysicallySubmittedAction';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
+import {DARK} from '../Organization/Colors/Color';
 
 export default function DetailScreen({navigation}) {
   const dispatch = useDispatch();
@@ -41,7 +43,7 @@ export default function DetailScreen({navigation}) {
     if (billDetail.status == 'Pending') return '#FFA500';
     if (billDetail.status == 'Rejected') return 'red';
     if (billDetail.status == 'Approved') return 'green';
-    if (billDetail.status == 'Forward') return 'red';
+    if (billDetail.status == 'Forward') return '#282A3A';
   };
 
   const getBillDetailResponse = useSelector(
@@ -244,6 +246,7 @@ export default function DetailScreen({navigation}) {
             </View>
           </View>
         </View>
+
         <View style={styles.container2}>
           <View style={styles.elevationstyle}>
             <Text style={styles.textExpe}>Expense Details</Text>
@@ -287,6 +290,14 @@ export default function DetailScreen({navigation}) {
                 <View style={styles.flexapproved}>
                   <Text style={[styles.Approved, {color: statuscolor()}]}>
                     {billDetail != null && billDetail.status}{' '}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.flexview}>
+                <Text style={styles.textdate}>Participants</Text>
+                <View style={styles.flexapproved}>
+                  <Text style={{color: DARK}}>
+                    {billDetail != null && billDetail.participants}{' '}
                   </Text>
                 </View>
               </View>
@@ -400,6 +411,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 15,
     padding: 20,
+    marginBottom: '10%',
   },
   textExpe: {
     fontSize: 20,

@@ -7,6 +7,7 @@ import {
   Dimensions,
   StatusBar,
   Platform,
+  ScrollView,
 } from 'react-native';
 
 import React, {useCallback, useEffect, useState} from 'react';
@@ -19,13 +20,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import Loader from '../Organization/Componets/Loader';
 import {pi1, pi2, pi3, pi4} from '../core/theme';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  VictoryBar,
-  VictoryChart,
-  VictoryPie,
-  VictoryTheme,
-  VictoryTooltip,
-} from 'victory-native';
+import {VictoryPie} from 'victory-native';
 import {
   clearGetDashboardData,
   getDashboardData,
@@ -120,20 +115,27 @@ const Ehome = ({navigation}) => {
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
+              alignContent: 'center',
               width: deviceWidth / 3 - 14,
               backgroundColor: backGround,
               height: 90,
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
             }}>
-            <Icon name="rupee-sign" size={16} color={WHITE} />
+            <Icon
+              name="rupee-sign"
+              size={16}
+              color={WHITE}
+              style={{alignSelf: 'center'}}
+            />
             <Text
               adjustsFontSizeToFit={true}
               numberOfLines={1}
               style={{
+                maxWidth: 80,
                 fontSize: 16,
-
                 marginLeft: 5,
+                textAlign: 'center',
                 color: WHITE,
                 alignContent: 'center',
                 alignSelf: 'center',
@@ -203,118 +205,122 @@ const Ehome = ({navigation}) => {
       <StatusBar backgroundColor={theme.colors.primary} barStyle="default" />
       <View style={{margin: 12}}>
         <Welogo navigation={navigation} />
-        <View
-          style={{
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-          }}>
-          <MiddleContent
-            money={dashboardData != null && dashboardData.one_month_data}
-            heading="This Month"
-            backGround={A}
-            fontSize={16}
-          />
-          <MiddleContent
-            money={dashboardData != null && dashboardData.six_month_data}
-            heading="Last 6 Months"
-            backGround={B}
-            fontSize={16}
-          />
-          <MiddleContent
-            money={dashboardData != null && dashboardData.one_year_data}
-            heading="This Year"
-            backGround={C}
-            fontSize={16}
-          />
-        </View>
 
-        <View style={styles.pieDesboard}>
-          <VictoryPie
-            height={300}
-            width={400}
-            radius={100}
-            innerRadius={0}
-            padAngle={0}
-            cornerRadius={3}
-            colorScale={[pi1, pi2, pi3, pi4]}
-            style={{marginTop: 30}}
-            data={[
-              {x: 1, y: 2, label: '10%'},
-              {x: 2, y: 3, label: '20%'},
-              {x: 3, y: 6, label: '30%'},
-              {x: 4, y: 5, label: '60%'},
-            ]}
-          />
-        </View>
-        <View>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <View
             style={{
               flexDirection: 'row',
-              alignItems: 'center',
               justifyContent: 'space-between',
-              marginHorizontal: 50,
-              marginTop: 20,
             }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
-                style={{
-                  width: 30,
-                  height: 17,
-                  borderRadius: 10,
-                  marginRight: 7,
-                  backgroundColor: pi1,
-                }}></View>
-              <Text style={{color: GREY}}>Medical</Text>
+            <MiddleContent
+              money={dashboardData != null && dashboardData.one_month_data}
+              heading="This Month"
+              backGround={A}
+              fontSize={16}
+            />
+            <MiddleContent
+              money={dashboardData != null && dashboardData.six_month_data}
+              heading="Last 6 Months"
+              backGround={B}
+              fontSize={16}
+            />
+            <MiddleContent
+              money={dashboardData != null && dashboardData.one_year_data}
+              heading="This Year"
+              backGround={C}
+              fontSize={16}
+            />
+          </View>
+
+          <View style={styles.pieDesboard}>
+            <VictoryPie
+              height={280}
+              width={400}
+              radius={100}
+              innerRadius={0}
+              padAngle={0}
+              cornerRadius={3}
+              colorScale={[pi1, pi2, pi3, pi4]}
+              style={{marginTop: 30}}
+              data={[
+                {x: 1, y: 2, label: '10%'},
+                {x: 2, y: 3, label: '20%'},
+                {x: 3, y: 6, label: '30%'},
+                {x: 4, y: 5, label: '60%'},
+              ]}
+            />
+          </View>
+          <View style={{width: '100%', marginBottom: '40%'}}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginHorizontal: 50,
+                marginTop: '10%',
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View
+                  style={{
+                    width: 30,
+                    height: 17,
+                    borderRadius: 10,
+                    marginRight: 7,
+                    backgroundColor: pi1,
+                  }}></View>
+                <Text style={{color: GREY}}>Medical</Text>
+              </View>
+
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View
+                  style={{
+                    width: 30,
+                    height: 17,
+                    borderRadius: 10,
+                    marginRight: 7,
+
+                    backgroundColor: pi2,
+                  }}></View>
+                <Text style={{color: GREY, paddingRight: 16}}>Fuel</Text>
+              </View>
             </View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                marginHorizontal: 50,
+                marginTop: 20,
+              }}>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View
+                  style={{
+                    width: 30,
+                    height: 17,
+                    borderRadius: 10,
+                    marginRight: 7,
+                    backgroundColor: pi3,
+                  }}></View>
+                <Text style={{color: GREY}}>Food</Text>
+              </View>
 
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
-                style={{
-                  width: 30,
-                  height: 17,
-                  borderRadius: 10,
-                  marginRight: 7,
-
-                  backgroundColor: pi2,
-                }}></View>
-              <Text style={{color: GREY, paddingRight: 16}}>Fuel</Text>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <View
+                  style={{
+                    width: 30,
+                    height: 17,
+                    borderRadius: 10,
+                    marginRight: Platform.OS === 'ios' ? 3 : 7,
+                    marginLeft: 1,
+                    backgroundColor: pi4,
+                  }}></View>
+                <Text style={{color: GREY, paddingRight: 10}}>Other</Text>
+              </View>
             </View>
           </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              marginHorizontal: 50,
-              marginTop: 20,
-            }}>
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
-                style={{
-                  width: 30,
-                  height: 17,
-                  borderRadius: 10,
-                  marginRight: 7,
-                  backgroundColor: pi3,
-                }}></View>
-              <Text style={{color: GREY}}>Food</Text>
-            </View>
-
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <View
-                style={{
-                  width: 30,
-                  height: 17,
-                  borderRadius: 10,
-                  marginRight: Platform.OS === 'ios' ? 3 : 7,
-                  marginLeft: 1,
-                  backgroundColor: pi4,
-                }}></View>
-              <Text style={{color: GREY, paddingRight: 10}}>Other</Text>
-            </View>
-          </View>
-        </View>
+        </ScrollView>
       </View>
+
       {loadingDashboard && <Loader />}
     </SafeAreaView>
   );
@@ -327,12 +333,14 @@ const styles = StyleSheet.create({
   pieDesboard: {
     alignItems: 'center',
     justifyContent: 'center',
+
+    width: '100%',
+    height: '45%',
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-
     marginTop: 12,
   },
   heading: {
@@ -355,6 +363,9 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     shadowOpacity: 0.25,
     marginBottom: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
   },
   RecordContainer: {},
   recentList: {

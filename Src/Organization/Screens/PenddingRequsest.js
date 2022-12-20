@@ -10,7 +10,7 @@ import {
   Platform,
 } from 'react-native';
 import React, {useCallback, useEffect, useState} from 'react';
-import {GREY, PRIMARY} from '../Colors/Color';
+import {DARK, GREY, PRIMARY} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
@@ -246,14 +246,19 @@ const PenddingRequsest = ({navigation}) => {
             onChangeText={text => {
               setSearchText(text);
             }}
-            style={{height: Platform.OS === 'ios' ? 50 : 50 ,width:'100%'}}
+            placeholderTextColor={GREY}
+            style={{
+              height: Platform.OS === 'ios' ? 50 : 50,
+              width: '100%',
+              color: DARK,
+            }}
           />
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
           data={data}
-          style={{marginBottom:Platform.OS === 'ios' ? 70 : 55}}
+          style={{marginBottom: Platform.OS === 'ios' ? 70 : 55}}
           renderItem={RecentRequestList}
           onEndReached={() => {
             fetchAllBills(page, searchText);

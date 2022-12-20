@@ -1,9 +1,10 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   View,
   StyleSheet,
   StatusBar,
   Text,
+  Modal,
   TouchableOpacity,
   ScrollView,
   Image,
@@ -16,24 +17,26 @@ import moment from 'moment';
 import Entypo from 'react-native-vector-icons/Entypo';
 import EmpTextInput from '../components/TextInput';
 import Imagepath from '../Assets/Images/Imagepath';
-import ImagePicker from 'react-native-image-crop-picker';
-import { Iconlist } from '../Common/VerticalData';
-import { theme } from '../core/theme';
+import ImagePicker, {openCamera} from 'react-native-image-crop-picker';
+import {Iconlist} from '../Common/VerticalData';
+import {theme} from '../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
-import { amountValidator } from '../helpers/amountValidator';
-import { descriptionValidator } from '../helpers/descriptionValidator';
-import { participantsValidator } from '../helpers/participantsValidator';
-import { useFocusEffect } from '@react-navigation/native';
+import {amountValidator} from '../helpers/amountValidator';
+import {descriptionValidator} from '../helpers/descriptionValidator';
+import {participantsValidator} from '../helpers/participantsValidator';
+import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useDispatch, useSelector } from 'react-redux';
-import { addBill, clearAddBill } from '../redux/actions/addBillAction';
+import {useDispatch, useSelector} from 'react-redux';
+import {addBill, clearAddBill} from '../redux/actions/addBillAction';
 import Loader from '../Organization/Componets/Loader';
-import * as permissions from 'react-native-permissions'
-import { DARK } from '../Organization/Colors/Color';
+import * as permissions from 'react-native-permissions';
+import {DARK, WHITE} from '../Organization/Colors/Color';
+import {SafeAreaView} from 'react-native-safe-area-context';
 
-export default function Reimbursement({ navigation }) {
+export default function Reimbursement({navigation}) {
   const dispatch = useDispatch();
 
+  const [OpenGallry, setOpenGallry] = useState(false);
   const [userData, setUserData] = useState(null);
   const [date, setDate] = useState('Select a Date');
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
@@ -41,9 +44,9 @@ export default function Reimbursement({ navigation }) {
   const [upload, setupload] = useState(false);
   const [select, setSelect] = useState('');
 
-  const [amount, setAmount] = useState({ value: '', error: '' });
-  const [description, setDescription] = useState({ value: '', error: '' });
-  const [participants, setParticipants] = useState({ value: '', error: '' });
+  const [amount, setAmount] = useState({value: '', error: ''});
+  const [description, setDescription] = useState({value: '', error: ''});
+  const [participants, setParticipants] = useState({value: '', error: ''});
 
   const addBillResponse = useSelector(state => state.addBillReducer.data);
   const loading = useSelector(state => state.addBillReducer.loading);
@@ -53,9 +56,9 @@ export default function Reimbursement({ navigation }) {
     const participantsError = participantsValidator(participants.value);
 
     if (amountError || descriptionError || participantsError) {
-      setAmount({ ...amount, error: amountError });
-      setDescription({ ...description, error: descriptionError });
-      setParticipants({ ...participants, error: participantsError });
+      setAmount({...amount, error: amountError});
+      setDescription({...description, error: descriptionError});
+      setParticipants({...participants, error: participantsError});
       return;
     }
     if (date == 'Select a Date') {
@@ -107,34 +110,36 @@ export default function Reimbursement({ navigation }) {
     hideDatePicker();
   };
 
-  const imageCrop = () => {
-    Alert.alert('Attach your Select bill', '', [
-      {
-        text: 'Cancel',
-        onPress: () => console.log('Cancel Pressed'),
-        style: 'cancel',
-      },
-      { text: 'Gallery', onPress: () => OpenGallery() },
-      { text: 'Camera', onPress: () => OpenCamera() },
-    ]);
-    const OpenGallery = () => {
-      ImagePicker.openPicker({
-        width: 1000,
-        height: 1000,
-        cropping: true,
-      }).then(image => {
-        setupload(image.path);
-      });
-    };
-    const OpenCamera = () => {
-      ImagePicker.openCamera({
-        width: 1000,
-        height: 1000,
-        cropping: true,
-      }).then(image => {
-        setupload(image.path);
-      });
-    };
+  // const imageCrop = () => {
+  //   Alert.alert('Attach your bill', '', [
+  //     {
+  //       text: 'Cancel',
+  //       onPress: () => console.log('Cancel Pressed'),
+  //       style: 'cancel',
+  //     },
+  //     {text: 'Gallery', onPress: () => OpenGallery()},
+  //     {text: 'Camera', onPress: () => OpenCamera()},
+  //   ]);
+  // };
+  const OpenGalleryy = () => {
+    ImagePicker.openPicker({
+      width: 1000,
+      height: 1000,
+      cropping: true,
+    }).then(image => {
+      setOpenGallry(false);
+      setupload(image.path);
+    });
+  };
+  const OpenCameraa = () => {
+    ImagePicker.openCamera({
+      width: 1000,
+      height: 1000,
+      cropping: true,
+    }).then(image => {
+      setOpenGallry(false);
+      setupload(image.path);
+    });
   };
 
   const addBillApi = () => {
@@ -171,19 +176,19 @@ export default function Reimbursement({ navigation }) {
         console.log('response', addBillResponse);
         dispatch(clearAddBill());
 
-        navigation.navigate('Bills', { screen: 'ToptabBar' });
+        navigation.navigate('Bills', {screen: 'ToptabBar'});
 
         setDate('Select a Date');
-        setAmount({ value: '' });
-        setDescription({ value: '' });
-        setParticipants({ value: '' });
+        setAmount({value: ''});
+        setDescription({value: ''});
+        setParticipants({value: ''});
         setupload(false);
         setSelect('');
       }
     }
   }, [addBillResponse]);
 
-  const renderItem = ({ item }) => {
+  const renderItem = ({item}) => {
     return (
       <View style={styles.antDesign}>
         <TouchableOpacity
@@ -220,7 +225,7 @@ export default function Reimbursement({ navigation }) {
               fontSize: 18,
               fontWeight: '700',
               marginVertical: 10,
-              marginBottom:Platform.OS ==='ios' ? 30 : 10
+              marginBottom: Platform.OS === 'ios' ? 30 : 10,
             }}>
             Add Expense
           </Text>
@@ -255,7 +260,7 @@ export default function Reimbursement({ navigation }) {
                 keyboardType={'numeric'}
                 value={amount.value}
                 onChangeText={text => {
-                  setAmount({ value: text, error: '' });
+                  setAmount({value: text, error: ''});
                 }}
                 error={!!amount.error}
                 errorText={amount.error}
@@ -271,17 +276,17 @@ export default function Reimbursement({ navigation }) {
               placeholder="Description"
               value={description.value}
               onChangeText={text => {
-                setDescription({ value: text, error: '' });
+                setDescription({value: text, error: ''});
               }}
               error={!!description.error}
               errorText={description.error}
             />
             <EmpTextInput
-              placeholder="Participants"
-              keyboardType={'numeric'}
+              placeholder="Participants Names"
               value={participants.value}
+              multiline={true}
               onChangeText={text => {
-                setParticipants({ value: text, error: '' });
+                setParticipants({value: text, error: ''});
               }}
               error={!!participants.error}
               errorText={participants.error}
@@ -291,7 +296,8 @@ export default function Reimbursement({ navigation }) {
               <TouchableOpacity
                 style={styles.touchacrop}
                 onPress={() => {
-                  imageCrop();
+                  // imageCrop();
+                  setOpenGallry(true);
                 }}>
                 <Image source={Imagepath.Medical} style={styles.imagecrop} />
               </TouchableOpacity>
@@ -302,14 +308,14 @@ export default function Reimbursement({ navigation }) {
                   style={styles.touchablicon}
                   activeOpacity={0.9}>
                   <Image
-                    source={upload ? { uri: upload } : Imagepath.file}
+                    source={upload ? {uri: upload} : Imagepath.file}
                     style={styles.imagestyle}
                   />
                 </TouchableOpacity>
               </View>
             )}
             <Text style={styles.textbill}>Select your bill type</Text>
-            <View style={{ flex: 1 }}>
+            <View style={{flex: 1}}>
               <FlatList
                 data={Iconlist}
                 horizontal
@@ -319,7 +325,10 @@ export default function Reimbursement({ navigation }) {
               />
             </View>
             <View
-              style={{ marginTop:Platform.OS ==='ios' ? 60 : 30, marginBottom: 50 }}>
+              style={{
+                marginTop: Platform.OS === 'ios' ? 60 : 30,
+                marginBottom: 50,
+              }}>
               <TouchableOpacity
                 mode="contained"
                 onPress={onSubmitPress}
@@ -335,6 +344,60 @@ export default function Reimbursement({ navigation }) {
             </View>
           </View>
         </ScrollView>
+        <View style={styles.OpenGalleryModel}>
+          <Modal visible={OpenGallry} animationType="fade" transparent={true}>
+            <View style={{backgroundColor: 'rgba(0, 0, 0, 0.5)', flex: 1}}>
+              <SafeAreaView
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexGrow: 1,
+                  backgroundColor: WHITE,
+                  marginVertical: 270,
+                  marginHorizontal: 20,
+                  borderRadius: 10,
+                  shadowColor: '#000',
+                  shadowOffset: {width: 0, height: 1},
+                  shadowOpacity: 0.8,
+                  shadowRadius: 2,
+                  elevation: 10,
+                }}>
+                <View>
+                  <Text style={{fontSize: 24, fontWeight: 'bold'}}>
+                    Attach your bill
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                      marginTop: '30%',
+                    }}>
+                    <View>
+                      <TouchableOpacity onPress={() => setOpenGallry(false)}>
+                        <Text style={{fontSize: 18, marginRight: '15%'}}>
+                          CANCEL
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View style={{flexDirection: 'row'}}>
+                      <Text
+                        style={{fontSize: 18}}
+                        onPress={() => OpenGalleryy()}>
+                        GALLERY
+                      </Text>
+
+                      <Text
+                        style={{fontSize: 18, marginLeft: 15}}
+                        onPress={() => OpenCameraa()}>
+                        CAMERA
+                      </Text>
+                    </View>
+                  </View>
+                </View>
+              </SafeAreaView>
+            </View>
+          </Modal>
+        </View>
       </View>
 
       {loading && <Loader />}
@@ -343,6 +406,11 @@ export default function Reimbursement({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  OpenGalleryModel: {
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignContent: 'center',
+  },
   container: {
     flex: 1,
     backgroundColor: theme.colors.violet,
@@ -354,8 +422,8 @@ const styles = StyleSheet.create({
     padding: 15,
     justifyContent: 'space-between',
     borderRadius: 15,
-    borderColor: "#5D3FD3",
-    height: 75
+    borderColor: '#5D3FD3',
+    height: 75,
   },
   mainview: {
     flex: 1,
@@ -363,8 +431,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 2,
     marginHorizontal: 16,
-    marginTop: Platform.OS === 'ios'? 70 :  20,
-    marginBottom:Platform.OS === 'ios' ? 115 : 85,
+    marginTop: Platform.OS === 'ios' ? 70 : 20,
+    marginBottom: Platform.OS === 'ios' ? 115 : 85,
     borderRadius: 15,
   },
   attachview: {

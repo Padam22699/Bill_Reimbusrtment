@@ -87,7 +87,7 @@ export default function Current({navigation}) {
     };
 
     dispatch(getAllBills(request));
-    console.log('req',request)
+    console.log('req', request);
   };
 
   useEffect(() => {
@@ -180,18 +180,18 @@ export default function Current({navigation}) {
                 style={{
                   ...styles.textapprove,
                   color:
-                  item.status == 'Approved'
-                  ? theme.colors.green
-                  : item.status == 'Pending'
-                  ? 'orange'
-                  : item.status == 'Forward'
-                  ? '#282A3A'
-                  : 'red'
-
+                    item.status == 'Approved'
+                      ? theme.colors.green
+                      : item.status == 'Pending'
+                      ? 'orange'
+                      : item.status == 'Forward'
+                      ? '#282A3A'
+                      : 'red',
                 }}>
                 {item.status}
               </Text>
             </View>
+
             <View style={styles.texticon}>
               <Text numberOfLines={1} style={styles.textmar}>
                 {item.description}
@@ -281,7 +281,9 @@ export default function Current({navigation}) {
           </TouchableOpacity>
           <View style={{flex: 0.8}}>
             <TextInput
+              placeholderTextColor={GREY}
               placeholder="Search"
+              style={{color: DARK}}
               onChangeText={text => {
                 console.log(text);
                 setSearchText(text);

@@ -158,6 +158,7 @@ const Deshboard = ({navigation}) => {
             style={{
               flexDirection: 'row',
               alignItems: 'center',
+              alignContent: 'center',
               justifyContent: 'center',
               width: deviceWidth / 3 - 20,
               backgroundColor: backGround,
@@ -166,15 +167,17 @@ const Deshboard = ({navigation}) => {
               borderTopRightRadius: 20,
             }}>
             <Icon name="rupee-sign" size={16} color={WHITE} />
+
             <Text
               numberOfLines={1}
               style={{
-                width: 80,
+                maxWidth: 70,
                 fontSize: 16,
-                marginLeft: 5,
+                marginLeft: 2,
                 color: WHITE,
                 alignContent: 'center',
                 alignSelf: 'center',
+                textAlign: 'center',
                 fontWeight: 'bold',
               }}>
               {money}

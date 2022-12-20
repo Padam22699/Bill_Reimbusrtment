@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import {WHITE} from '../Colors/Color';
 
 const Welogo = () => {
-  
   return (
     <View style={styles.logocontainer}>
       <Text style={styles.logo}>Wedigtech</Text>
@@ -17,6 +17,7 @@ export default Welogo;
 
 const styles = StyleSheet.create({
   logocontainer: {
+    backgroundColor: WHITE,
     alignItems: 'center',
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -25,7 +26,7 @@ const styles = StyleSheet.create({
   logo: {
     alignSelf: 'center',
     fontSize: 24,
-    color: "#5D3FD3",
+    color: '#5D3FD3',
     fontWeight: 'bold',
   },
 });

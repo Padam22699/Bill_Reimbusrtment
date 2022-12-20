@@ -15,7 +15,7 @@ import {DARK, GREY, PRIMARY, WHITE} from '../Colors/Color';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {Picker} from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import ImageViewer from 'react-native-image-zoom-viewer';
 import Imagepath from '../../Assets/Images/Imagepath';
 import {useFocusEffect} from '@react-navigation/native';
@@ -30,30 +30,82 @@ import {
   clearChangeStatus,
 } from '../../redux/actions/changeStatusAction';
 import LoaderOrg from '../Componets/LoaderOrg';
+import {
+  clearGetBillDetail,
+  getBillDetail,
+} from '../../redux/actions/getBillDetailAction';
 
 export default function FullDetailScreen({navigation, route}) {
-  const [stutes, setstutes] = useState('Pending');
-  const [Sstutes, setSstutes] = useState('Forward');
+  const [stutes, setstutes] = useState('');
+
   const [visible, setvisible] = useState(false);
   const [userData, setUserData] = useState('');
+  const [openpicke, setopenpicker] = useState(false);
+  const [userAdminLoggedIn, setuserAdminLoggedIn] = useState(false);
+  const [billDetails, setbillDetails] = useState('');
 
   console.log('SuperAdmin1', userData.role_type);
 
   const dispatch = useDispatch();
+
+  const getBillDetailResponse = useSelector(
+    state => state.getBillDetailReducer.data,
+  );
 
   const changeStatusResponse = useSelector(
     state => state.changeStatusReducer.data,
   );
   const loading = useSelector(state => state.changeStatusReducer.loading);
 
+  useEffect(() => {
+    if (userData.role_type === 'super_admin') {
+      setuserAdminLoggedIn(true);
+    }
+  }, [userAdminLoggedIn]);
+
   useFocusEffect(
     useCallback(() => {
       console.log('fullDeatailsScreen', route.params);
-      setstutes('Pending');
-      setSstutes('Forward');
+      setstutes(route.params.item.status);
+
       getData();
     }, []),
   );
+
+  useEffect(() => {
+    if (userData != null) {
+      fateBillDetails();
+    }
+  }, [userData]);
+
+  const fateBillDetails = () => {
+    let request = {
+      bill_id: route.params.item.bill_id,
+      type: 'organization',
+    };
+    dispatch(getBillDetail(request));
+  };
+
+  useEffect(() => {
+    if (getBillDetailResponse != null) {
+      console.log('getBillDeatailsResponse', getBillDetailResponse);
+      if (
+        Object.keys(getBillDetailResponse).length != 0 &&
+        getBillDetailResponse.statusCode != 200
+      ) {
+        alert(getBillDetailResponse.message);
+        dispatch(clearGetBillDetail());
+      }
+      if (
+        Object.keys(getBillDetailResponse).length != 0 &&
+        getBillDetailResponse.statusCode == 200
+      ) {
+        console.log('response', getBillDetailResponse);
+        setbillDetails(getBillDetailResponse.data[0]);
+        dispatch(clearGetBillDetail());
+      }
+    }
+  }, [getBillDetailResponse]);
 
   const getData = async () => {
     try {
@@ -104,45 +156,90 @@ export default function FullDetailScreen({navigation, route}) {
   }, [changeStatusResponse]);
 
   const picker = () => {
-    if (userData.role_type === 'super_admin') {
-      if (route.params.item.status == 'Forward') {
+    if (userData.role_type == 'super_admin') {
+      if (
+        route.params.item.status == 'Forward' ||
+        route.params.item.status == 'Pending'
+      ) {
         return (
-          <Picker
-            enabled={route.params.item.status == 'Forward'}
-            style={[styles.picker]}
-            selectedValue={Sstutes}
-            mode="dropdown"
-            itemStyle={{backgroundColor: WHITE}}
-            dropdownIconRippleColor={'black'}
-            dropdownIconColor={'black'}
-            onValueChange={itemvalue => setSstutes(itemvalue)}>
-            <Picker.Item label="Pending" value="Pending" color={DARK} />
-            <Picker.Item label="Approved" value="Approved" color={DARK} />
-            <Picker.Item label="Rejected" value="Rejected" color={DARK} />
-            <Picker.Item label="Forward" value="Forward" color={DARK} />
-          </Picker>
+          <DropDownPicker
+            dropDownContainerStyle={{
+              borderWidth: 0,
+              zIndex: 100,
+              backgroundColor: WHITE,
+            }}
+            style={{
+              borderWidth: 0,
+            }}
+            value={stutes}
+            setValue={item => {
+              setstutes(item);
+              // console.log('item', stutes);
+            }}
+            open={openpicke}
+            // placeholder={route.params.item.status}
+            setOpen={setopenpicker}
+            listMode={'SCROLLVIEW'}
+            autoScroll={true}
+            items={[
+              {label: 'Pending', value: 'Pending'},
+              {label: 'Approved', value: 'Approved'},
+              {label: 'Rejected', value: 'Rejected'},
+            ]}
+          />
         );
+        //     return (
+        //       <Picker
+        //         enabled={route.params.item.status == 'Forward'}
+        //         style={[styles.picker]}
+        //         selectedValue={Sstutes}
+        //         mode="dropdown"
+        //         itemStyle={{backgroundColor: WHITE}}
+        //         dropdownIconRippleColor={'black'}
+        //         dropdownIconColor={'black'}
+        //         onValueChange={itemvalue => setSstutes(itemvalue)}>
+        //         <Picker.Item label="Pending" value="Pending" color={DARK} />
+        //         <Picker.Item label="Approved" value="Approved" color={DARK} />
+        //         <Picker.Item label="Rejected" value="Rejected" color={DARK} />
+        //         <Picker.Item label="Forward" value="Forward" color={DARK} />
+        //       </Picker>
+        //     );
       }
     }
 
     if (route.params.item.status == 'Pending') {
       return (
-        <Picker
-          enabled={route.params.item.status == 'Pending'}
-          style={[styles.picker]}
-          selectedValue={stutes}
-          mode="dropdown"
-          itemStyle={{backgroundColor: WHITE}}
-          dropdownIconRippleColor={'black'}
-          dropdownIconColor={'black'}
-          onValueChange={itemvalue => setstutes(itemvalue)}>
-          <Picker.Item label="Pending" value="Pending" color={DARK} />
-          <Picker.Item label="Approved" value="Approved" color={DARK} />
-          <Picker.Item label="Rejected" value="Rejected" color={DARK} />
-          <Picker.Item label="Forward" value="Forward" color={DARK} />
-        </Picker>
+        <DropDownPicker
+          disabled={route.params.item.status !== 'Pending'}
+          dropDownContainerStyle={{
+            borderWidth: 0,
+            zIndex: 100,
+            backgroundColor: WHITE,
+          }}
+          style={{
+            borderWidth: 0,
+          }}
+          defaultIndex={0}
+          value={stutes}
+          setValue={item => {
+            setstutes(item);
+            // console.log('item', stutes);
+          }}
+          open={openpicke}
+          placeholder={route.params.item.status}
+          setOpen={setopenpicker}
+          listMode={'SCROLLVIEW'}
+          autoScroll={true}
+          items={[
+            {label: 'Pending', value: 'Pending'},
+            {label: 'Approved', value: 'Approved'},
+            {label: 'Rejected', value: 'Rejected'},
+            {label: 'Forward', value: 'Forward'},
+          ]}
+        />
       );
     }
+
     return <Text style={styles.textfuel}>{route.params.item.status}</Text>;
   };
 
@@ -274,13 +371,13 @@ export default function FullDetailScreen({navigation, route}) {
                 </View>
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Status</Text>
-
                   <View style={styles.pickerContainer}>{picker()}</View>
                 </View>
               </View>
 
               <View style={styles.flexview}>
                 <Text style={[styles.textdate, {}]}>Status by</Text>
+
                 <Text style={[styles.textmar, {}]}>Admin</Text>
               </View>
               {/* <View
@@ -296,6 +393,14 @@ export default function FullDetailScreen({navigation, route}) {
                 <Text style={[styles.textmar, {}]}> Amount</Text>
               </View> */}
               <View style={styles.flexview}>
+                <Text style={styles.textdate}>Participants</Text>
+                <View style={{width: '50%', alignItems: 'flex-end'}}>
+                  <Text style={[{color: DARK, fontSize: 14}]}>
+                    {billDetails.participants}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.flexview}>
                 <Text style={styles.textdate}>Total Reimbursement</Text>
                 <Text style={[styles.textmar, {}]} numberOfLines={1}>
                   {route.params.item.amount}
@@ -303,20 +408,6 @@ export default function FullDetailScreen({navigation, route}) {
               </View>
             </View>
             {submitbtnShow()}
-            {/* {route.params.item.status == 'Pending' && (
-              <TouchableOpacity
-                mode="contained"
-                onPress={submit}
-                activeOpacity={0.9}>
-                <LinearGradient
-                  colors={['#FAC898', '#E14D2A']}
-                  useAngle={true}
-                  angle={10}
-                  style={styles.touchabltext}>
-                  <Text style={styles.textstyle}>SUBMIT</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            )} */}
           </View>
         </Animatable.View>
       </ScrollView>
@@ -445,6 +536,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     // top: 9,
     // left: 12,
+    marginLeft: 44,
   },
   container2: {
     marginHorizontal: 18,
@@ -505,6 +597,7 @@ const styles = StyleSheet.create({
   pickerContainer: {
     alignItems: 'center',
     //  marginBottom:Platform.OS && 180 ,
+    width: '40%',
   },
   picker: {
     width: Dimensions.get('window').width / 2 - 40,

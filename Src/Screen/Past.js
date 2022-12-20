@@ -181,8 +181,7 @@ export default function Past({navigation}) {
                       ? 'orange'
                       : item.status == 'Forward'
                       ? '#282A3A'
-                      : 'red'
-
+                      : 'red',
                 }}>
                 {item.status}
               </Text>
@@ -275,7 +274,9 @@ export default function Past({navigation}) {
           </TouchableOpacity>
           <View style={{flex: 0.8}}>
             <TextInput
+              placeholderTextColor={GREY}
               placeholder="Search"
+              style={{color: DARK}}
               onChangeText={text => {
                 console.log(text);
                 setSearchText(text);
