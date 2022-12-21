@@ -206,135 +206,146 @@ export default function DetailScreen({navigation}) {
   }, [reminderResponse]);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
-        <StatusBar backgroundColor={theme.colors.primary} barStyle="default" />
-        <View style={styles.mainview}>
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            activeOpacity={0.9}>
-            <AntDesign
-              name="close"
-              size={25}
-              color={'#fff'}
-              style={{alignSelf: 'flex-end'}}
+    <>
+      <ScrollView style={{flex: 1, backgroundColor: '#fff'}}>
+        <SafeAreaView style={styles.container}>
+          <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
+            <StatusBar
+              backgroundColor={theme.colors.primary}
+              barStyle="default"
             />
-          </TouchableOpacity>
-          <View style={styles.touchablview}>
-            <TouchableOpacity style={styles.imagetouchabl} activeOpacity={0.9}>
-              <Image
-                source={
-                  billDetail != null ? icon(billDetail.type) : Imagepath.Fuel
-                }
-                style={styles.imagestyle}
-              />
-            </TouchableOpacity>
-            <View style={styles.fonticon}>
-              <FontAwesome
-                name="rupee"
-                size={18}
-                color={theme.colors.white}
-                style={{top: 5}}
-              />
-              <View>
-                <Text style={styles.textrupees}>
-                  {billDetail != null ? billDetail.amount : null}
-                </Text>
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.container2}>
-          <View style={styles.elevationstyle}>
-            <Text style={styles.textExpe}>Expense Details</Text>
-
-            <View style={{marginTop: 20}}>
-              <View style={styles.flexview}>
-                <Text style={styles.textdate}>Date</Text>
-                <Text style={styles.textmar}>
-                  {billDetail != null
-                    ? moment(billDetail.date).format('MMM DD, yyyy')
-                    : null}
-                </Text>
-              </View>
-              <View style={styles.flexview}>
-                <Text style={styles.textdate}>Description</Text>
-                <Text style={styles.textfuel}>
-                  {billDetail != null ? billDetail.description : null}
-                </Text>
-              </View>
-              <View style={styles.flexview}>
-                <Text style={styles.textdate}>Attachment</Text>
+            <View style={styles.mainview}>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                activeOpacity={0.9}>
+                <AntDesign
+                  name="close"
+                  size={25}
+                  color={'#fff'}
+                  style={{alignSelf: 'flex-end'}}
+                />
+              </TouchableOpacity>
+              <View style={styles.touchablview}>
                 <TouchableOpacity
-                  onPress={() =>
-                    navigation.navigate('ImageViwers', {
-                      imageurl: billDetail.bill_attachment,
-                      route: routes,
-                    })
-                  }>
+                  style={styles.imagetouchabl}
+                  activeOpacity={0.9}>
                   <Image
                     source={
                       billDetail != null
-                        ? {uri: billDetail.bill_attachment}
+                        ? icon(billDetail.type)
                         : Imagepath.Fuel
                     }
-                    style={{height: 50, width: 50, resizeMode: 'contain'}}
+                    style={styles.imagestyle}
                   />
                 </TouchableOpacity>
-              </View>
-              <View style={styles.flexview}>
-                <Text style={styles.textdate}>Status</Text>
-                <View style={styles.flexapproved}>
-                  <Text style={[styles.Approved, {color: statuscolor()}]}>
-                    {billDetail != null && billDetail.status}{' '}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.flexview}>
-                <Text style={styles.textdate}>Participants</Text>
-                <View style={styles.flexapproved}>
-                  <Text style={{color: DARK}}>
-                    {billDetail != null && billDetail.participants}{' '}
-                  </Text>
-                </View>
-              </View>
-              <View style={styles.flexview}>
-                <Text style={styles.textdate}>
-                  Physically submitted the bill
-                </Text>
-                <TouchableOpacity
-                  style={[
-                    styles.imagetouchstyle,
-                    {backgroundColor: checkbook ? '#5D3FD3' : '#fff'},
-                  ]}
-                  onPress={() => {
-                    setcheckbook(!checkbook);
-                    setClicked(true);
-                  }}
-                  activeOpacity={0.9}>
-                  <Image
-                    source={checkbook ? Imagepath.check : Imagepath}
-                    style={[
-                      styles.imageCheck,
-                      {tintColor: checkbook ? 'white' : '#E6E6FA'},
-                    ]}
+                <View style={styles.fonticon}>
+                  <FontAwesome
+                    name="rupee"
+                    size={18}
+                    color={theme.colors.white}
+                    style={{top: 5}}
                   />
-                </TouchableOpacity>
+                  <View>
+                    <Text style={styles.textrupees}>
+                      {billDetail != null ? billDetail.amount : null}
+                    </Text>
+                  </View>
+                </View>
               </View>
             </View>
-            {checkbook && (
-              <TouchableOpacity onPress={sendReminder} activeOpacity={0.9}>
-                <Text style={styles.textstyle}>Add Reminder</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        </View>
-      </Animatable.View>
-      {loading && <Loader />}
-    </SafeAreaView>
+
+            <View style={styles.container2}>
+              <View style={styles.elevationstyle}>
+                <Text style={styles.textExpe}>Expense Details</Text>
+
+                <View style={{marginTop: 20}}>
+                  <View style={styles.flexview}>
+                    <Text style={styles.textdate}>Date</Text>
+                    <Text style={styles.textmar}>
+                      {billDetail != null
+                        ? moment(billDetail.date).format('MMM DD, yyyy')
+                        : null}
+                    </Text>
+                  </View>
+                  <View style={styles.flexview}>
+                    <Text style={styles.textdate}>Description</Text>
+                    <Text style={styles.textfuel}>
+                      {billDetail != null ? billDetail.description : null}
+                    </Text>
+                  </View>
+                  <View style={styles.flexview}>
+                    <Text style={styles.textdate}>Attachment</Text>
+                    <TouchableOpacity
+                      onPress={() =>
+                        navigation.navigate('ImageViwers', {
+                          imageurl: billDetail.bill_attachment,
+                          route: routes,
+                        })
+                      }>
+                      <Image
+                        source={
+                          billDetail != null
+                            ? {uri: billDetail.bill_attachment}
+                            : Imagepath.Fuel
+                        }
+                        style={{height: 50, width: 50, resizeMode: 'contain'}}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.flexview}>
+                    <Text style={styles.textdate}>Status</Text>
+                    <View style={styles.flexapproved}>
+                      <Text style={[styles.Approved, {color: statuscolor()}]}>
+                        {billDetail != null && billDetail.status}{' '}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.flexview}>
+                    <Text style={styles.textdate}>Participants</Text>
+                    <View style={{width: '50%', alignItems: 'flex-end'}}>
+                      <Text style={[{color: DARK, fontSize: 14}]}>
+                        {billDetail != null && billDetail.participants}{' '}
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={styles.flexview}>
+                    <Text style={styles.textdate}>
+                      Physically submitted the bill
+                    </Text>
+                    <TouchableOpacity
+                      style={[
+                        styles.imagetouchstyle,
+                        {backgroundColor: checkbook ? '#5D3FD3' : '#fff'},
+                      ]}
+                      onPress={() => {
+                        setcheckbook(!checkbook);
+                        setClicked(true);
+                      }}
+                      activeOpacity={0.9}>
+                      <Image
+                        source={checkbook ? Imagepath.check : Imagepath}
+                        style={[
+                          styles.imageCheck,
+                          {tintColor: checkbook ? 'white' : '#E6E6FA'},
+                        ]}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                {checkbook && (
+                  <TouchableOpacity onPress={sendReminder} activeOpacity={0.9}>
+                    <Text style={styles.textstyle}>Send Reminder</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          </Animatable.View>
+          {loading && <Loader />}
+        </SafeAreaView>
+      </ScrollView>
+    </>
   );
 }
 const styles = StyleSheet.create({
@@ -386,7 +397,8 @@ const styles = StyleSheet.create({
   },
   container2: {
     marginHorizontal: 18,
-    marginTop: 20,
+    marginTop: 10,
+    marginBottom: 50,
   },
   imagetouchstyle: {
     height: 20,

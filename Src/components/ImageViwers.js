@@ -20,14 +20,13 @@ const ImageViwers = ({navigation, route}) => {
         imageUrls={image}
         index={0}
         renderIndicator={() => null}
-        style={[styles.Imagecontainer, {}]}>
-      </ImageViewer>
+        style={[styles.Imagecontainer, {}]}></ImageViewer>
       <View style={styles.iconContainer}>
         <Icon
           name="times"
           color={PRIMARY}
           size={20}
-          onPress={() => navigation.goBack()}
+          onPress={() => navigation.pop()}
         />
       </View>
     </SafeAreaView>
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   iconContainer: {
-    marginTop :Platform.OS ==='ios' ?60 :0 ,
+    marginTop: Platform.OS === 'ios' ? 60 : 0,
     position: 'absolute',
     width: 30,
     height: 30,

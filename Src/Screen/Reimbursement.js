@@ -115,38 +115,38 @@ export default function Reimbursement({navigation}) {
     hideDatePicker();
   };
 
-  // const imageCrop = () => {
-  //   Alert.alert('Attach your bill', '', [
-  //     {
-  //       text: 'Cancel',
-  //       onPress: () => console.log('Cancel Pressed'),
-  //       style: 'cancel',
-  //     },
-  //     {text: 'Gallery', onPress: () => OpenGallery()},
-  //     {text: 'Camera', onPress: () => OpenCamera()},
-  //   ]);
-  // };
-  const OpenGalleryy = () => {
-    ImagePicker.openPicker({
-      width: 1000,
-      height: 1000,
-      cropping: true,
-    }).then(image => {
-      setOpenGallry(false);
-      setupload(image.path);
-    });
-  };
-  const OpenCameraa = () => {
-    ImagePicker.openCamera({
-      width: 1000,
-      height: 1000,
-      cropping: true,
-    }).then(image => {
-      setOpenGallry(false);
-      setupload(image.path);
-    });
-  };
+  const imageCrop = () => {
+    Alert.alert('Attach your bill', '', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'Gallery', onPress: () => OpenGallery()},
+      {text: 'Camera', onPress: () => OpenCamera()},
+    ]);
 
+    const OpenGallery = () => {
+      ImagePicker.openPicker({
+        width: 1000,
+        height: 1000,
+        cropping: true,
+      }).then(image => {
+        setOpenGallry(false);
+        setupload(image.path);
+      });
+    };
+    const OpenCamera = () => {
+      ImagePicker.openCamera({
+        width: 1000,
+        height: 1000,
+        cropping: true,
+      }).then(image => {
+        setOpenGallry(false);
+        setupload(image.path);
+      });
+    };
+  };
   const addBillApi = () => {
     let request = new FormData();
     //  request.append('user_id', userData.user_id);
@@ -301,8 +301,8 @@ export default function Reimbursement({navigation}) {
               <TouchableOpacity
                 style={styles.touchacrop}
                 onPress={() => {
-                  // imageCrop();
-                  setOpenGallry(true);
+                  imageCrop();
+                  // setOpenGallry(true);
                 }}>
                 <Image source={Imagepath.Medical} style={styles.imagecrop} />
               </TouchableOpacity>
@@ -349,7 +349,7 @@ export default function Reimbursement({navigation}) {
             </View>
           </View>
         </ScrollView>
-        <View style={styles.OpenGalleryModel}>
+        {/* <View style={styles.OpenGalleryModel}>
           <Modal visible={OpenGallry} animationType="fade" transparent={true}>
             <View
               style={{
@@ -433,7 +433,7 @@ export default function Reimbursement({navigation}) {
               </SafeAreaView>
             </View>
           </Modal>
-        </View>
+        </View> */}
       </View>
 
       {loading && <Loader />}

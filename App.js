@@ -3,8 +3,8 @@ import {NavigationContainer} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import {View} from 'react-native';
 import Routes from './Src/Navigation/Routes';
-import { useDispatch } from 'react-redux';
-import { setToken } from './Src/redux/actions/tokenAction';
+import {useDispatch} from 'react-redux';
+import {setToken} from './Src/redux/actions/tokenAction';
 import {Organization} from './Src/Navigation/Auth';
 import DetailScreen from './Src/Screen/DetailScreen';
 import Loader from './Src/Organization/Componets/Loader';
@@ -14,14 +14,14 @@ const App = () => {
   const [loggedin, setLoggedin] = useState(false);
   const [loggedintype, setLoggedintype] = useState('');
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   useEffect(() => {
     initializeApp();
   }, []);
 
   const initializeApp = async () => {
-    dispatch(setToken(null))
+    dispatch(setToken(null));
     try {
       const value = await AsyncStorage.getItem('@user_data');
       console.log('value', value);
@@ -34,7 +34,7 @@ const App = () => {
           } else {
             setLoggedin(false);
           }
-          dispatch(setToken(data.token))
+          dispatch(setToken(data.token));
         } else {
           setLoggedin(false);
         }
