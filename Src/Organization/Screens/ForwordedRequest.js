@@ -19,6 +19,11 @@ import {
   getAllBills,
 } from '../../redux/actions/getAllBillsAction';
 import Imagepath from '../../Assets/Images/Imagepath';
+import {
+  responsiveScreenHeight,
+  responsiveScreenWidth,
+  responsiveScreenFontSize,
+} from 'react-native-responsive-dimensions';
 import LoaderOrg from '../Componets/LoaderOrg';
 const ForwordedRequest = ({navigation}) => {
   const [userData, setUserData] = useState(null);
@@ -255,7 +260,7 @@ const ForwordedRequest = ({navigation}) => {
         <FlatList
           showsVerticalScrollIndicator={false}
           data={data}
-          contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
+          contentContainerStyle={{flexGrow: 1, paddingBottom: responsiveScreenHeight(9)}}
           renderItem={RecentRequestList}
           style={{height: Platform.OS === 'ios' ? 50 : 50, width: '100%'}}
           onEndReached={() => {

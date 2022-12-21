@@ -269,17 +269,25 @@ export default function Current({navigation}) {
           </View>
         </Modal>
         <View style={styles.searchinput}>
-          <TouchableOpacity style={styles.iconstyle}>
-            <AntDesign
-              name="filter"
-              size={25}
-              color={theme.colors.text}
-              onPress={() => {
-                setModalOpen(true);
-              }}
-            />
+          <TouchableOpacity style={styles.iconstyle} activeOpacity={0.6}>
+            <View>
+              <AntDesign
+                name="filter"
+                size={25}
+                color={theme.colors.text}
+                onPress={() => {
+                  setModalOpen(true);
+                }}
+              />
+            </View>
           </TouchableOpacity>
-          <View style={{flex: 0.8}}>
+          <View style={{width: '60%'}}>
+            <Text style={{fontSize: 20, color: DARK, fontWeight: '400'}}>
+              {selectedType}
+            </Text>
+          </View>
+
+          {/* <View style={{flex: 0.8}}>
             <TextInput
               placeholderTextColor={GREY}
               placeholder="Search"
@@ -289,7 +297,7 @@ export default function Current({navigation}) {
                 setSearchText(text);
               }}
             />
-          </View>
+          </View> */}
         </View>
         <FlatList
           contentContainerStyle={{flexGrow: 1}}
@@ -404,20 +412,19 @@ const styles = StyleSheet.create({
   },
   searchinput: {
     marginHorizontal: 22,
-
     backgroundColor: '#fff',
     shadowOffset: {
       width: 3,
       height: 3,
     },
-    elevation: 5,
-    shadowRadius: 5,
-    shadowOpacity: 0.25,
-    paddingHorizontal: 10,
-    marginVertical: 7,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 15,
+    // elevation: 5,
+    // shadowRadius: 5,
+    // shadowOpacity: 0.25,
+    // paddingHorizontal: 10,
+    // marginVertical: 7,
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // borderRadius: 15,
     marginTop: Platform.OS === 'ios' ? -40 : 10,
     height: Platform.OS === 'ios' ? 43 : 43,
   },

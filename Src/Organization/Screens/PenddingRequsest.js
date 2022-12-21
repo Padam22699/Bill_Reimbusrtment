@@ -19,6 +19,11 @@ import {
   clearGetAllBills,
   getAllBills,
 } from '../../redux/actions/getAllBillsAction';
+import {
+  responsiveScreenHeight,
+  responsiveScreenWidth,
+  responsiveScreenFontSize,
+} from 'react-native-responsive-dimensions';
 import Imagepath from '../../Assets/Images/Imagepath';
 import LoaderOrg from '../Componets/LoaderOrg';
 const PenddingRequsest = ({navigation}) => {
@@ -256,7 +261,10 @@ const PenddingRequsest = ({navigation}) => {
         </View>
         <FlatList
           showsVerticalScrollIndicator={false}
-          contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: responsiveScreenHeight(2),
+          }}
           data={data}
           style={{marginBottom: Platform.OS === 'ios' ? 70 : 55}}
           renderItem={RecentRequestList}

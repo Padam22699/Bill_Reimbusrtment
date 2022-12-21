@@ -26,6 +26,11 @@ import {
   getDashboardData,
 } from '../redux/actions/getDashboardDataAction';
 import {Item} from 'react-native-paper/lib/typescript/components/List/List';
+import {
+  responsiveScreenHeight,
+  responsiveScreenWidth,
+  responsiveScreenFontSize,
+} from 'react-native-responsive-dimensions';
 
 const Ehome = ({navigation}) => {
   const [userData, setUserData] = useState(null);
@@ -129,12 +134,11 @@ const Ehome = ({navigation}) => {
               style={{alignSelf: 'center'}}
             />
             <Text
-              adjustsFontSizeToFit={true}
               numberOfLines={1}
               style={{
                 maxWidth: 80,
                 fontSize: 16,
-                marginLeft: 5,
+                marginLeft: 3,
                 textAlign: 'center',
                 color: WHITE,
                 alignContent: 'center',
@@ -234,14 +238,14 @@ const Ehome = ({navigation}) => {
 
           <View style={styles.pieDesboard}>
             <VictoryPie
-              height={280}
+              height={responsiveScreenHeight(46)}
               width={400}
               radius={100}
               innerRadius={0}
               padAngle={0}
               cornerRadius={3}
               colorScale={[pi1, pi2, pi3, pi4]}
-              style={{marginTop: 30}}
+              style={{marginTop: 20}}
               data={[
                 {x: 1, y: 2, label: '10%'},
                 {x: 2, y: 3, label: '20%'},
@@ -250,14 +254,18 @@ const Ehome = ({navigation}) => {
               ]}
             />
           </View>
-          <View style={{width: '100%', marginBottom: '40%'}}>
+          <View
+            style={{
+              width: '100%',
+              // marginBottom: responsiveScreenHeight(16)
+            }}>
             <View
               style={{
                 flexDirection: 'row',
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 marginHorizontal: 50,
-                marginTop: '10%',
+                marginTop: responsiveScreenHeight(6),
               }}>
               <View style={{flexDirection: 'row', alignItems: 'center'}}>
                 <View
@@ -333,9 +341,8 @@ const styles = StyleSheet.create({
   pieDesboard: {
     alignItems: 'center',
     justifyContent: 'center',
-
     width: '100%',
-    height: '45%',
+    height: responsiveScreenHeight(36),
   },
   header: {
     flexDirection: 'row',

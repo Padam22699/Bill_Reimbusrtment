@@ -32,6 +32,11 @@ import Loader from '../Organization/Componets/Loader';
 import * as permissions from 'react-native-permissions';
 import {DARK, WHITE} from '../Organization/Colors/Color';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {
+  responsiveScreenHeight,
+  responsiveScreenWidth,
+  responsiveScreenFontSize,
+} from 'react-native-responsive-dimensions';
 
 export default function Reimbursement({navigation}) {
   const dispatch = useDispatch();
@@ -346,48 +351,79 @@ export default function Reimbursement({navigation}) {
         </ScrollView>
         <View style={styles.OpenGalleryModel}>
           <Modal visible={OpenGallry} animationType="fade" transparent={true}>
-            <View style={{backgroundColor: 'rgba(0, 0, 0, 0.5)', flex: 1}}>
+            <View
+              style={{
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                flex: 1,
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}>
               <SafeAreaView
                 style={{
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  flexGrow: 1,
+                  // alignItems: 'center',
+                  // justifyContent: 'center',
+                  // width: responsiveScreenWidth(85),
+                  // height: responsiveScreenHeight(25),
                   backgroundColor: WHITE,
-                  marginVertical: 270,
-                  marginHorizontal: 20,
+                  // marginVertical: responsiveScreenHeight(35),
+                  marginHorizontal: responsiveScreenWidth(8),
                   borderRadius: 10,
-                  shadowColor: '#000',
-                  shadowOffset: {width: 0, height: 1},
-                  shadowOpacity: 0.8,
-                  shadowRadius: 2,
                   elevation: 10,
+                  // shadowColor: WHITE,
+                  // shadowOffset: {width: 0, height: 1},
+                  // shadowOpacity: 0.8,
+                  // shadowRadius: 2,
+                  // elevation: 10,
                 }}>
-                <View>
-                  <Text style={{fontSize: 24, fontWeight: 'bold'}}>
-                    Attach your bill
+                <View
+                  style={{
+                    paddingHorizontal: responsiveScreenWidth(5),
+                    borderRadius: 10,
+                    shadowColor: WHITE,
+                    shadowOffset: {width: 0, height: 1},
+                    shadowOpacity: 0.8,
+                    shadowRadius: 2,
+                    elevation: 15,
+                    width: 300,
+                    height: 150,
+                  }}>
+                  <Text
+                    style={{
+                      fontSize: 22,
+                      marginTop: 10,
+                      fontWeight: '500',
+                    }}>
+                    Attach Your Bill
                   </Text>
                   <View
                     style={{
                       flexDirection: 'row',
                       justifyContent: 'space-between',
-                      marginTop: '30%',
+                      marginTop: 70,
                     }}>
                     <View>
                       <TouchableOpacity onPress={() => setOpenGallry(false)}>
-                        <Text style={{fontSize: 18, marginRight: '15%'}}>
+                        <Text
+                          style={{
+                            fontSize: 15,
+                            marginRight: '15%',
+                          }}>
                           CANCEL
                         </Text>
                       </TouchableOpacity>
                     </View>
                     <View style={{flexDirection: 'row'}}>
                       <Text
-                        style={{fontSize: 18}}
+                        style={{fontSize: 15}}
                         onPress={() => OpenGalleryy()}>
                         GALLERY
                       </Text>
 
                       <Text
-                        style={{fontSize: 18, marginLeft: 15}}
+                        style={{
+                          fontSize: 15,
+                          marginLeft: 15,
+                        }}
                         onPress={() => OpenCameraa()}>
                         CAMERA
                       </Text>

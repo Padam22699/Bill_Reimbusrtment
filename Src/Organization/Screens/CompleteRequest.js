@@ -21,6 +21,11 @@ import {
 } from '../../redux/actions/getAllBillsAction';
 import Imagepath from '../../Assets/Images/Imagepath';
 import LoaderOrg from '../Componets/LoaderOrg';
+import {
+  responsiveScreenHeight,
+  responsiveScreenWidth,
+  responsiveScreenFontSize,
+} from 'react-native-responsive-dimensions';
 const CompleteRequest = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [data, setData] = useState([]);
@@ -259,7 +264,10 @@ const CompleteRequest = ({navigation}) => {
           />
         </View>
         <FlatList
-          contentContainerStyle={{flexGrow: 1, paddingBottom: 20}}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: responsiveScreenHeight(2),
+          }}
           showsVerticalScrollIndicator={false}
           style={{marginBottom: Platform.OS === 'ios' ? 70 : 55}}
           data={data}

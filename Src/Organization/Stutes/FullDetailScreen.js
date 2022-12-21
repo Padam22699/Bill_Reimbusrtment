@@ -41,7 +41,6 @@ export default function FullDetailScreen({navigation, route}) {
   const [visible, setvisible] = useState(false);
   const [userData, setUserData] = useState('');
   const [openpicke, setopenpicker] = useState(false);
-  const [userAdminLoggedIn, setuserAdminLoggedIn] = useState(false);
   const [billDetails, setbillDetails] = useState('');
 
   console.log('SuperAdmin1', userData.role_type);
@@ -57,15 +56,12 @@ export default function FullDetailScreen({navigation, route}) {
   );
   const loading = useSelector(state => state.changeStatusReducer.loading);
 
-  useEffect(() => {
-    if (userData.role_type === 'super_admin') {
-      setuserAdminLoggedIn(true);
-    }
-  }, [userAdminLoggedIn]);
+  useEffect(() => {}, []);
 
   useFocusEffect(
     useCallback(() => {
       console.log('fullDeatailsScreen', route.params);
+      console.log('uuuuusserrr => ', billDetails.status);
       setstutes(route.params.item.status);
 
       getData();
@@ -177,7 +173,7 @@ export default function FullDetailScreen({navigation, route}) {
               // console.log('item', stutes);
             }}
             open={openpicke}
-            // placeholder={route.params.item.status}
+            placeholder={billDetails.status}
             setOpen={setopenpicker}
             listMode={'SCROLLVIEW'}
             autoScroll={true}
@@ -219,14 +215,13 @@ export default function FullDetailScreen({navigation, route}) {
           style={{
             borderWidth: 0,
           }}
-          defaultIndex={0}
           value={stutes}
           setValue={item => {
             setstutes(item);
             // console.log('item', stutes);
           }}
           open={openpicke}
-          placeholder={route.params.item.status}
+          placeholder={billDetails.status}
           setOpen={setopenpicker}
           listMode={'SCROLLVIEW'}
           autoScroll={true}

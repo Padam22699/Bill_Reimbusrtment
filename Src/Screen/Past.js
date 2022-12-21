@@ -272,7 +272,10 @@ export default function Past({navigation}) {
             }}>
             <AntDesign name="filter" size={25} color={theme.colors.text} />
           </TouchableOpacity>
-          <View style={{flex: 0.8}}>
+          <View style={{width: '60%'}}>
+            <Text style={{fontSize: 20, color: DARK,fontWeight:'400'}}>{selectedType}</Text>
+          </View>
+          {/* <View style={{flex: 0.8}}>
             <TextInput
               placeholderTextColor={GREY}
               placeholder="Search"
@@ -282,7 +285,7 @@ export default function Past({navigation}) {
                 setSearchText(text);
               }}
             />
-          </View>
+          </View> */}
         </View>
         <FlatList
           ListEmptyComponent={() => {
@@ -404,9 +407,9 @@ const styles = StyleSheet.create({
       width: 3,
       height: 3,
     },
-    elevation: 5,
-    shadowRadius: 5,
-    shadowOpacity: 0.25,
+    // elevation: 5,
+    // shadowRadius: 5,
+    // shadowOpacity: 0.25,
     paddingHorizontal: 10,
     marginVertical: 7,
     flexDirection: 'row',
