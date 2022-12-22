@@ -31,6 +31,7 @@ import {
   responsiveScreenWidth,
   responsiveScreenFontSize,
 } from 'react-native-responsive-dimensions';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const Ehome = ({navigation}) => {
   const [userData, setUserData] = useState(null);
@@ -203,6 +204,8 @@ const Ehome = ({navigation}) => {
       color: pi4,
     },
   ];
+
+  
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>

@@ -10,6 +10,7 @@ import {
   StatusBar,
   Image,
   ScrollView,
+  Platform,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import AntDesign from 'react-native-vector-icons/AntDesign';
@@ -38,8 +39,6 @@ export default function DetailScreen({navigation}) {
   const [billDetail, setBillDetail] = useState('');
   const [checkbook, setcheckbook] = useState(false);
   const [Clicked, setClicked] = useState(false);
-
-  console.log('rrrrrrrrrrrrr =>', billDetail.status);
 
   const statuscolor = () => {
     if (billDetail.status == 'Pending') return '#FFA500';
@@ -209,7 +208,7 @@ export default function DetailScreen({navigation}) {
 
   return (
     <>
-      <ScrollView style={{flex: 1, backgroundColor: '#fff'}}>
+      <ScrollView style={{flex: 1, backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
         <SafeAreaView style={styles.container}>
           <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
             <StatusBar
@@ -260,7 +259,7 @@ export default function DetailScreen({navigation}) {
 
             <View style={styles.container2}>
               <View style={styles.elevationstyle}>
-                <Text style={styles.textExpe}>Expense Details</Text>
+                <Text style={[styles.textExpe ,{ paddingTop:Platform.OS =='ios' ? 10 :0,}]}>Expense Details</Text>
 
                 <View style={{marginTop: 20}}>
                   <View style={styles.flexview}>
@@ -340,7 +339,7 @@ export default function DetailScreen({navigation}) {
                 </View>
                 {checkbook && billDetail.status == 'Pending' && (
                   <TouchableOpacity onPress={sendReminder} activeOpacity={0.9}>
-                    <Text style={styles.textstyle}>Send Reminder</Text>
+                    <Text style={[styles.textstyle,{ paddingBottom:Platform.OS =='ios' ? 10 :0,}]}>Send Reminder</Text>
                   </TouchableOpacity>
                 )}
               </View>
@@ -364,6 +363,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
+    marginTop: Platform.OS == 'ios' ? -60 : 0,
   },
   touchablview: {
     flexDirection: 'row',
@@ -424,10 +424,21 @@ const styles = StyleSheet.create({
     // height: 450,
     backgroundColor: '#fff',
     marginTop: 24,
-    elevation: 10,
+    
     borderRadius: 15,
     padding: 20,
     marginBottom: '10%',
+    borderRadius: 10,
+    padding: 10,
+
+    shadowColor: DARK,
+    shadowOffset: {
+      width: 3,
+      height: 3,
+    },
+    elevation: 2,
+    shadowRadius: 5,
+    shadowOpacity: 0.50,
   },
   textExpe: {
     fontSize: 20,

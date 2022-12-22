@@ -118,15 +118,17 @@ const Notification = ({navigation}) => {
   };
 
   return (
+
     <View style={{backgroundColor: WHITE, flex: 1, paddingHorizontal: 8}}>
       {/* <Heading navigation={navigation} /> */}
       <Text
         style={{
           color: DARK,
           fontSize: 22,
-          fontWeight: '600',
+          fontWeight: '700',
           paddingHorizontal: 10,
           paddingVertical: 10,
+          // marginTop: Platform.OS == 'ios' ? 10 : 0,
         }}>
         Notifications
       </Text>
@@ -188,6 +190,7 @@ const Notification = ({navigation}) => {
         </Modal>
       )}
     </View>
+    
   );
 };
 const styles = StyleSheet.create({

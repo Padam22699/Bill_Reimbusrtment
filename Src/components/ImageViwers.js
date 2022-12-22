@@ -44,7 +44,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   iconContainer: {
-    marginTop: Platform.OS === 'ios' ? 60 : 0,
+    // marginTop: Platform.OS === 'ios' ? 40 : 0,
     position: 'absolute',
     width: 30,
     height: 30,

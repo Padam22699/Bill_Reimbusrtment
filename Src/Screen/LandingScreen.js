@@ -12,6 +12,15 @@ import * as Animatable from 'react-native-animatable';
 import {theme} from '../core/theme';
 import LinearGradient from 'react-native-linear-gradient';
 
+
+
+
+
+
+
+
+
+
 const LandingScreen = ({navigation}) => {
   return (
     <View style={styles.container}>

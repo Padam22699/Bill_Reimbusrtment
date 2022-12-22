@@ -425,7 +425,7 @@ const styles = StyleSheet.create({
     // flexDirection: 'row',
     // alignItems: 'center',
     // borderRadius: 15,
-    marginTop: Platform.OS === 'ios' ? -40 : 10,
+    marginTop: Platform.OS === 'ios' ? -55 : 10,
     height: Platform.OS === 'ios' ? 43 : 43,
   },
   iconstyle: {

@@ -14,6 +14,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 const SideMenu = ({ navigation }) => {
   const [name, setName] = useState(null);
   const [email, setemail] = useState(null);
+  const [data , setdata] =useState()
 
   useEffect(() => {
     getUserData();
@@ -26,6 +27,7 @@ const SideMenu = ({ navigation }) => {
       if (value !== null) {
         const data = JSON.parse(value);
         if (data != null) {
+          console.log("Datatatatatatatt  => " ,data)
           setName(data.first_name + ' ' + data.last_name);
           setemail(data.email);
         } else {
@@ -40,6 +42,8 @@ const SideMenu = ({ navigation }) => {
       console.log('storage error', e);
     }
   };
+
+ 
 
   const logout = async () => {
     let data = {
@@ -142,7 +146,7 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   text: {
-    marginTop :Platform.OS === 'ios' ? 33 :0 ,
+    // marginTop :Platform.OS === 'ios' ? 33 :0 ,
     color: '#5D3FD3',
     fontSize: 22,
     fontWeight: '700',

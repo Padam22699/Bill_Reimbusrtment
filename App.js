@@ -1,13 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {NavigationContainer} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
+import {NavigationContainer, useFocusEffect} from '@react-navigation/native';
+import React, {useCallback, useEffect, useState} from 'react';
+import {StatusBar, View} from 'react-native';
 import Routes from './Src/Navigation/Routes';
 import {useDispatch} from 'react-redux';
 import {setToken} from './Src/redux/actions/tokenAction';
 import {Organization} from './Src/Navigation/Auth';
 import DetailScreen from './Src/Screen/DetailScreen';
 import Loader from './Src/Organization/Componets/Loader';
+import {theme} from './Src/core/theme';
+import {
+  SafeAreaProvider,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
+import {PRIMARY, WHITE} from './Src/Organization/Colors/Color';
 
 const App = () => {
   const [ready, setReady] = useState(false);
@@ -47,9 +53,10 @@ const App = () => {
     setReady(true);
   };
 
+
+
   if (ready) {
     return (
-      // <Loader/>
       <NavigationContainer>
         <Routes loggedin={loggedin} loggedIntype={loggedintype} />
       </NavigationContainer>

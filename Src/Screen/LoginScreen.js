@@ -79,6 +79,7 @@ export default function LoginScreen({navigation}) {
   const saveData = async newData => {
     let userData = newData;
     userData = {...userData, ...{loggedin: true, loggedIntype: 'Emp'}};
+    
     try {
       const jsonValue = JSON.stringify(userData);
       await AsyncStorage.setItem('@user_data', jsonValue);
