@@ -42,8 +42,9 @@ export default function FullDetailScreen({navigation, route}) {
   const [userData, setUserData] = useState('');
   const [openpicke, setopenpicker] = useState(false);
   const [billDetails, setbillDetails] = useState('');
+  const [stutess, setstutess] = useState('');
 
-  console.log('SuperAdmin1', userData.role_type);
+  console.log('pppppppppppp =>', billDetails.status);
 
   const dispatch = useDispatch();
 
@@ -61,10 +62,9 @@ export default function FullDetailScreen({navigation, route}) {
   useFocusEffect(
     useCallback(() => {
       console.log('fullDeatailsScreen', route.params);
-      console.log('uuuuusserrr => ', billDetails.status);
       setstutes(route.params.item.status);
-
-      getData();
+      setstutess();
+      getData(billDetails.status);
     }, []),
   );
 
@@ -173,7 +173,7 @@ export default function FullDetailScreen({navigation, route}) {
               // console.log('item', stutes);
             }}
             open={openpicke}
-            placeholder={billDetails.status}
+            placeholder={stutess}
             setOpen={setopenpicker}
             listMode={'SCROLLVIEW'}
             autoScroll={true}
@@ -221,7 +221,7 @@ export default function FullDetailScreen({navigation, route}) {
             // console.log('item', stutes);
           }}
           open={openpicke}
-          placeholder={billDetails.status}
+          placeholder={stutess}
           setOpen={setopenpicker}
           listMode={'SCROLLVIEW'}
           autoScroll={true}

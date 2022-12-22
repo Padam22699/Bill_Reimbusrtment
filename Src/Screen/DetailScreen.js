@@ -39,6 +39,8 @@ export default function DetailScreen({navigation}) {
   const [checkbook, setcheckbook] = useState(false);
   const [Clicked, setClicked] = useState(false);
 
+  console.log('rrrrrrrrrrrrr =>', billDetail.status);
+
   const statuscolor = () => {
     if (billDetail.status == 'Pending') return '#FFA500';
     if (billDetail.status == 'Rejected') return 'red';
@@ -310,31 +312,33 @@ export default function DetailScreen({navigation}) {
                       </Text>
                     </View>
                   </View>
-                  <View style={styles.flexview}>
-                    <Text style={styles.textdate}>
-                      Physically submitted the bill
-                    </Text>
-                    <TouchableOpacity
-                      style={[
-                        styles.imagetouchstyle,
-                        {backgroundColor: checkbook ? '#5D3FD3' : '#fff'},
-                      ]}
-                      onPress={() => {
-                        setcheckbook(!checkbook);
-                        setClicked(true);
-                      }}
-                      activeOpacity={0.9}>
-                      <Image
-                        source={checkbook ? Imagepath.check : Imagepath}
+                  {billDetail.status == 'Pending' && (
+                    <View style={styles.flexview}>
+                      <Text style={styles.textdate}>
+                        Physically submitted the bill
+                      </Text>
+                      <TouchableOpacity
                         style={[
-                          styles.imageCheck,
-                          {tintColor: checkbook ? 'white' : '#E6E6FA'},
+                          styles.imagetouchstyle,
+                          {backgroundColor: checkbook ? '#5D3FD3' : '#fff'},
                         ]}
-                      />
-                    </TouchableOpacity>
-                  </View>
+                        onPress={() => {
+                          setcheckbook(!checkbook);
+                          setClicked(true);
+                        }}
+                        activeOpacity={0.9}>
+                        <Image
+                          source={checkbook ? Imagepath.check : Imagepath}
+                          style={[
+                            styles.imageCheck,
+                            {tintColor: checkbook ? 'white' : '#E6E6FA'},
+                          ]}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 </View>
-                {checkbook && (
+                {checkbook && billDetail.status == 'Pending' && (
                   <TouchableOpacity onPress={sendReminder} activeOpacity={0.9}>
                     <Text style={styles.textstyle}>Send Reminder</Text>
                   </TouchableOpacity>
