@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View, StyleSheet, Text, TextInput, Platform} from 'react-native';
 import {theme} from '../../core/theme';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import {DARK, GREY} from '../Colors/Color';
+import {DARK, GREY, PRIMARY} from '../Colors/Color';
 
 export default function OrgtextInput({
   errorText,
@@ -26,6 +26,7 @@ export default function OrgtextInput({
             name={hidePassword ? 'eye-slash' : 'eye'}
             size={20}
             style={{marginRight: 8, color: '#E14D2A'}}
+            color={PRIMARY}
           />
         )}
       </View>

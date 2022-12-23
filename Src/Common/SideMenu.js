@@ -14,7 +14,6 @@ import Icon from 'react-native-vector-icons/FontAwesome5';
 const SideMenu = ({ navigation }) => {
   const [name, setName] = useState(null);
   const [email, setemail] = useState(null);
-  const [data , setdata] =useState()
 
   useEffect(() => {
     getUserData();
@@ -27,7 +26,6 @@ const SideMenu = ({ navigation }) => {
       if (value !== null) {
         const data = JSON.parse(value);
         if (data != null) {
-          console.log("Datatatatatatatt  => " ,data)
           setName(data.first_name + ' ' + data.last_name);
           setemail(data.email);
         } else {

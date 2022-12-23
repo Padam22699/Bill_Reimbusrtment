@@ -347,7 +347,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 14,
-    marginTop:Platform.OS === 'ios' ? 50 :0
+    // marginTop:Platform.OS === 'ios' ? 50 :0
   },
   heading: {
     textShadowColor: 'rgba(0, 0, 0, 0.25)',

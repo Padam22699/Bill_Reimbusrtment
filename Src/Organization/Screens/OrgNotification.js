@@ -76,6 +76,7 @@ const OrgNotification = ({navigation}) => {
           flex: 1,
           // borderBottomColor: theme.colors.PRIMARY,
           // borderBottomWidth: 1,
+          paddingHorizontal:responsiveScreenHeight(2),
           marginBottom: 5,
           elevation: 1,
         }}>
@@ -126,7 +127,7 @@ const OrgNotification = ({navigation}) => {
       <View
         style={{
           alignItems: 'center',
-          marginTop: Platform.OS === 'ios' ? 70 : 1,
+          marginTop: 2,
           flexDirection: 'row',
         }}>
         <Icon

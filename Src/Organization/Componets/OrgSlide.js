@@ -75,6 +75,7 @@ export const OrgSlide = ({navigation}) => {
         style={{
           borderBottomColor: '#E14D2A',
           borderBottomWidth: 1,
+          paddingBottom: Platform.OS == 'ios' && 40,
           padding: 20,
           backgroundColor: '#FAC898',
         }}>
@@ -192,7 +193,7 @@ export const styles = StyleSheet.create({
     padding: 10,
   },
   text: {
-    marginTop: Platform.OS === 'ios' ? 30 : 0,
+    // marginTop: Platform.OS === 'ios' ? 30 : 0,
     color: '#E14D2A',
     fontSize: 22,
     fontWeight: '700',

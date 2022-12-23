@@ -26,6 +26,7 @@ export default function EmpTextInput({
             onPress={() => sethidePassword(!hidePassword)}
             name={hidePassword ? 'eye-slash' : 'eye'}
             size={20}
+            color={DARK}
             style={{marginRight: 8}}
           />
         )}

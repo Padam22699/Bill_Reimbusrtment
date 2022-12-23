@@ -57,13 +57,15 @@ export default function FullDetailScreen({navigation, route}) {
   );
   const loading = useSelector(state => state.changeStatusReducer.loading);
 
+  console.log(stutess);
+
   useEffect(() => {}, []);
 
   useFocusEffect(
     useCallback(() => {
       console.log('fullDeatailsScreen', route.params);
       setstutes(route.params.item.status);
-      setstutess();
+      setstutess(billDetails.status);
       getData(billDetails.status);
     }, []),
   );
@@ -159,21 +161,31 @@ export default function FullDetailScreen({navigation, route}) {
       ) {
         return (
           <DropDownPicker
+            zIndex={1}
             dropDownContainerStyle={{
               borderWidth: 0,
-              zIndex: 100,
               backgroundColor: WHITE,
+              position: Platform.OS === 'ios' && 'relative',
+              paddingBottom: Platform.OS === 'ios' && 40,
+              marginTop: Platform.OS === 'ios' && -60,
+              marginLeft: Platform.OS === 'ios' && 20,
             }}
             style={{
               borderWidth: 0,
+              backgroundColor: WHITE,
+              marginLeft: Platform.OS === 'ios' && 20,
             }}
+            labelStyle={{}}
             value={stutes}
             setValue={item => {
               setstutes(item);
               // console.log('item', stutes);
             }}
+            containerStyle={{
+              width: Platform.OS === 'ios' && '90%',
+            }}
             open={openpicke}
-            placeholder={stutess}
+            placeholder={billDetails.status}
             setOpen={setopenpicker}
             listMode={'SCROLLVIEW'}
             autoScroll={true}
@@ -181,25 +193,10 @@ export default function FullDetailScreen({navigation, route}) {
               {label: 'Pending', value: 'Pending'},
               {label: 'Approved', value: 'Approved'},
               {label: 'Rejected', value: 'Rejected'},
+              {label: 'Forward', value: 'Forward'},
             ]}
           />
         );
-        //     return (
-        //       <Picker
-        //         enabled={route.params.item.status == 'Forward'}
-        //         style={[styles.picker]}
-        //         selectedValue={Sstutes}
-        //         mode="dropdown"
-        //         itemStyle={{backgroundColor: WHITE}}
-        //         dropdownIconRippleColor={'black'}
-        //         dropdownIconColor={'black'}
-        //         onValueChange={itemvalue => setSstutes(itemvalue)}>
-        //         <Picker.Item label="Pending" value="Pending" color={DARK} />
-        //         <Picker.Item label="Approved" value="Approved" color={DARK} />
-        //         <Picker.Item label="Rejected" value="Rejected" color={DARK} />
-        //         <Picker.Item label="Forward" value="Forward" color={DARK} />
-        //       </Picker>
-        //     );
       }
     }
 
@@ -207,21 +204,31 @@ export default function FullDetailScreen({navigation, route}) {
       return (
         <DropDownPicker
           disabled={route.params.item.status !== 'Pending'}
+          zIndex={1}
           dropDownContainerStyle={{
             borderWidth: 0,
-            zIndex: 100,
             backgroundColor: WHITE,
+            position: Platform.OS === 'ios' && 'relative',
+            paddingBottom: Platform.OS === 'ios' && 30,
+            marginTop: Platform.OS === 'ios' && -60,
+            marginLeft: Platform.OS === 'ios' && 20,
           }}
           style={{
             borderWidth: 0,
+            backgroundColor: WHITE,
+            marginLeft: Platform.OS === 'ios' && 20,
           }}
+          labelStyle={{}}
           value={stutes}
           setValue={item => {
             setstutes(item);
             // console.log('item', stutes);
           }}
+          containerStyle={{
+            width: Platform.OS === 'ios' && '90%',
+          }}
           open={openpicke}
-          placeholder={stutess}
+          placeholder={billDetails.status}
           setOpen={setopenpicker}
           listMode={'SCROLLVIEW'}
           autoScroll={true}
@@ -293,11 +300,11 @@ export default function FullDetailScreen({navigation, route}) {
 
   return (
     <>
-      <ScrollView style={styles.container}>
+      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
         <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
           <View style={styles.mainview}>
             <TouchableOpacity
-              style={{marginTop: Platform.OS === 'ios' ? 50 : 0}}
+              style={{}}
               onPress={() => {
                 navigation.goBack();
               }}
@@ -366,7 +373,7 @@ export default function FullDetailScreen({navigation, route}) {
                 </View>
                 <View style={[styles.flexview, {}]}>
                   <Text style={styles.textdate}>Status</Text>
-                  <View style={styles.pickerContainer}>{picker()}</View>
+                  <View style={[styles.pickerContainer, {}]}>{picker()}</View>
                 </View>
               </View>
 
@@ -593,6 +600,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     //  marginBottom:Platform.OS && 180 ,
     width: '40%',
+    paddingLeft: 10,
   },
   picker: {
     width: Dimensions.get('window').width / 2 - 40,

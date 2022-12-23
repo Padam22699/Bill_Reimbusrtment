@@ -139,6 +139,7 @@ const Notification = ({navigation}) => {
             marginTop: responsiveScreenHeight(1),
           }}
           data={notifications}
+          showsVerticalScrollIndicator={false}
           renderItem={renderNotifications}
           // onEndReached={fetchNotifications(page)}
           ListEmptyComponent={() => {

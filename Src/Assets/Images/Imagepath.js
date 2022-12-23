@@ -1,7 +1,7 @@
 const Imagepath = {
   user: require('../Images/User.png'),
   google: require('../Images/google.png'),
-  facebook: require('../Images/facebook.png'),
+  // facebook: require('../Images/facebook.png'),
   user3: require('../Images/Discussion.png'),
   wave: require('../Images/wave.png'),
   Online: require('../Images/Online.png'),
