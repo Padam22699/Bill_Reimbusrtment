@@ -151,7 +151,7 @@ const AddSuperAdminS = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      <View style={{marginTop: Platform.OS === 'ios' ? 40 : 0}}>
+      <View style={{}}>
         <Backbtn goBack={navigation.goBack} />
       </View>
 
