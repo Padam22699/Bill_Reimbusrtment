@@ -37,14 +37,10 @@ import {
 
 export default function FullDetailScreen({navigation, route}) {
   const [stutes, setstutes] = useState('');
-
   const [visible, setvisible] = useState(false);
   const [userData, setUserData] = useState('');
   const [openpicke, setopenpicker] = useState(false);
   const [billDetails, setbillDetails] = useState('');
-  const [stutess, setstutess] = useState('');
-
-  console.log('pppppppppppp =>', billDetails.status);
 
   const dispatch = useDispatch();
 
@@ -57,15 +53,10 @@ export default function FullDetailScreen({navigation, route}) {
   );
   const loading = useSelector(state => state.changeStatusReducer.loading);
 
-  console.log(stutess);
-
-  useEffect(() => {}, []);
-
   useFocusEffect(
     useCallback(() => {
       console.log('fullDeatailsScreen', route.params);
-      setstutes(route.params.item.status);
-      setstutess(billDetails.status);
+      setstutes(billDetails.status);
       getData(billDetails.status);
     }, []),
   );
@@ -99,7 +90,9 @@ export default function FullDetailScreen({navigation, route}) {
         getBillDetailResponse.statusCode == 200
       ) {
         console.log('response', getBillDetailResponse);
+        setstutes(getBillDetailResponse.data[0].status);
         setbillDetails(getBillDetailResponse.data[0]);
+
         dispatch(clearGetBillDetail());
       }
     }
@@ -154,10 +147,10 @@ export default function FullDetailScreen({navigation, route}) {
   }, [changeStatusResponse]);
 
   const picker = () => {
-    if (userData.role_type == 'super_admin') {
+    if (userData.role_type === 'super_admin') {
       if (
-        route.params.item.status == 'Forward' ||
-        route.params.item.status == 'Pending'
+        billDetails.status === 'Forward' ||
+        billDetails.status === 'Pending'
       ) {
         return (
           <DropDownPicker
@@ -165,15 +158,15 @@ export default function FullDetailScreen({navigation, route}) {
             dropDownContainerStyle={{
               borderWidth: 0,
               backgroundColor: WHITE,
-              position: Platform.OS === 'ios' && 'relative',
-              paddingBottom: Platform.OS === 'ios' && 40,
-              marginTop: Platform.OS === 'ios' && -60,
-              marginLeft: Platform.OS === 'ios' && 20,
+              position: Platform.OS === 'ios' ? 'relative' : 'absolute',
+              paddingBottom: Platform.OS === 'ios' ? 30 : 0,
+              marginTop: Platform.OS === 'ios' ? -60 : 0,
+              marginLeft: Platform.OS === 'ios' ? 20 : 0,
             }}
             style={{
               borderWidth: 0,
               backgroundColor: WHITE,
-              marginLeft: Platform.OS === 'ios' && 20,
+              marginLeft: Platform.OS === 'ios' ? 20 : 0,
             }}
             labelStyle={{}}
             value={stutes}
@@ -182,10 +175,10 @@ export default function FullDetailScreen({navigation, route}) {
               // console.log('item', stutes);
             }}
             containerStyle={{
-              width: Platform.OS === 'ios' && '90%',
+              width: Platform.OS === 'ios' ? '90%' : '120%',
             }}
             open={openpicke}
-            placeholder={billDetails.status}
+            placeholder={stutes}
             setOpen={setopenpicker}
             listMode={'SCROLLVIEW'}
             autoScroll={true}
@@ -208,15 +201,15 @@ export default function FullDetailScreen({navigation, route}) {
           dropDownContainerStyle={{
             borderWidth: 0,
             backgroundColor: WHITE,
-            position: Platform.OS === 'ios' && 'relative',
-            paddingBottom: Platform.OS === 'ios' && 30,
-            marginTop: Platform.OS === 'ios' && -60,
-            marginLeft: Platform.OS === 'ios' && 20,
+            position: Platform.OS === 'ios' ? 'relative' : 'absolute',
+            paddingBottom: Platform.OS === 'ios' ? 30 : 0,
+            marginTop: Platform.OS === 'ios' ? -60 : 0,
+            marginLeft: Platform.OS === 'ios' ? 20 : 0,
           }}
           style={{
             borderWidth: 0,
             backgroundColor: WHITE,
-            marginLeft: Platform.OS === 'ios' && 20,
+            marginLeft: Platform.OS === 'ios' ? 20 : 0,
           }}
           labelStyle={{}}
           value={stutes}
@@ -225,10 +218,10 @@ export default function FullDetailScreen({navigation, route}) {
             // console.log('item', stutes);
           }}
           containerStyle={{
-            width: Platform.OS === 'ios' && '90%',
+            width: Platform.OS === 'ios' ? '90%' : '120%',
           }}
           open={openpicke}
-          placeholder={billDetails.status}
+          placeholder={stutes}
           setOpen={setopenpicker}
           listMode={'SCROLLVIEW'}
           autoScroll={true}
@@ -306,7 +299,7 @@ export default function FullDetailScreen({navigation, route}) {
             <TouchableOpacity
               style={{}}
               onPress={() => {
-                navigation.goBack();
+                navigation.goBack(null);
               }}
               activeOpacity={0.9}>
               <AntDesign
@@ -538,7 +531,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     // top: 9,
     // left: 12,
-    marginLeft: 44,
+    marginLeft: 30,
   },
   container2: {
     marginHorizontal: 18,

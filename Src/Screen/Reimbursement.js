@@ -223,7 +223,7 @@ export default function Reimbursement({navigation}) {
           backgroundColor={theme.colors.primary}
           barStyle="dark-content"
         />
-        <ScrollView style={styles.mainview}>
+        <ScrollView style={styles.mainview} showsVerticalScrollIndicator={false}>
           <Text
             style={{
               textAlign: 'center',

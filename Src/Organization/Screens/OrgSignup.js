@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,11 +7,11 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { Text } from 'react-native-paper';
+import {Text} from 'react-native-paper';
 import DeviceInfo from 'react-native-device-info';
 import Logo from '../../components/Logo';
 import OrgtextInput from '../Componets/OrgtextInput';
-import { GREY, PRIMARY, WHITE } from '../Colors/Color';
+import {GREY, PRIMARY, WHITE} from '../Colors/Color';
 import {
   OrganizationNameV,
   OrganizationAddressV,
@@ -19,16 +19,16 @@ import {
   passwordValidatorV,
 } from '../Validation/OrgnizationValidation';
 import LinearGradient from 'react-native-linear-gradient';
-import { useDispatch, useSelector } from 'react-redux';
-import { clearRegister, register } from '../../redux/actions/registerAction';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import {useDispatch, useSelector} from 'react-redux';
+import {clearRegister, register} from '../../redux/actions/registerAction';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Backbtn from '../Componets/Backbtn';
 import Loader from '../Componets/Loader';
 import messaging from '@react-native-firebase/messaging';
-import { setToken } from '../../redux/actions/tokenAction';
+import {setToken} from '../../redux/actions/tokenAction';
 import LoaderOrg from '../Componets/LoaderOrg';
 
-export default function OrgSignup({ navigation }) {
+export default function OrgSignup({navigation}) {
   const dispatch = useDispatch();
 
   const [OrganizationName, setOrganizationName] = useState({
@@ -40,9 +40,12 @@ export default function OrgSignup({ navigation }) {
     error: '',
   });
 
-  const [email, setEmail] = useState({ value: '', error: '' });
-  const [password, setPassword] = useState({ value: '', error: '' });
-  const [confirmPassword, setConfirmPassword] = useState({ value: '', error: '' });
+  const [email, setEmail] = useState({value: '', error: ''});
+  const [password, setPassword] = useState({value: '', error: ''});
+  const [confirmPassword, setConfirmPassword] = useState({
+    value: '',
+    error: '',
+  });
 
   const registerResponse = useSelector(state => state.registerReducer.data);
   const loading = useSelector(state => state.registerReducer.loading);
@@ -59,13 +62,13 @@ export default function OrgSignup({ navigation }) {
       OrganizationNameError ||
       OrganizationAddError
     ) {
-      setOrganizationName({ ...OrganizationName, error: OrganizationNameError });
+      setOrganizationName({...OrganizationName, error: OrganizationNameError});
       setOrganizationAddres({
         ...OrganizationAddres,
         error: OrganizationAddError,
       });
-      setEmail({ ...email, error: emailError });
-      setPassword({ ...password, error: passwordError });
+      setEmail({...email, error: emailError});
+      setPassword({...password, error: passwordError});
       // setOrganization({ ...Organization, error: OrganizationError })
       return;
     }
@@ -92,17 +95,17 @@ export default function OrgSignup({ navigation }) {
       });
   };
 
-  const signup = (firebase_token) => {
+  const signup = firebase_token => {
     let request = {
-      'first_name': OrganizationName.value,
-      'last_name': OrganizationAddres.value,
-      'email': email.value,
-      'password': password.value,
-      'confirm_password': password.value,
-      'role': 'organization',
-      'device_type': Platform.OS,
-      'device_token': firebase_token,
-      'device_id': DeviceInfo.getDeviceId(),
+      first_name: OrganizationName.value,
+      last_name: OrganizationAddres.value,
+      email: email.value,
+      password: password.value,
+      confirm_password: password.value,
+      role: 'organization',
+      device_type: Platform.OS,
+      device_token: firebase_token,
+      device_id: DeviceInfo.getDeviceId(),
     };
     dispatch(register(request));
   };
@@ -129,16 +132,19 @@ export default function OrgSignup({ navigation }) {
 
   const saveData = async data => {
     let Organizationdata = data;
-    Organizationdata = { ...Organizationdata, ...{ loggedin: true, loggedIntype: 'Org' } };
+    Organizationdata = {
+      ...Organizationdata,
+      ...{loggedin: true, loggedIntype: 'Org'},
+    };
     try {
       const jsonValue = JSON.stringify(Organizationdata);
-      console.log('Register',jsonValue)
+      console.log('Register', jsonValue);
       await AsyncStorage.setItem('@user_data', jsonValue);
-      dispatch(setToken(data.token))
+      dispatch(setToken(data.token));
       dispatch(clearRegister());
       navigation.reset({
         index: 0,
-        routes: [{ name: 'OrgDrawer' }],
+        routes: [{name: 'OrgDrawer'}],
       });
     } catch (e) {
       console.log('error in saving data', e);
@@ -147,16 +153,20 @@ export default function OrgSignup({ navigation }) {
 
   return (
     <View style={styles.container}>
-       <View style={{marginTop:Platform.OS ?50:0}}>
-       <Backbtn goBack={navigation.goBack} />
-       </View>
-    
-      <View style={{ alignItems: 'center' }}>
+      <View style={{marginTop: Platform.OS == 'ios ' ? 50 : 0}}>
+        <Backbtn goBack={navigation.goBack} />
+      </View>
+
+      <View style={{alignItems: 'center'}}>
         <Logo />
         <Text style={styles.textcreate}>Create Account</Text>
       </View>
-      <KeyboardAvoidingView behavior="padding" style={styles.keyboarstyle} keyboardShouldPersistTaps='always'>
+      <KeyboardAvoidingView
+        behavior="padding"
+        style={styles.keyboarstyle}
+        keyboardShouldPersistTaps="always">
         <ScrollView
+          showsVerticalScrollIndicator={false}
           nestedScrollEnabled={true}
           //scrollEnabled={this.state.openCountryDropwdown ? false : true}
           keyboardShouldPersistTaps={'handled'}
@@ -165,7 +175,7 @@ export default function OrgSignup({ navigation }) {
             placeholder="Organization Name"
             returnKeyType="next"
             value={OrganizationName.value}
-            onChangeText={text => setOrganizationName({ value: text, error: '' })}
+            onChangeText={text => setOrganizationName({value: text, error: ''})}
             error={!!OrganizationName.error}
             errorText={OrganizationName.error}
           />
@@ -174,7 +184,7 @@ export default function OrgSignup({ navigation }) {
             returnKeyType="next"
             value={OrganizationAddres.value}
             onChangeText={text =>
-              setOrganizationAddres({ value: text, error: '' })
+              setOrganizationAddres({value: text, error: ''})
             }
             error={!!OrganizationAddres.error}
             errorText={OrganizationAddres.error}
@@ -183,7 +193,7 @@ export default function OrgSignup({ navigation }) {
             placeholder="Email"
             returnKeyType="next"
             value={email.value}
-            onChangeText={text => setEmail({ value: text, error: '' })}
+            onChangeText={text => setEmail({value: text, error: ''})}
             error={!!email.error}
             errorText={email.error}
             autoCapitalize="none"
@@ -195,7 +205,7 @@ export default function OrgSignup({ navigation }) {
             placeholder="Password"
             returnKeyType="next"
             value={password.value}
-            onChangeText={text => setPassword({ value: text, error: '' })}
+            onChangeText={text => setPassword({value: text, error: ''})}
             error={!!password.error}
             errorText={password.error}
             password={true}
@@ -204,7 +214,7 @@ export default function OrgSignup({ navigation }) {
             placeholder="Confirm Password"
             returnKeyType="done"
             value={confirmPassword.value}
-            onChangeText={text => setConfirmPassword({ value: text, error: '' })}
+            onChangeText={text => setConfirmPassword({value: text, error: ''})}
             error={!!confirmPassword.error}
             errorText={confirmPassword.error}
             password={true}
@@ -244,7 +254,7 @@ export default function OrgSignup({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  cancel: { color: PRIMARY },
+  cancel: {color: PRIMARY},
   container: {
     flex: 1,
     backgroundColor: WHITE,
@@ -258,7 +268,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
   },
-  logo: { fontSize: 18, paddingVertical: 12, color: WHITE, fontWeight: 'bold' },
+  logo: {fontSize: 18, paddingVertical: 12, color: WHITE, fontWeight: 'bold'},
   textcreate: {
     fontSize: 18,
     color: PRIMARY,

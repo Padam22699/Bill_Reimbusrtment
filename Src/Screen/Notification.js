@@ -18,24 +18,33 @@ import {Headers} from '../Common/Headers';
 import Heading from '../components/Heading';
 import {theme} from '../core/theme';
 import {DARK, GREY, WHITE, PRIMARY} from '../Organization/Colors/Color';
-import {getNotification} from '../redux/actions/notificationAction';
-import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
+import {
+  clearNotification,
+  getNotification,
+} from '../redux/actions/notificationAction';
+import {
+  responsiveScreenHeight,
+  responsiveScreenWidth,
+} from 'react-native-responsive-dimensions';
+import LoaderOrg from '../Organization/Componets/LoaderOrg';
 
 const Notification = ({navigation}) => {
   const dispatch = useDispatch();
 
   const [notifications, setNotifications] = useState([]);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState('1');
   const [visible, setvisible] = useState(false);
   const [imageUrl, setImageUral] = useState('');
 
   const notificationResponse = useSelector(
     state => state.notificationReducer.data,
   );
+  const loading = useSelector(state => state.notificationReducer.loading);
 
   useFocusEffect(
     useCallback(() => {
-      fetchNotifications(1);
+      fetchNotifications('1');
+      setPage('1');
     }, []),
   );
 
@@ -58,13 +67,17 @@ const Notification = ({navigation}) => {
         notificationResponse.statusCode != 200
       ) {
         alert(notificationResponse.message);
+        dispatch(clearNotification());
       }
       if (
         Object.keys(notificationResponse).length != 0 &&
         notificationResponse.statusCode == 200
       ) {
-        setNotifications(notificationResponse.data);
-        setPage(page => page + 1);
+        setNotifications([...notifications, ...notificationResponse.data]);
+        let pageNum = parseInt(page);
+        let incPage = pageNum + 1;
+        setPage(incPage.toString());
+        dispatch(clearNotification());
       }
     }
   }, [notificationResponse]);
@@ -85,17 +98,17 @@ const Notification = ({navigation}) => {
           <View
             style={{
               flexDirection: 'row',
-              justifyContent: 'space-between',
               alignItems: 'center',
               marginBottom: 5,
               borderRadius: 20,
+              flex: 1,
             }}>
             <TouchableOpacity
               onPress={() => {
                 setvisible(true);
                 setImageUral(item.bill_attachment);
               }}>
-              <View style={{borderRadius: 100, marginRight: 20}}>
+              <View style={{borderRadius: 100, marginRight: 10}}>
                 <Image
                   style={{width: 60, height: 60, borderRadius: 100}}
                   source={{uri: item.bill_attachment}}
@@ -103,7 +116,12 @@ const Notification = ({navigation}) => {
               </View>
             </TouchableOpacity>
 
-            <View style={{width: '80%'}}>
+            <View
+              style={{
+                alignItems: 'flex-start',
+                paddingRight: 25,
+                width: responsiveScreenWidth(80),
+              }}>
               <Text style={{fontSize: 15, color: DARK}}>{item.message}</Text>
             </View>
           </View>
@@ -118,80 +136,83 @@ const Notification = ({navigation}) => {
   };
 
   return (
-
-    <View style={{backgroundColor: WHITE, flex: 1, paddingHorizontal: 8}}>
-      {/* <Heading navigation={navigation} /> */}
-      <Text
-        style={{
-          color: DARK,
-          fontSize: 22,
-          fontWeight: '700',
-          paddingHorizontal: 10,
-          paddingVertical: 10,
-          // marginTop: Platform.OS == 'ios' ? 10 : 0,
-        }}>
-        Notifications
-      </Text>
-      <View style={styles.container}>
-        <FlatList
-          contentContainerStyle={{
-            paddingBottom: responsiveScreenHeight(15),
-            marginTop: responsiveScreenHeight(1),
-          }}
-          data={notifications}
-          showsVerticalScrollIndicator={false}
-          renderItem={renderNotifications}
-          // onEndReached={fetchNotifications(page)}
-          ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: Platform.OS === 'ios' ? 80 : 0,
-                }}>
-                <Text style={styles.text}>Notifications</Text>
-              </View>
-            );
-          }}
-        />
-      </View>
-      {visible && (
-        <Modal visible={visible} animationType="fade">
-          <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
-            <ImageViewer
-              renderIndicator={() => null}
-              imageUrls={[{url: imageUrl}]}
-              index={0}
-              style={[
-                styles.Imagecontainer,
-                {
-                  width: '100%',
-                  height: '100%',
-                  padding: 10,
-                },
-              ]}>
-              {/* <Image
+    <>
+      <View style={{backgroundColor: WHITE, flex: 1, paddingHorizontal: 8}}>
+        {/* <Heading navigation={navigation} /> */}
+        <Text
+          style={{
+            color: DARK,
+            fontSize: 22,
+            fontWeight: '700',
+            paddingHorizontal: 10,
+            paddingVertical: 10,
+            // marginTop: Platform.OS == 'ios' ? 10 : 0,
+          }}>
+          Notifications
+        </Text>
+        <View style={styles.container}>
+          <FlatList
+            contentContainerStyle={{
+              paddingBottom: responsiveScreenHeight(20),
+              marginTop: responsiveScreenHeight(1),
+            }}
+            data={notifications}
+            showsVerticalScrollIndicator={false}
+            renderItem={renderNotifications}
+            onEndReached={() => {
+              fetchNotifications(page);
+            }}
+            ListEmptyComponent={() => {
+              return (
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: Platform.OS === 'ios' ? 80 : 0,
+                  }}>
+                  <Text style={styles.text}>Notifications</Text>
+                </View>
+              );
+            }}
+          />
+        </View>
+        {visible && (
+          <Modal visible={visible} animationType="fade">
+            <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
+              <ImageViewer
+                renderIndicator={() => null}
+                imageUrls={[{url: imageUrl}]}
+                index={0}
+                style={[
+                  styles.Imagecontainer,
+                  {
+                    width: '100%',
+                    height: '100%',
+                    padding: 10,
+                  },
+                ]}>
+                {/* <Image
                 source={require('../../Assets/bills.png')}
                 style={{width: '100%', height: '100%', resizeMode: 'cover'}}
               /> */}
-            </ImageViewer>
-            <View style={styles.iconContainer}>
-              <Icon
-                name="times"
-                color={PRIMARY}
-                size={20}
-                onPress={() => {
-                  setvisible(false);
-                }}
-              />
-            </View>
-          </SafeAreaView>
-        </Modal>
-      )}
-    </View>
-    
+              </ImageViewer>
+              <View style={styles.iconContainer}>
+                <Icon
+                  name="times"
+                  color={PRIMARY}
+                  size={20}
+                  onPress={() => {
+                    setvisible(false);
+                  }}
+                />
+              </View>
+            </SafeAreaView>
+          </Modal>
+        )}
+      </View>
+      {loading && <LoaderOrg />}
+    </>
   );
 };
 const styles = StyleSheet.create({

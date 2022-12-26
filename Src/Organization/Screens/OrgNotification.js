@@ -14,7 +14,10 @@ import React, {useEffect, useState} from 'react';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {useDispatch, useSelector} from 'react-redux';
 import {useFocusEffect} from '@react-navigation/native';
-import {getNotification} from '../../redux/actions/notificationAction';
+import {
+  clearNotification,
+  getNotification,
+} from '../../redux/actions/notificationAction';
 import {useCallback} from 'react';
 
 import {theme} from '../../core/theme';
@@ -22,6 +25,7 @@ import {DARK, PRIMARY, GREY, WHITE} from '../Colors/Color';
 
 import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 import ImageViewer from 'react-native-image-zoom-viewer';
+import LoaderOrg from '../Componets/LoaderOrg';
 const OrgNotification = ({navigation}) => {
   const dispatch = useDispatch();
 
@@ -35,10 +39,12 @@ const OrgNotification = ({navigation}) => {
   const notificationResponse = useSelector(
     state => state.notificationReducer.data,
   );
+  const loading = useSelector(state => state.notificationReducer.loading);
 
   useFocusEffect(
     useCallback(() => {
       fatchNotification(1);
+      setPage('1');
     }, []),
   );
 
@@ -59,13 +65,17 @@ const OrgNotification = ({navigation}) => {
         notificationResponse.statusCode != 200
       ) {
         alert(notificationResponse.message);
+        dispatch(clearNotification());
       }
       if (
         Object.keys(notificationResponse).length != 0 &&
         notificationResponse.statusCode == 200
       ) {
-        setNotifications(notificationResponse.data);
-        setPage(page => page + 1);
+        setNotifications([...notifications, ...notificationResponse.data]);
+        let pageNum = parseInt(page);
+        let incPage = pageNum + 1;
+        setPage(incPage.toString());
+        dispatch(clearNotification());
       }
     }
   }, [notificationResponse]);
@@ -76,7 +86,7 @@ const OrgNotification = ({navigation}) => {
           flex: 1,
           // borderBottomColor: theme.colors.PRIMARY,
           // borderBottomWidth: 1,
-          paddingHorizontal:responsiveScreenHeight(2),
+          paddingHorizontal: responsiveScreenHeight(2),
           marginBottom: 5,
           elevation: 1,
         }}>
@@ -123,91 +133,96 @@ const OrgNotification = ({navigation}) => {
     );
   };
   return (
-    <View style={{flex: 1, backgroundColor: WHITE}}>
-      <View
-        style={{
-          alignItems: 'center',
-          marginTop: 2,
-          flexDirection: 'row',
-        }}>
-        <Icon
-          name="arrow-left"
-          size={28}
-          color={PRIMARY}
-          style={{marginLeft: 20}}
-          onPress={() => {
-            navigation.goBack();
-          }}
-        />
-        <Text
+    <>
+      <View style={{flex: 1, backgroundColor: WHITE}}>
+        <View
           style={{
-            fontSize: 24,
-            color: DARK,
-            marginLeft: '20%',
-            fontWeight: '600',
-            paddingVertical: 10,
+            alignItems: 'center',
+            marginTop: 2,
+            flexDirection: 'row',
           }}>
-          Notifications
-        </Text>
-      </View>
-      <View style={styles.container}>
-        <FlatList
-          contentContainerStyle={{
-            paddingBottom: responsiveScreenHeight(15),
-            marginTop: responsiveScreenHeight(1),
-          }}
-          data={notifications}
-          renderItem={renderNotifications}
-          // onEndReached={fetchNotifications(page)}
-          ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginTop: Platform.OS === 'ios' ? 80 : 0,
-                }}>
-                <Text style={styles.text}>Notifications</Text>
-              </View>
-            );
-          }}
-        />
-      </View>
-      {visible && (
-        <Modal visible={visible} animationType="fade">
-          <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
-            <ImageViewer
-              renderIndicator={() => null}
-              imageUrls={[{url: imageUrl}]}
-              index={0}
-              style={[
-                styles.Imagecontainer,
-                {
-                  width: '100%',
-                  height: '100%',
-                  padding: 10,
-                },
-              ]}>
-              {/* <Image
+          <Icon
+            name="arrow-left"
+            size={28}
+            color={PRIMARY}
+            style={{marginLeft: 20}}
+            onPress={() => {
+              navigation.goBack();
+            }}
+          />
+          <Text
+            style={{
+              fontSize: 24,
+              color: DARK,
+              marginLeft: '20%',
+              fontWeight: '600',
+              paddingVertical: 10,
+            }}>
+            Notifications
+          </Text>
+        </View>
+        <View style={styles.container}>
+          <FlatList
+            contentContainerStyle={{
+              paddingBottom: responsiveScreenHeight(15),
+              marginTop: responsiveScreenHeight(1),
+            }}
+            data={notifications}
+            renderItem={renderNotifications}
+            onEndReached={() => {
+              fatchNotification(page);
+            }}
+            ListEmptyComponent={() => {
+              return (
+                <View
+                  style={{
+                    flex: 1,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    marginTop: Platform.OS === 'ios' ? 80 : 0,
+                  }}>
+                  <Text style={styles.text}>Notifications</Text>
+                </View>
+              );
+            }}
+          />
+        </View>
+        {visible && (
+          <Modal visible={visible} animationType="fade">
+            <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
+              <ImageViewer
+                renderIndicator={() => null}
+                imageUrls={[{url: imageUrl}]}
+                index={0}
+                style={[
+                  styles.Imagecontainer,
+                  {
+                    width: '100%',
+                    height: '100%',
+                    padding: 10,
+                  },
+                ]}>
+                {/* <Image
                 source={require('../../Assets/bills.png')}
                 style={{width: '100%', height: '100%', resizeMode: 'cover'}}
               /> */}
-            </ImageViewer>
-            <View style={styles.iconContainer}>
-              <Icon
-                name="times"
-                color={PRIMARY}
-                size={20}
-                onPress={() => {
-                  setvisible(false);
-                }}
-              />
-            </View>
-          </SafeAreaView>
-        </Modal>
-      )}
-    </View>
+              </ImageViewer>
+              <View style={styles.iconContainer}>
+                <Icon
+                  name="times"
+                  color={PRIMARY}
+                  size={20}
+                  onPress={() => {
+                    setvisible(false);
+                  }}
+                />
+              </View>
+            </SafeAreaView>
+          </Modal>
+        )}
+      </View>
+      {loading && <LoaderOrg />}
+    </>
   );
 };
 

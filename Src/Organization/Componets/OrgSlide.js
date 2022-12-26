@@ -75,7 +75,7 @@ export const OrgSlide = ({navigation}) => {
         style={{
           borderBottomColor: '#E14D2A',
           borderBottomWidth: 1,
-          paddingBottom: Platform.OS == 'ios' && 40,
+          paddingBottom: Platform.OS == 'ios' ? 40 : 40,
           padding: 20,
           backgroundColor: '#FAC898',
         }}>

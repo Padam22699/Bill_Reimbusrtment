@@ -161,6 +161,7 @@ export default function RegisterScreen({navigation}) {
         <KeyboardAvoidingView behavior="padding" style={styles.keyboarstyle}>
           <ScrollView
             nestedScrollEnabled={true}
+            showsVerticalScrollIndicator={false}
             //scrollEnabled={this.state.openCountryDropwdown ? false : true}
             keyboardShouldPersistTaps={'handled'}
             style={styles.innerContainer}>

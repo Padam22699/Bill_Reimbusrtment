@@ -273,7 +273,9 @@ export default function Past({navigation}) {
             <AntDesign name="filter" size={25} color={theme.colors.text} />
           </TouchableOpacity>
           <View style={{width: '60%'}}>
-            <Text style={{fontSize: 20, color: DARK,fontWeight:'400'}}>{selectedType}</Text>
+            <Text style={{fontSize: 20, color: DARK, fontWeight: '400'}}>
+              {selectedType}
+            </Text>
           </View>
           {/* <View style={{flex: 0.8}}>
             <TextInput
@@ -415,7 +417,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 15,
-    marginTop: Platform.OS === 'ios' ? -60 : 10,
+    marginTop: Platform.OS === 'ios' ? -60 : 0,
     height: Platform.OS === 'ios' ? 43 : 43,
   },
   iconstyle: {
