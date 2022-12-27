@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {View, StatusBar, Text, StyleSheet} from 'react-native';
 import {theme} from '../core/theme';
 import * as Animatable from 'react-native-animatable';
+import {PRIMARY} from '../../Src/Organization/Colors/Color'
 import LinearGradient from 'react-native-linear-gradient';
 
 const SplashScreen = ({navigation}) => {
@@ -37,7 +38,7 @@ const SplashScreen = ({navigation}) => {
       <Animatable.View animation={animationType}>
         <StatusBar
           animated={true}
-          backgroundColor={theme.colors.violet}
+          backgroundColor={PRIMARY}
           barStyle="default"
         />
         <View style={styles.textview}>
