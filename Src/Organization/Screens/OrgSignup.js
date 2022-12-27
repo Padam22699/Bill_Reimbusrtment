@@ -153,7 +153,7 @@ export default function OrgSignup({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={{marginTop: Platform.OS == 'ios ' ? 50 : 0}}>
+      <View style={{marginTop:Platform.OS === 'ios'? 40 : 0}}>
         <Backbtn goBack={navigation.goBack} />
       </View>
 
@@ -256,6 +256,7 @@ export default function OrgSignup({navigation}) {
 const styles = StyleSheet.create({
   cancel: {color: PRIMARY},
   container: {
+    
     flex: 1,
     backgroundColor: WHITE,
     paddingVertical: 10,

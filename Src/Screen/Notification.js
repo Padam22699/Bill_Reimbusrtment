@@ -86,7 +86,7 @@ const Notification = ({navigation}) => {
     return (
       <SafeAreaView
         style={{
-          flex: 1,
+          // flex: 1,
           marginBottom: 5,
           elevation: 1,
         }}>
@@ -101,7 +101,7 @@ const Notification = ({navigation}) => {
               alignItems: 'center',
               marginBottom: 5,
               borderRadius: 20,
-              flex: 1,
+             
             }}>
             <TouchableOpacity
               onPress={() => {
@@ -119,7 +119,8 @@ const Notification = ({navigation}) => {
             <View
               style={{
                 alignItems: 'flex-start',
-                paddingRight: 25,
+                paddingRight:5,
+                flex:1,
                 width: responsiveScreenWidth(80),
               }}>
               <Text style={{fontSize: 15, color: DARK}}>{item.message}</Text>

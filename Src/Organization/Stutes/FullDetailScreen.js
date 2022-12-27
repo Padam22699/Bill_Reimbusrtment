@@ -531,7 +531,7 @@ const styles = StyleSheet.create({
     textAlign: 'right',
     // top: 9,
     // left: 12,
-    marginLeft: 30,
+    marginLeft:Platform.OS =='ios' ? 60 : 30,
   },
   container2: {
     marginHorizontal: 18,

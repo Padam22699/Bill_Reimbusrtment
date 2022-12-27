@@ -83,10 +83,9 @@ const OrgNotification = ({navigation}) => {
     return (
       <SafeAreaView
         style={{
-          flex: 1,
+          // flex: 1,
           // borderBottomColor: theme.colors.PRIMARY,
           // borderBottomWidth: 1,
-          paddingHorizontal: responsiveScreenHeight(2),
           marginBottom: 5,
           elevation: 1,
         }}>
@@ -100,6 +99,7 @@ const OrgNotification = ({navigation}) => {
               flexDirection: 'row',
               justifyContent: 'space-between',
               alignItems: 'center',
+
               marginBottom: 5,
               borderRadius: 20,
             }}>
@@ -116,7 +116,7 @@ const OrgNotification = ({navigation}) => {
               </View>
             </TouchableOpacity>
 
-            <View style={{width: '80%'}}>
+            <View style={{flex: 1}}>
               <Text style={{fontSize: 15, color: DARK, fontWeight: '700'}}>
                 {item.name}
               </Text>
@@ -166,6 +166,7 @@ const OrgNotification = ({navigation}) => {
             contentContainerStyle={{
               paddingBottom: responsiveScreenHeight(15),
               marginTop: responsiveScreenHeight(1),
+              paddingHorizontal: responsiveScreenHeight(1),
             }}
             data={notifications}
             renderItem={renderNotifications}
