@@ -251,9 +251,9 @@ const styles = StyleSheet.create({
     shadowRadius: 6.46,
     elevation: 9,
 
-    top: 15,
+    top: 0,
     right: 5,
-    marginTop: Platform.OS === 'ios' ? 60 : 20,
+    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(5) : 20,
   },
 });
 export default Notification;

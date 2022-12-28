@@ -26,6 +26,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {DARK, GREY} from '../Organization/Colors/Color';
+import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
 export default function Past({navigation}) {
   const dispatch = useDispatch();
@@ -179,7 +180,7 @@ export default function Past({navigation}) {
                       ? theme.colors.green
                       : item.status == 'Pending'
                       ? 'orange'
-                      : item.status == 'Forward'
+                      : item.status == 'Forwarded'
                       ? '#282A3A'
                       : 'red',
                 }}>
@@ -312,6 +313,7 @@ export default function Past({navigation}) {
               </View>
             );
           }}
+          contentContainerStyle={{paddingBottom:8}}
           style={{marginBottom: 55}}
           data={current}
           keyExtractor={item => item.id}
@@ -417,7 +419,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 15,
-    marginTop: Platform.OS === 'ios' ? -60 : 0,
+    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(-4) : 10,
     height: Platform.OS === 'ios' ? 43 : 43,
   },
   iconstyle: {

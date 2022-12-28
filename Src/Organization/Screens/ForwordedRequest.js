@@ -76,7 +76,7 @@ const ForwordedRequest = ({navigation}) => {
       type: 'organization',
       page: page,
       reverse: -1,
-      user_status: 'Forward',
+      user_status: 'Forwarded',
       search: searchText,
       bill_type: '',
       from_date: '',

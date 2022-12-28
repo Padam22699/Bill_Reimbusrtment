@@ -28,7 +28,8 @@ import {
   forgotPassword,
 } from '../redux/actions/forgotPasswordAction';
 import Loader from '../Organization/Componets/Loader';
-import { DARK } from '../Organization/Colors/Color';
+import {DARK} from '../Organization/Colors/Color';
+import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
 export default function LoginScreen({navigation}) {
   const dispatch = useDispatch();
@@ -58,12 +59,14 @@ export default function LoginScreen({navigation}) {
 
   const requestUserPermission = async () => {
     const authStatus = await messaging().requestPermission();
+    const M = await messaging().registerDeviceForRemoteMessages();
     const enabled =
       authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
       authStatus === messaging.AuthorizationStatus.PROVISIONAL;
 
     if (enabled) {
       console.log('Authorization status:', authStatus);
+      console.log('Authorization status:', M);
       getFirebaseToken();
     }
   };
@@ -79,7 +82,7 @@ export default function LoginScreen({navigation}) {
   const saveData = async newData => {
     let userData = newData;
     userData = {...userData, ...{loggedin: true, loggedIntype: 'Emp'}};
-    
+
     try {
       const jsonValue = JSON.stringify(userData);
       await AsyncStorage.setItem('@user_data', jsonValue);
@@ -173,13 +176,18 @@ export default function LoginScreen({navigation}) {
           backgroundColor={theme.colors.surface}
           barStyle="dark-content"
         />
-        <View style={{marginTop: Platform.OS === 'ios' ? 60 : 0}}>
+        <View
+          style={{
+            marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(4) : 0,
+          }}>
           <BackButton goBack={navigation.goBack} />
         </View>
 
         <KeyboardAvoidingView style={styles.keyboar}>
-          <Logo />
-          <Header>LOGIN</Header>
+          <View style={{marginTop:responsiveScreenHeight(-3),alignItems:'center',justifyContent:'center'}}>
+            <Logo />
+            <Header>LOGIN</Header>
+          </View>
           <EmpTextInput
             placeholder="Email id"
             returnKeyType="next"

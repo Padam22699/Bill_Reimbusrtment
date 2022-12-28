@@ -29,6 +29,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoaderOrg from '../Componets/LoaderOrg';
 import {setToken} from '../../redux/actions/tokenAction';
+import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
 export default function OrgSignin({navigation}) {
   const dispatch = useDispatch();
@@ -183,16 +184,23 @@ export default function OrgSignin({navigation}) {
           style={{flex: 1, padding: 20}}
           contentContainerStyle={{alignItems: 'center'}}
           keyboardShouldPersistTaps="always">
-          <Logo />
-          <Text
+          <View
             style={{
-              fontSize: 22,
-              fontWeight: 'bold',
-              color: PRIMARY,
-              marginVertical: 20,
+              marginTop: responsiveScreenHeight(-3),
+              alignItems: 'center',
+              justifyContent: 'center',
             }}>
-            LOGIN
-          </Text>
+            <Logo />
+            <Text
+              style={{
+                fontSize: 22,
+                fontWeight: 'bold',
+                color: PRIMARY,
+                marginVertical: 20,
+              }}>
+              LOGIN
+            </Text>
+          </View>
           <OrgtextInput
             placeholder="Email id"
             returnKeyType="next"
@@ -296,6 +304,6 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   backbtncontiner: {
-    marginTop: Platform.OS === 'ios' ? 50 : 0,
+    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(5) : 0,
   },
 });

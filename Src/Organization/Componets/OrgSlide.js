@@ -69,7 +69,7 @@ export const OrgSlide = ({navigation}) => {
         flex: 1,
         borderLeftWidth: 2,
         borderColor: '#E14D2A',
-        marginBottom: Platform.OS === 'ios' ? 38 : 0,
+        // marginBottom: Platform.OS === 'ios' ? 38 : 0,
       }}>
       <View
         style={{

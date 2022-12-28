@@ -7,6 +7,7 @@ import PenddingRequsest from '../Screens/PenddingRequsest';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {DARK, PRIMARY} from '../Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
+import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 const Tab = createBottomTabNavigator();
 export const Tabs = () => {
   return (
@@ -15,7 +16,7 @@ export const Tabs = () => {
         tabBarActiveTintColor: PRIMARY,
         tabBarInactiveTintColor: 'black',
         tabBarStyle: {
-          height: Platform.OS === 'ios' ? 100 : 60,
+          height: Platform.OS === 'ios' ? responsiveScreenHeight(10) : 60,
           position: 'absolute',
           backgroundColor: "#FAC898",
           borderTopLeftRadius: 30,

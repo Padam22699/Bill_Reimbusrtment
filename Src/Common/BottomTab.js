@@ -7,6 +7,7 @@ import { DARK } from '../Organization/Colors/Color';
 import Ehome from '../Screen/Ehome';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { Transactions } from '../Navigation/Auth';
+import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 
 const Tab = createBottomTabNavigator();
 
@@ -17,7 +18,7 @@ function BottomTab() {
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: 'black',
         tabBarStyle: {
-          height:  Platform.OS === 'ios' ? 95 : 60,
+          height:  Platform.OS === 'ios' ? responsiveScreenHeight(12) : 60,
           position: 'absolute',
           backgroundColor: "#E6E6FA",
           borderTopLeftRadius: 30,

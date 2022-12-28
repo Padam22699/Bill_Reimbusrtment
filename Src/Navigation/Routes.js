@@ -73,7 +73,7 @@ export const MyDrawer = () => {
               drawerType: 'front',
               drawerStyle: {
                 backgroundColor: 'transparent',
-                marginBottom: Platform.OS === 'ios' ? 97 : 62,
+                // marginBottom: Platform.OS === 'ios' ? 97 : 62,
                 width: Dimensions.get('window').width / 2,
               },
             }}
@@ -135,7 +135,7 @@ export const OrgDrawer = () => {
               drawerType: 'front',
               drawerStyle: {
                 backgroundColor: 'transparent',
-                marginBottom: 62,
+            //    marginBottom: 62,
                 width: Dimensions.get('window').width / 2,
               },
             }}

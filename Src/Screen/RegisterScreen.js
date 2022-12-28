@@ -25,6 +25,7 @@ import {setToken} from '../redux/actions/tokenAction';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import messaging from '@react-native-firebase/messaging';
 import Loader from '../Organization/Componets/Loader';
+import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 
 export default function RegisterScreen({navigation}) {
   const dispatch = useDispatch();
@@ -150,7 +151,7 @@ export default function RegisterScreen({navigation}) {
           backgroundColor={theme.colors.surface}
           barStyle="dark-content"
         />
-        <View style={{marginTop: Platform.OS === 'ios' ? 50 : 0}}>
+        <View style={{ marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(4) : 0}}>
           <BackButton goBack={navigation.goBack} />
         </View>
 

@@ -27,6 +27,7 @@ import Loader from '../Componets/Loader';
 import messaging from '@react-native-firebase/messaging';
 import {setToken} from '../../redux/actions/tokenAction';
 import LoaderOrg from '../Componets/LoaderOrg';
+import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
 export default function OrgSignup({navigation}) {
   const dispatch = useDispatch();
@@ -153,11 +154,19 @@ export default function OrgSignup({navigation}) {
 
   return (
     <View style={styles.container}>
-      <View style={{marginTop:Platform.OS === 'ios'? 40 : 0}}>
+      <View
+        style={{
+          marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(5) : 0,
+        }}>
         <Backbtn goBack={navigation.goBack} />
       </View>
 
-      <View style={{alignItems: 'center'}}>
+      <View
+        style={{
+          marginTop: responsiveScreenHeight(-3),
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
         <Logo />
         <Text style={styles.textcreate}>Create Account</Text>
       </View>
@@ -256,7 +265,6 @@ export default function OrgSignup({navigation}) {
 const styles = StyleSheet.create({
   cancel: {color: PRIMARY},
   container: {
-    
     flex: 1,
     backgroundColor: WHITE,
     paddingVertical: 10,

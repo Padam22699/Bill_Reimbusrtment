@@ -30,6 +30,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
 import {DARK} from '../Organization/Colors/Color';
+import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 
 export default function DetailScreen({navigation}) {
   const dispatch = useDispatch();
@@ -44,7 +45,7 @@ export default function DetailScreen({navigation}) {
     if (billDetail.status == 'Pending') return '#FFA500';
     if (billDetail.status == 'Rejected') return 'red';
     if (billDetail.status == 'Approved') return 'green';
-    if (billDetail.status == 'Forward') return '#282A3A';
+    if (billDetail.status == 'Forwarded') return '#282A3A';
   };
 
   const getBillDetailResponse = useSelector(
@@ -363,7 +364,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius: 30,
-    marginTop: Platform.OS == 'ios' ? -60 : 0,
+     marginTop: Platform.OS == 'ios' ? responsiveScreenHeight(-3) : 0,
   },
   touchablview: {
     flexDirection: 'row',
@@ -427,7 +428,7 @@ const styles = StyleSheet.create({
     
     borderRadius: 15,
     padding: 20,
-    marginBottom: '10%',
+    marginBottom: '15%',
     borderRadius: 10,
     padding: 10,
 

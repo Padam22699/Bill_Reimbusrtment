@@ -34,6 +34,7 @@ import {
   clearGetBillDetail,
   getBillDetail,
 } from '../../redux/actions/getBillDetailAction';
+import {responsiveScreenWidth} from 'react-native-responsive-dimensions';
 
 export default function FullDetailScreen({navigation, route}) {
   const [stutes, setstutes] = useState('');
@@ -149,7 +150,7 @@ export default function FullDetailScreen({navigation, route}) {
   const picker = () => {
     if (userData.role_type === 'super_admin') {
       if (
-        billDetails.status === 'Forward' ||
+        billDetails.status === 'Forwarded' ||
         billDetails.status === 'Pending'
       ) {
         return (
@@ -159,7 +160,7 @@ export default function FullDetailScreen({navigation, route}) {
               borderWidth: 0,
               backgroundColor: WHITE,
               position: Platform.OS === 'ios' ? 'relative' : 'absolute',
-              paddingBottom: Platform.OS === 'ios' ? 30 : 0,
+              marginBottom: Platform.OS === 'ios' ? 30 : 0,
               marginTop: Platform.OS === 'ios' ? -60 : 0,
               marginLeft: Platform.OS === 'ios' ? 20 : 0,
             }}
@@ -167,6 +168,8 @@ export default function FullDetailScreen({navigation, route}) {
               borderWidth: 0,
               backgroundColor: WHITE,
               marginLeft: Platform.OS === 'ios' ? 20 : 0,
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
             labelStyle={{}}
             value={stutes}
@@ -175,7 +178,9 @@ export default function FullDetailScreen({navigation, route}) {
               // console.log('item', stutes);
             }}
             containerStyle={{
-              width: Platform.OS === 'ios' ? '90%' : '120%',
+              //  width: Platform.OS === 'ios' ? '100%' : '120%',
+              flex: 1,
+              alignSelf: 'flex-end',
             }}
             open={openpicke}
             placeholder={stutes}
@@ -186,7 +191,7 @@ export default function FullDetailScreen({navigation, route}) {
               {label: 'Pending', value: 'Pending'},
               {label: 'Approved', value: 'Approved'},
               {label: 'Rejected', value: 'Rejected'},
-              {label: 'Forward', value: 'Forward'},
+              {label: 'Forwarded', value: 'Forwarded'},
             ]}
           />
         );
@@ -197,7 +202,7 @@ export default function FullDetailScreen({navigation, route}) {
       return (
         <DropDownPicker
           disabled={route.params.item.status !== 'Pending'}
-          zIndex={1}
+          zIndex={1000}
           dropDownContainerStyle={{
             borderWidth: 0,
             backgroundColor: WHITE,
@@ -218,7 +223,8 @@ export default function FullDetailScreen({navigation, route}) {
             // console.log('item', stutes);
           }}
           containerStyle={{
-            width: Platform.OS === 'ios' ? '90%' : '120%',
+            flex: 1,
+            alignSelf: 'flex-end',
           }}
           open={openpicke}
           placeholder={stutes}
@@ -229,7 +235,7 @@ export default function FullDetailScreen({navigation, route}) {
             {label: 'Pending', value: 'Pending'},
             {label: 'Approved', value: 'Approved'},
             {label: 'Rejected', value: 'Rejected'},
-            {label: 'Forward', value: 'Forward'},
+            {label: 'Forwarded', value: 'Forwarded'},
           ]}
         />
       );
@@ -258,7 +264,7 @@ export default function FullDetailScreen({navigation, route}) {
       }
     }
     if (userData.role_type === 'super_admin') {
-      if (route.params.item.status == 'Forward') {
+      if (route.params.item.status == 'Forwarded') {
         return (
           <TouchableOpacity
             mode="contained"
@@ -465,9 +471,9 @@ const styles = StyleSheet.create({
     shadowRadius: 6.46,
     elevation: 9,
 
-    top: 15,
+    top: 0,
     right: 5,
-    marginTop: Platform.OS === 'ios' ? 60 : 20,
+    marginTop: Platform.OS === 'ios' ? 40 : 20,
   },
   container: {
     flex: 1,
@@ -529,9 +535,10 @@ const styles = StyleSheet.create({
     color: DARK,
     flex: 0.9,
     textAlign: 'right',
+    alignSelf: 'flex-end',
     // top: 9,
     // left: 12,
-    marginLeft:Platform.OS =='ios' ? 60 : 30,
+    //marginLeft:Platform.OS =='ios' ? responsiveScreenWidth(12) : 30,
   },
   container2: {
     marginHorizontal: 18,
@@ -592,7 +599,7 @@ const styles = StyleSheet.create({
   pickerContainer: {
     alignItems: 'center',
     //  marginBottom:Platform.OS && 180 ,
-    width: '40%',
+    width: '43%',
     paddingLeft: 10,
   },
   picker: {

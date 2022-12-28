@@ -26,6 +26,7 @@ import moment from 'moment';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
 import {DARK, GREY} from '../Organization/Colors/Color';
+import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
 
 export default function Current({navigation}) {
   const dispatch = useDispatch();
@@ -184,7 +185,7 @@ export default function Current({navigation}) {
                       ? theme.colors.green
                       : item.status == 'Pending'
                       ? 'orange'
-                      : item.status == 'Forward'
+                      : item.status == 'Forwarded'
                       ? '#282A3A'
                       : 'red',
                 }}>
@@ -300,7 +301,7 @@ export default function Current({navigation}) {
           </View> */}
         </View>
         <FlatList
-          contentContainerStyle={{flexGrow: 1}}
+          contentContainerStyle={{flexGrow: 1,paddingBottom:8}}
           ListEmptyComponent={() => {
             return (
               <View
@@ -323,6 +324,7 @@ export default function Current({navigation}) {
             );
           }}
           style={{marginBottom: 55}}
+          
           data={current}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
@@ -425,7 +427,7 @@ const styles = StyleSheet.create({
     // flexDirection: 'row',
     // alignItems: 'center',
     // borderRadius: 15,
-    marginTop: Platform.OS === 'ios' ? -55 : 10,
+    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(-4) : 10,
     height: Platform.OS === 'ios' ? 43 : 43,
   },
   iconstyle: {
