@@ -191,32 +191,34 @@ const OrgNotification = ({navigation}) => {
         {visible && (
           <Modal visible={visible} animationType="fade">
             <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
-              <ImageViewer
-                renderIndicator={() => null}
-                imageUrls={[{url: imageUrl}]}
-                index={0}
-                style={[
-                  styles.Imagecontainer,
-                  {
-                    width: '100%',
-                    height: '100%',
-                    padding: 10,
-                  },
-                ]}>
-                {/* <Image
+              <View style={{flex: 1}}>
+                <ImageViewer
+                  renderIndicator={() => null}
+                  imageUrls={[{url: imageUrl}]}
+                  index={0}
+                  style={[
+                    styles.Imagecontainer,
+                    {
+                      width: '100%',
+                      height: '100%',
+                      padding: 10,
+                    },
+                  ]}>
+                  {/* <Image
                 source={require('../../Assets/bills.png')}
                 style={{width: '100%', height: '100%', resizeMode: 'cover'}}
               /> */}
-              </ImageViewer>
-              <View style={styles.iconContainer}>
-                <Icon
-                  name="times"
-                  color={PRIMARY}
-                  size={20}
-                  onPress={() => {
-                    setvisible(false);
-                  }}
-                />
+                </ImageViewer>
+                <View style={styles.iconContainer}>
+                  <Icon
+                    name="times"
+                    color={PRIMARY}
+                    size={20}
+                    onPress={() => {
+                      setvisible(false);
+                    }}
+                  />
+                </View>
               </View>
             </SafeAreaView>
           </Modal>
@@ -249,7 +251,7 @@ const styles = StyleSheet.create({
 
     top: 0,
     right: 5,
-    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(5) : 20,
+    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(1) : 20,
   },
   Imagecontainer: {
     marginHorizontal: 10,

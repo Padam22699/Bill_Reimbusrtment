@@ -158,7 +158,7 @@ export default function OrgSignup({navigation}) {
         style={{
           marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(5) : 0,
         }}>
-        <Backbtn goBack={navigation.goBack} />
+      <Backbtn goBack={navigation.goBack} />
       </View>
 
       <View

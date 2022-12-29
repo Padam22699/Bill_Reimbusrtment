@@ -468,7 +468,7 @@ const styles = StyleSheet.create({
     elevation: 2,
     marginHorizontal: 16,
     marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(3) : 20,
-    marginBottom: Platform.OS === 'ios' ? 100 : 85,
+    marginBottom: Platform.OS === 'ios' ? responsiveScreenHeight(13) : 85,
     borderRadius: 15,
   },
   attachview: {

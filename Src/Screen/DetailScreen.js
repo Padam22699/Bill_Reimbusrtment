@@ -30,7 +30,7 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
 import {DARK} from '../Organization/Colors/Color';
-import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
+import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
 export default function DetailScreen({navigation}) {
   const dispatch = useDispatch();
@@ -209,13 +209,21 @@ export default function DetailScreen({navigation}) {
 
   return (
     <>
-      <ScrollView style={{flex: 1, backgroundColor: '#fff'}} showsVerticalScrollIndicator={false}>
-        <SafeAreaView style={styles.container}>
+      <StatusBar
+        backgroundColor={theme.colors.primary}
+        barStyle="light-content"
+      />
+
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: '£fff',
+          marginBottom: Platform.OS === 'ios' ? responsiveScreenHeight(2) : 0,
+        }}>
+        <ScrollView
+          style={{flex: 1, backgroundColor: '#fff'}}
+          showsVerticalScrollIndicator={false}>
           <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
-            <StatusBar
-              backgroundColor={theme.colors.primary}
-              barStyle="default"
-            />
             <View style={styles.mainview}>
               <TouchableOpacity
                 onPress={() => {
@@ -260,7 +268,13 @@ export default function DetailScreen({navigation}) {
 
             <View style={styles.container2}>
               <View style={styles.elevationstyle}>
-                <Text style={[styles.textExpe ,{ paddingTop:Platform.OS =='ios' ? 10 :0,}]}>Expense Details</Text>
+                <Text
+                  style={[
+                    styles.textExpe,
+                    {paddingTop: Platform.OS == 'ios' ? 10 : 0},
+                  ]}>
+                  Expense Details
+                </Text>
 
                 <View style={{marginTop: 20}}>
                   <View style={styles.flexview}>
@@ -340,15 +354,21 @@ export default function DetailScreen({navigation}) {
                 </View>
                 {checkbook && billDetail.status == 'Pending' && (
                   <TouchableOpacity onPress={sendReminder} activeOpacity={0.9}>
-                    <Text style={[styles.textstyle,{ paddingBottom:Platform.OS =='ios' ? 10 :0,}]}>Send Reminder</Text>
+                    <Text
+                      style={[
+                        styles.textstyle,
+                        {paddingBottom: Platform.OS == 'ios' ? 10 : 0},
+                      ]}>
+                      Send Reminder
+                    </Text>
                   </TouchableOpacity>
                 )}
               </View>
             </View>
           </Animatable.View>
           {loading && <Loader />}
-        </SafeAreaView>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </>
   );
 }
@@ -356,15 +376,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    //backgroundColor:'red'
   },
   mainview: {
     backgroundColor: theme.colors.primary,
-    height: 135,
+    //height: 135,
+
     paddingHorizontal: 18,
-    paddingVertical: 8,
+    paddingVertical: 15,
+
     borderBottomLeftRadius: 30,
+    // backgroundColor: 'red',
     borderBottomRightRadius: 30,
-     marginTop: Platform.OS == 'ios' ? responsiveScreenHeight(-3) : 0,
+    //marginTop: Platform.OS == 'ios' ? 0 : 0,
   },
   touchablview: {
     flexDirection: 'row',
@@ -425,7 +449,7 @@ const styles = StyleSheet.create({
     // height: 450,
     backgroundColor: '#fff',
     marginTop: 24,
-    
+
     borderRadius: 15,
     padding: 20,
     marginBottom: '15%',
@@ -439,7 +463,7 @@ const styles = StyleSheet.create({
     },
     elevation: 2,
     shadowRadius: 5,
-    shadowOpacity: 0.50,
+    shadowOpacity: 0.5,
   },
   textExpe: {
     fontSize: 20,

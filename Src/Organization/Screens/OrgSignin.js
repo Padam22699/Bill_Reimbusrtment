@@ -186,7 +186,7 @@ export default function OrgSignin({navigation}) {
           keyboardShouldPersistTaps="always">
           <View
             style={{
-              marginTop: responsiveScreenHeight(-3),
+              marginTop: Platform.OS ==="ios" ? responsiveScreenHeight(-3):0,
               alignItems: 'center',
               justifyContent: 'center',
             }}>
@@ -304,6 +304,6 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   backbtncontiner: {
-    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(5) : 0,
+    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(5) : 10,
   },
 });

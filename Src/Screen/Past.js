@@ -208,7 +208,7 @@ export default function Past({navigation}) {
   };
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <Modal animationType="slide" transparent={true} visible={modalOpen}>
           <View style={styles.modalView}>
             <View
@@ -313,14 +313,14 @@ export default function Past({navigation}) {
               </View>
             );
           }}
-          contentContainerStyle={{paddingBottom:8}}
+          contentContainerStyle={{paddingBottom: 8}}
           style={{marginBottom: 55}}
           data={current}
           keyExtractor={item => item.id}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
         />
-      </SafeAreaView>
+      </View>
       {loading && <Loader />}
     </>
   );
@@ -405,21 +405,21 @@ const styles = StyleSheet.create({
   },
   searchinput: {
     marginHorizontal: 22,
-
     backgroundColor: '#fff',
     shadowOffset: {
       width: 3,
       height: 3,
     },
+
     // elevation: 5,
     // shadowRadius: 5,
     // shadowOpacity: 0.25,
-    paddingHorizontal: 10,
-    marginVertical: 7,
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 15,
-    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(-4) : 10,
+    // paddingHorizontal: 10,
+    // marginVertical: 7,
+    // flexDirection: 'row',
+    // alignItems: 'center',
+    // borderRadius: 15,
+    // marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(-7) : 10,
     height: Platform.OS === 'ios' ? 43 : 43,
   },
   iconstyle: {
@@ -443,7 +443,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: theme.colors.white,
-    marginTop: 125,
+    marginTop:Platform.OS  ==="ios" ? responsiveScreenHeight(17)  : responsiveScreenHeight(12),
     marginHorizontal: 35,
     padding: 10,
     borderColor: '#454545',

@@ -101,7 +101,6 @@ const Notification = ({navigation}) => {
               alignItems: 'center',
               marginBottom: 5,
               borderRadius: 20,
-             
             }}>
             <TouchableOpacity
               onPress={() => {
@@ -119,8 +118,8 @@ const Notification = ({navigation}) => {
             <View
               style={{
                 alignItems: 'flex-start',
-                paddingRight:5,
-                flex:1,
+                paddingRight: 5,
+                flex: 1,
                 width: responsiveScreenWidth(80),
               }}>
               <Text style={{fontSize: 15, color: DARK}}>{item.message}</Text>
@@ -181,32 +180,34 @@ const Notification = ({navigation}) => {
         {visible && (
           <Modal visible={visible} animationType="fade">
             <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
-              <ImageViewer
-                renderIndicator={() => null}
-                imageUrls={[{url: imageUrl}]}
-                index={0}
-                style={[
-                  styles.Imagecontainer,
-                  {
-                    width: '100%',
-                    height: '100%',
-                    padding: 10,
-                  },
-                ]}>
-                {/* <Image
+              <View style={{flex: 1}}>
+                <ImageViewer
+                  renderIndicator={() => null}
+                  imageUrls={[{url: imageUrl}]}
+                  index={0}
+                  style={[
+                    styles.Imagecontainer,
+                    {
+                      width: '100%',
+                      height: '100%',
+                      padding: 10,
+                    },
+                  ]}>
+                  {/* <Image
                 source={require('../../Assets/bills.png')}
                 style={{width: '100%', height: '100%', resizeMode: 'cover'}}
               /> */}
-              </ImageViewer>
-              <View style={styles.iconContainer}>
-                <Icon
-                  name="times"
-                  color={PRIMARY}
-                  size={20}
-                  onPress={() => {
-                    setvisible(false);
-                  }}
-                />
+                </ImageViewer>
+                <View style={styles.iconContainer}>
+                  <Icon
+                    name="times"
+                    color={PRIMARY}
+                    size={20}
+                    onPress={() => {
+                      setvisible(false);
+                    }}
+                  />
+                </View>
               </View>
             </SafeAreaView>
           </Modal>
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
 
     top: 0,
     right: 5,
-    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(5) : 20,
+    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(2) : 20,
   },
 });
 export default Notification;

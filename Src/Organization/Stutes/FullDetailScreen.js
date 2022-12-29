@@ -34,7 +34,10 @@ import {
   clearGetBillDetail,
   getBillDetail,
 } from '../../redux/actions/getBillDetailAction';
-import {responsiveScreenWidth} from 'react-native-responsive-dimensions';
+import {
+  responsiveScreenHeight,
+  responsiveScreenWidth,
+} from 'react-native-responsive-dimensions';
 
 export default function FullDetailScreen({navigation, route}) {
   const [stutes, setstutes] = useState('');
@@ -59,6 +62,7 @@ export default function FullDetailScreen({navigation, route}) {
       console.log('fullDeatailsScreen', route.params);
       setstutes(billDetails.status);
       getData(billDetails.status);
+      setopenpicker(false);
     }, []),
   );
 
@@ -178,7 +182,7 @@ export default function FullDetailScreen({navigation, route}) {
               // console.log('item', stutes);
             }}
             containerStyle={{
-              //  width: Platform.OS === 'ios' ? '100%' : '120%',
+              // width: Platform.OS === 'ios' ? '0%' : '120%',
               flex: 1,
               alignSelf: 'flex-end',
             }}
@@ -191,7 +195,6 @@ export default function FullDetailScreen({navigation, route}) {
               {label: 'Pending', value: 'Pending'},
               {label: 'Approved', value: 'Approved'},
               {label: 'Rejected', value: 'Rejected'},
-              {label: 'Forwarded', value: 'Forwarded'},
             ]}
           />
         );
@@ -299,89 +302,93 @@ export default function FullDetailScreen({navigation, route}) {
 
   return (
     <>
-      <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
-        <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
-          <View style={styles.mainview}>
-            <TouchableOpacity
-              style={{}}
-              onPress={() => {
-                navigation.goBack(null);
-              }}
-              activeOpacity={0.9}>
-              <AntDesign
-                name="close"
-                size={25}
-                color={'#fff'}
-                style={{alignSelf: 'flex-end', marginTop: Platform.OS ? 10 : 0}}
-              />
-            </TouchableOpacity>
-            <View style={styles.touchablview}>
+      <SafeAreaView style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          <Animatable.View animation="zoomInDown" style={{transform: 'scale'}}>
+            <View style={styles.mainview}>
               <TouchableOpacity
-                style={styles.imagetouchabl}
+                style={{}}
+                onPress={() => {
+                  navigation.goBack(null);
+                }}
                 activeOpacity={0.9}>
-                <Image source={Imagepath.Fuel} style={styles.imagestyle} />
-              </TouchableOpacity>
-              <View style={styles.fonticon}>
-                <FontAwesome
-                  name="rupee"
-                  size={18}
-                  color={WHITE}
-                  style={{top: 5}}
+                <AntDesign
+                  name="close"
+                  size={25}
+                  color={'#fff'}
+                  style={{
+                    alignSelf: 'flex-end',
+                    marginTop: Platform.OS ? 10 : 0,
+                  }}
                 />
-                <View>
-                  <Text style={styles.textrupees}>
-                    {route.params.item.amount}
-                  </Text>
-                  <>
-                    <Text style={styles.textfuelthe}>
-                      {route.params.item.type}
+              </TouchableOpacity>
+              <View style={styles.touchablview}>
+                <TouchableOpacity
+                  style={styles.imagetouchabl}
+                  activeOpacity={0.9}>
+                  <Image source={Imagepath.Fuel} style={styles.imagestyle} />
+                </TouchableOpacity>
+                <View style={styles.fonticon}>
+                  <FontAwesome
+                    name="rupee"
+                    size={18}
+                    color={WHITE}
+                    style={{top: 5}}
+                  />
+                  <View>
+                    <Text style={styles.textrupees}>
+                      {route.params.item.amount}
                     </Text>
-                  </>
+                    <>
+                      <Text style={styles.textfuelthe}>
+                        {route.params.item.type}
+                      </Text>
+                    </>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-          <View style={styles.container2}>
-            <View style={styles.elevationstyle}>
-              <Text style={styles.textExpe}>Expense Details</Text>
-              <View style={{marginTop: 20}}>
-                <View style={[styles.flexview, {}]}>
-                  <Text style={styles.textdate}>Date</Text>
-                  <Text style={styles.textmar}>
-                    {moment(route.params.item.date).format('MMM DD, yyyy')}
-                  </Text>
+            <View style={styles.container2}>
+              <View style={styles.elevationstyle}>
+                <Text style={styles.textExpe}>Expense Details</Text>
+                <View style={{marginTop: 20}}>
+                  <View style={[styles.flexview, {}]}>
+                    <Text style={styles.textdate}>Date</Text>
+                    <Text style={styles.textmar}>
+                      {moment(route.params.item.date).format('MMM DD, yyyy')}
+                    </Text>
+                  </View>
+                  <View style={[styles.flexview, {}]}>
+                    <Text style={styles.textdate}>Description</Text>
+                    <Text style={styles.textfuel}>
+                      {route.params.item.description}
+                    </Text>
+                  </View>
+                  <View style={styles.flexview}>
+                    <Text style={styles.textdate}>Attachment</Text>
+                    <TouchableOpacity onPress={() => setvisible(true)}>
+                      <Image
+                        source={{uri: route.params.item.bill_attachment}}
+                        style={{
+                          height: 50,
+                          width: 50,
+                          resizeMode: 'contain',
+                        }}
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={[styles.flexview, {}]}>
+                    <Text style={styles.textdate}>Status</Text>
+                    <View style={[styles.pickerContainer, {}]}>{picker()}</View>
+                  </View>
                 </View>
-                <View style={[styles.flexview, {}]}>
-                  <Text style={styles.textdate}>Description</Text>
-                  <Text style={styles.textfuel}>
-                    {route.params.item.description}
-                  </Text>
-                </View>
+
                 <View style={styles.flexview}>
-                  <Text style={styles.textdate}>Attachment</Text>
-                  <TouchableOpacity onPress={() => setvisible(true)}>
-                    <Image
-                      source={{uri: route.params.item.bill_attachment}}
-                      style={{
-                        height: 50,
-                        width: 50,
-                        resizeMode: 'contain',
-                      }}
-                    />
-                  </TouchableOpacity>
-                </View>
-                <View style={[styles.flexview, {}]}>
-                  <Text style={styles.textdate}>Status</Text>
-                  <View style={[styles.pickerContainer, {}]}>{picker()}</View>
-                </View>
-              </View>
+                  <Text style={[styles.textdate, {}]}>Status by</Text>
 
-              <View style={styles.flexview}>
-                <Text style={[styles.textdate, {}]}>Status by</Text>
-
-                <Text style={[styles.textmar, {}]}>Admin</Text>
-              </View>
-              {/* <View
+                  <Text style={[styles.textmar, {}]}>Admin</Text>
+                </View>
+                {/* <View
                 style={styles.flexview}>
                 <Text style={styles.textdate}>Sub Total</Text>
                 <Text style={[styles.textmar, {}]}>
@@ -393,58 +400,64 @@ export default function FullDetailScreen({navigation, route}) {
                 <Text style={styles.textdate}>Less Cash Advance</Text>
                 <Text style={[styles.textmar, {}]}> Amount</Text>
               </View> */}
-              <View style={styles.flexview}>
-                <Text style={styles.textdate}>Participants</Text>
-                <View style={{width: '50%', alignItems: 'flex-end'}}>
-                  <Text style={[{color: DARK, fontSize: 14}]}>
-                    {billDetails.participants}
+                <View style={styles.flexview}>
+                  <Text style={styles.textdate}>Participants</Text>
+                  <View style={{width: '50%', alignItems: 'flex-end'}}>
+                    <Text style={[{color: DARK, fontSize: 14}]}>
+                      {billDetails.participants}
+                    </Text>
+                  </View>
+                </View>
+                <View style={styles.flexview}>
+                  <Text style={styles.textdate}>Total Reimbursement</Text>
+                  <Text style={[styles.textmar, {}]} numberOfLines={1}>
+                    {route.params.item.amount}
                   </Text>
                 </View>
               </View>
-              <View style={styles.flexview}>
-                <Text style={styles.textdate}>Total Reimbursement</Text>
-                <Text style={[styles.textmar, {}]} numberOfLines={1}>
-                  {route.params.item.amount}
-                </Text>
-              </View>
+              {submitbtnShow()}
             </View>
-            {submitbtnShow()}
-          </View>
-        </Animatable.View>
-      </ScrollView>
+          </Animatable.View>
+        </ScrollView>
 
-      {visible && (
-        <Modal visible={visible} animationType="fade">
-          <SafeAreaView style={styles.container}>
-            <ImageViewer
-              renderIndicator={() => null}
-              imageUrls={[{url: route.params.item.bill_attachment}]}
-              index={0}
-              style={[
-                styles.Imagecontainer,
-                {
-                  padding: 10,
-                },
-              ]}>
-              {/* <Image
+        {visible && (
+          <Modal visible={visible} animationType="fade">
+            <SafeAreaView style={styles.container}>
+              <View
+                style={{
+                  flex: 1,
+                }}>
+                <ImageViewer
+                  renderIndicator={() => null}
+                  imageUrls={[{url: route.params.item.bill_attachment}]}
+                  index={0}
+                  style={[
+                    styles.Imagecontainer,
+                    {
+                      padding: 10,
+                    },
+                  ]}>
+                  {/* <Image
                 source={require('../../Assets/bills.png')}
                 style={{width: '100%', height: '100%', resizeMode: 'cover'}}
               /> */}
-            </ImageViewer>
-            <View style={styles.iconContainer}>
-              <Icon
-                name="times"
-                color={PRIMARY}
-                size={20}
-                onPress={() => {
-                  setvisible(false);
-                }}
-              />
-            </View>
-          </SafeAreaView>
-        </Modal>
-      )}
-      {loading && <LoaderOrg />}
+                </ImageViewer>
+                <View style={styles.iconContainer}>
+                  <Icon
+                    name="times"
+                    color={PRIMARY}
+                    size={20}
+                    onPress={() => {
+                      setvisible(false);
+                    }}
+                  />
+                </View>
+              </View>
+            </SafeAreaView>
+          </Modal>
+        )}
+        {loading && <LoaderOrg />}
+      </SafeAreaView>
     </>
   );
 }
@@ -473,7 +486,7 @@ const styles = StyleSheet.create({
 
     top: 0,
     right: 5,
-    marginTop: Platform.OS === 'ios' ? 40 : 20,
+    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(1) : 20,
   },
   container: {
     flex: 1,

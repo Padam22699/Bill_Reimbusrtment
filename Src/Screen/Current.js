@@ -26,7 +26,7 @@ import moment from 'moment';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
 import {DARK, GREY} from '../Organization/Colors/Color';
-import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
+import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
 export default function Current({navigation}) {
   const dispatch = useDispatch();
@@ -215,7 +215,7 @@ export default function Current({navigation}) {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <View style={styles.container}>
         <Modal animationType="slide" transparent={true} visible={modalOpen}>
           <View style={styles.modalView}>
             <View
@@ -269,6 +269,7 @@ export default function Current({navigation}) {
             </TouchableOpacity>
           </View>
         </Modal>
+
         <View style={styles.searchinput}>
           <TouchableOpacity style={styles.iconstyle} activeOpacity={0.6}>
             <View>
@@ -301,7 +302,7 @@ export default function Current({navigation}) {
           </View> */}
         </View>
         <FlatList
-          contentContainerStyle={{flexGrow: 1,paddingBottom:8}}
+          contentContainerStyle={{flexGrow: 1, paddingBottom: 8}}
           ListEmptyComponent={() => {
             return (
               <View
@@ -324,12 +325,11 @@ export default function Current({navigation}) {
             );
           }}
           style={{marginBottom: 55}}
-          
           data={current}
           renderItem={renderItem}
           showsVerticalScrollIndicator={false}
         />
-      </SafeAreaView>
+      </View>
       {loading && <Loader />}
     </>
   );
@@ -419,6 +419,7 @@ const styles = StyleSheet.create({
       width: 3,
       height: 3,
     },
+
     // elevation: 5,
     // shadowRadius: 5,
     // shadowOpacity: 0.25,
@@ -427,7 +428,7 @@ const styles = StyleSheet.create({
     // flexDirection: 'row',
     // alignItems: 'center',
     // borderRadius: 15,
-    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(-4) : 10,
+    // marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(-7) : 10,
     height: Platform.OS === 'ios' ? 43 : 43,
   },
   iconstyle: {
@@ -451,7 +452,7 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: theme.colors.white,
-    marginTop: 125,
+    marginTop:Platform.OS  ==="ios" ? responsiveScreenHeight(17)  : responsiveScreenHeight(12),
     marginHorizontal: 35,
     padding: 10,
     borderColor: '#454545',
