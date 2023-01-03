@@ -72,6 +72,7 @@ export const MyDrawer = () => {
               headerShown: false,
               drawerType: 'front',
               drawerStyle: {
+                
                 backgroundColor: 'transparent',
                 // marginBottom: Platform.OS === 'ios' ? 97 : 62,
                 width: Dimensions.get('window').width / 2,

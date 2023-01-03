@@ -39,13 +39,6 @@ const PenddingRequsest = ({navigation}) => {
   );
   const loading = useSelector(state => state.getAllBillsReducer.loading);
 
-  useFocusEffect(
-    useCallback(() => {
-      getData();
-      setPage('1');
-      setData([]);
-    }, []),
-  );
 
   const getData = async () => {
     try {
@@ -228,6 +221,14 @@ const PenddingRequsest = ({navigation}) => {
       fetchAllBills('1', searchText);
     }
   }, [searchText]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getData();
+      setPage('1');
+      setData([]);
+    }, []),
+  );
 
   return (
     <>

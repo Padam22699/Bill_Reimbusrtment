@@ -1,17 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-} from 'react-native';
-import { theme } from '../core/theme';
-import { DARK } from '../Organization/Colors/Color';
+import React, {useEffect, useState} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Platform} from 'react-native';
+import {theme} from '../core/theme';
+import {DARK} from '../Organization/Colors/Color';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 
-const SideMenu = ({ navigation }) => {
+const SideMenu = ({navigation}) => {
   const [name, setName] = useState(null);
   const [email, setemail] = useState(null);
 
@@ -41,8 +35,6 @@ const SideMenu = ({ navigation }) => {
     }
   };
 
- 
-
   const logout = async () => {
     let data = {
       loggedin: false,
@@ -53,7 +45,7 @@ const SideMenu = ({ navigation }) => {
       await AsyncStorage.mergeItem('@user_data', jsonValue);
       navigation.reset({
         index: 0,
-        routes: [{ name: 'AuthStack' }],
+        routes: [{name: 'AuthStack'}],
       });
     } catch (e) {
       console.log('error in saving data', e);
@@ -61,10 +53,22 @@ const SideMenu = ({ navigation }) => {
   };
 
   return (
-    <View style={{ flex: 1, borderLeftWidth: 2, borderColor: '#5D3FD3' }}>
-      <View style={{ borderBottomColor: '#5D3FD3', borderBottomWidth: 1, padding: 20, backgroundColor: "#E6E6FA", }}>
+    <View style={{flex: 1, borderLeftWidth: 2, borderColor: '#5D3FD3'}}>
+      <View
+        style={{
+          borderBottomColor: '#5D3FD3',
+          borderBottomWidth: 1,
+          padding: 20,
+          backgroundColor: '#E6E6FA',
+        }}>
         <Text style={styles.text}>{name}</Text>
-        <Text adjustsFontSizeToFit={true} allowFontScaling={true} numberOfLines={1} style={{ color: '#5D3FD3' }}>{email}</Text>
+        <Text
+          adjustsFontSizeToFit={true}
+          allowFontScaling={true}
+          numberOfLines={1}
+          style={{color: '#5D3FD3'}}>
+          {email}
+        </Text>
       </View>
 
       <View style={{backgroundColor: 'white', flex: 1, paddingTop: 20}}>
@@ -75,8 +79,8 @@ const SideMenu = ({ navigation }) => {
             <Icon
               name="home"
               size={20}
-              style={{ marginRight: 10 }}
-              color='#000'
+              style={{marginRight: 10}}
+              color="#000"
             />
             <Text style={styles.heading}>Home</Text>
           </View>
@@ -89,8 +93,8 @@ const SideMenu = ({ navigation }) => {
             <Icon
               name="exchange-alt"
               size={20}
-              style={{ marginRight: 10 }}
-              color='#000'
+              style={{marginRight: 10}}
+              color="#000"
             />
             <Text style={styles.heading}>Bills</Text>
           </View>
@@ -102,8 +106,8 @@ const SideMenu = ({ navigation }) => {
             <Icon
               name="plus-circle"
               size={20}
-              style={{ marginRight: 10 }}
-              color='#000'
+              style={{marginRight: 10}}
+              color="#000"
             />
             <Text style={styles.heading}>Add</Text>
           </View>
@@ -115,8 +119,8 @@ const SideMenu = ({ navigation }) => {
             <Icon
               name="bell"
               size={20}
-              style={{ marginRight: 10 }}
-              color='#000'
+              style={{marginRight: 10}}
+              color="#000"
             />
             <Text style={styles.heading}>Notification</Text>
           </View>
@@ -128,8 +132,8 @@ const SideMenu = ({ navigation }) => {
             <Icon
               name="sign-out-alt"
               size={20}
-              style={{ marginRight: 10 }}
-              color='#000'
+              style={{marginRight: 10}}
+              color="#000"
             />
             <Text style={styles.heading}>Logout</Text>
           </View>
@@ -147,6 +151,7 @@ export const styles = StyleSheet.create({
     // marginTop :Platform.OS === 'ios' ? 33 :0 ,
     color: '#5D3FD3',
     fontSize: 22,
+
     fontWeight: '700',
     marginVertical: 5,
   },
@@ -167,8 +172,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     // borderBottomWidth: 1,
-    paddingHorizontal: 20, 
-    paddingVertical: 5
+    paddingHorizontal: 20,
+
+    paddingVertical: 5,
   },
   screenCiantainer: {
     marginBottom: 10,
@@ -181,7 +187,7 @@ export const styles = StyleSheet.create({
   },
   logout: {
     textShadowColor: 'rgba(0, 0, 0, 0.23)',
-    textShadowOffset: { width: -1, height: 1 },
+    textShadowOffset: {width: -1, height: 1},
     textShadowRadius: 10,
     fontSize: 24,
     fontWeight: 'bold',

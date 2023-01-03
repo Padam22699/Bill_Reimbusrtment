@@ -223,7 +223,9 @@ export default function Reimbursement({navigation}) {
           backgroundColor={theme.colors.primary}
           barStyle="dark-content"
         />
-        <ScrollView style={styles.mainview} showsVerticalScrollIndicator={false}>
+        <ScrollView
+          style={styles.mainview}
+          showsVerticalScrollIndicator={false}>
           <Text
             style={{
               textAlign: 'center',
@@ -234,29 +236,35 @@ export default function Reimbursement({navigation}) {
             }}>
             Add Expense
           </Text>
-          <View style={styles.datetimestyle}>
-            <DateTimePickerModal
-              maximumDate={new Date()}
-              isVisible={isDatePickerVisible}
-              mode="date"
-              onConfirm={handleConfirm}
-              onCancel={hideDatePicker}
-            />
-            <TouchableOpacity
-              onPress={() => {
-                showDatePicker();
-              }}
-              activeOpacity={0.8}>
+          <TouchableOpacity
+            onPress={() => {
+              showDatePicker();
+            }}
+            activeOpacity={0.8}>
+            <View style={styles.datetimestyle}>
+              <DateTimePickerModal
+                maximumDate={new Date()}
+                isVisible={isDatePickerVisible}
+                mode="date"
+                onConfirm={handleConfirm}
+                onCancel={hideDatePicker}
+              />
+
               <Text style={styles.textdate}>{date}</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => {
-                showDatePicker();
-              }}
-              activeOpacity={0.8}>
-              <Entypo name="calendar" size={25} color={theme.colors.primary} />
-            </TouchableOpacity>
-          </View>
+
+              <TouchableOpacity
+                onPress={() => {
+                  showDatePicker();
+                }}
+                activeOpacity={0.8}>
+                <Entypo
+                  name="calendar"
+                  size={25}
+                  color={theme.colors.primary}
+                />
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
           <View>
             <View style={{}}>
               <EmpTextInput

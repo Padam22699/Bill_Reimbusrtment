@@ -184,7 +184,12 @@ export default function LoginScreen({navigation}) {
         </View>
 
         <KeyboardAvoidingView style={styles.keyboar}>
-          <View style={{marginTop:responsiveScreenHeight(-3),alignItems:'center',justifyContent:'center'}}>
+          <View
+            style={{
+              marginTop: responsiveScreenHeight(-3),
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
             <Logo />
             <Header>LOGIN</Header>
           </View>

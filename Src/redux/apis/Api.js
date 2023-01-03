@@ -43,7 +43,9 @@ export const login = async requestJson => {
     return response.data;
   } catch (err) {
     if (err.response.data.statusCode == 400) {
-      return alert(err.response.data.message);
+      setTimeout(() => {
+        return alert(err.response.data.message);
+      }, 100);
     } else {
       return alert('There is an issue in response, please try again later');
     }

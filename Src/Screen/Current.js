@@ -35,6 +35,8 @@ export default function Current({navigation}) {
   const [modalOpen, setModalOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [selectedType, setSelectedType] = useState('');
+  const [currentDate, setcurrentDate] = useState();
+  useEffect(() => {}, []);
 
   const [current, setCurrent] = useState([]);
 
@@ -105,10 +107,19 @@ export default function Current({navigation}) {
         Object.keys(getAllBillsResponse).length != 0 &&
         getAllBillsResponse.statusCode == 200
       ) {
-        // console.log("response", getAllBillsResponse)
+        console.log('responseeee', getAllBillsResponse);
         let allRequest = getAllBillsResponse.data;
         let filteredRequest = allRequest.filter(item => {
-          return new Date(item.date).getMonth() == new Date().getMonth();
+          
+          let currentyear = new Date().getFullYear();
+          let Currentmonth = new Date().getMonth() + 1;
+          let CurrentDate = currentyear + '-' + Currentmonth;
+
+          let billuploadYear = new Date(item.date).getFullYear();
+          let billuploadMonth = new Date(item.date).getMonth() + 1;
+          let billdata = billuploadYear + '-' + billuploadMonth;
+
+          return billdata == CurrentDate;
         });
         console.log('filtered request', filteredRequest);
         setCurrent(filteredRequest);
@@ -452,7 +463,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: theme.colors.white,
-    marginTop:Platform.OS  ==="ios" ? responsiveScreenHeight(17)  : responsiveScreenHeight(12),
+    marginTop:
+      Platform.OS === 'ios'
+        ? responsiveScreenHeight(17)
+        : responsiveScreenHeight(12),
     marginHorizontal: 35,
     padding: 10,
     borderColor: '#454545',

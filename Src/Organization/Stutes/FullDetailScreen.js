@@ -328,12 +328,13 @@ export default function FullDetailScreen({navigation, route}) {
                   activeOpacity={0.9}>
                   <Image source={Imagepath.Fuel} style={styles.imagestyle} />
                 </TouchableOpacity>
+
                 <View style={styles.fonticon}>
                   <FontAwesome
                     name="rupee"
                     size={18}
                     color={WHITE}
-                    style={{top: 5}}
+                    style={{top: 4}}
                   />
                   <View>
                     <Text style={styles.textrupees}>
@@ -534,12 +535,13 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   textrupees: {
-    fontSize: 18,
+    fontSize: 20,
     color: WHITE,
     fontWeight: 'bold',
     left: 2,
   },
   textfuelthe: {
+    marginTop: 5,
     fontSize: 16,
     color: WHITE,
   },
