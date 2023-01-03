@@ -11,11 +11,10 @@ import {
   Image,
   TouchableOpacity,
   Modal,
+  RefreshControl,
 } from 'react-native';
 import {useDispatch, useSelector} from 'react-redux';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import {Headers} from '../Common/Headers';
-import Heading from '../components/Heading';
 import {theme} from '../core/theme';
 import {DARK, GREY, WHITE, PRIMARY} from '../Organization/Colors/Color';
 import {
@@ -30,11 +29,11 @@ import LoaderOrg from '../Organization/Componets/LoaderOrg';
 
 const Notification = ({navigation}) => {
   const dispatch = useDispatch();
-
   const [notifications, setNotifications] = useState([]);
   const [page, setPage] = useState('1');
   const [visible, setvisible] = useState(false);
   const [imageUrl, setImageUral] = useState('');
+  const [refresh, setrefresh] = useState(false);
 
   const notificationResponse = useSelector(
     state => state.notificationReducer.data,
@@ -43,10 +42,14 @@ const Notification = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
+      setNotifications([])
       fetchNotifications('1');
       setPage('1');
     }, []),
   );
+  useEffect(() => {
+    console.log('Not', notifications);
+  }, [notifications]);
 
   const fetchNotifications = page => {
     let request = {
@@ -135,6 +138,15 @@ const Notification = ({navigation}) => {
     );
   };
 
+  // const loadNotification = () => {
+  //   setrefresh(true);
+  //   setTimeout(() => {
+  //     fetchNotifications('1');
+  //     setPage('1')
+  //     setrefresh(false);
+  //   }, 1000);
+  // };
+
   return (
     <>
       <View style={{backgroundColor: WHITE, flex: 1, paddingHorizontal: 8}}>
@@ -157,6 +169,12 @@ const Notification = ({navigation}) => {
               marginTop: responsiveScreenHeight(1),
             }}
             data={notifications}
+            // refreshControl={
+            //   <RefreshControl
+            //     refreshing={refresh}
+            //     onRefresh={loadNotification}
+            //   />
+            // }
             showsVerticalScrollIndicator={false}
             renderItem={renderNotifications}
             onEndReached={() => {

@@ -43,7 +43,8 @@ const OrgNotification = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      fatchNotification(1);
+      setNotifications([]);
+      fatchNotification('1');
       setPage('1');
     }, []),
   );
