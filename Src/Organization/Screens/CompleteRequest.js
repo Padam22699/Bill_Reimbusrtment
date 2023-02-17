@@ -26,12 +26,13 @@ import {
   responsiveScreenWidth,
   responsiveScreenFontSize,
 } from 'react-native-responsive-dimensions';
+import BufferLoader from '../../Loader/BufferLoader';
 const CompleteRequest = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [data, setData] = useState([]);
   const [page, setPage] = useState('1');
   const [searchText, setSearchText] = useState('');
-
+  const [isListEmpty, setIsListEmpty] = useState(true);
   const dispatch = useDispatch();
 
   const getAllBillsResponse = useSelector(
@@ -263,43 +264,51 @@ const CompleteRequest = ({navigation}) => {
             }}
           />
         </View>
-        <FlatList
-          contentContainerStyle={{
-            flexGrow: 1,
-            paddingBottom: responsiveScreenHeight(2),
-          }}
-          showsVerticalScrollIndicator={false}
-          style={{marginBottom: Platform.OS === 'ios' ? 70 : 55}}
-          data={data}
-          renderItem={RecentRequestList}
-          onEndReached={() => {
-            fetchAllBills(page, searchText);
-          }}
-          onEndReachedThreshold={0.1}
-          ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    marginBottom: 120,
-                    alignSelf: 'center',
-                    textAlignVertical: 'center',
-                    fontSize: 24,
-                    color: GREY,
-                  }}>
-                  Result not found
-                </Text>
-              </View>
-            );
-          }}
-        />
+        <View>
+          <FlatList
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingBottom: responsiveScreenHeight(2),
+            }}
+            showsVerticalScrollIndicator={false}
+            style={{marginBottom: Platform.OS === 'ios' ? 70 : 55}}
+            data={data}
+            renderItem={RecentRequestList}
+            onEndReached={() => {
+              fetchAllBills(page, searchText);
+            }}
+            onEndReachedThreshold={0.1}
+            ListEmptyComponent={() => {
+              return (
+                <BufferLoader/>
+                // <View
+                // // style={{
+                // //   flex: 1,
+                // //   alignItems: 'center',
+                // //   justifyContent: 'center',
+                // // }}
+                // >
+                //   {isListEmpty ? (
+                //     <BufferLoader />
+                //   ) : (
+                //     <Text
+                //       style={{
+                //         marginBottom: 120,
+                //         alignSelf: 'center',
+                //         textAlignVertical: 'center',
+                //         fontSize: 24,
+                //         color: GREY,
+                //       }}>
+                //       Result not found
+                //     </Text>
+                //   )}
+                // </View>
+              );
+            }}
+          />
+        </View>
       </SafeAreaView>
-      {loading && <LoaderOrg />}
+      {/* {loading && <LoaderOrg />} */}
     </>
   );
 };

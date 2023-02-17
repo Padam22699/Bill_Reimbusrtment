@@ -26,11 +26,23 @@ import {
   clearGetDashboardData,
   getDashboardData,
 } from '../../redux/actions/getDashboardDataAction';
+import BufferLoader from '../../Loader/BufferLoader';
 
 const Deshboard = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
   const [data, setData] = useState([]);
+
+  console.log('DDDD', data);
+
+  function convertNumber(num) {
+    if (num >= 1000000000000) {
+      return (num / 1000000000000).toFixed(1) + 'B';
+    } else {
+      return num.toString();
+    }
+  }
+
   // const [superAdmin,setSuperAdmin]=useState(false)
 
   // console.log('Super' , userData.role_type)
@@ -98,7 +110,7 @@ const Deshboard = ({navigation}) => {
       type: 'organization',
       page: '1',
       reverse: -1,
-      user_status: '',
+      user_status: 'Pending',
       search: '',
       bill_type: '',
       from_date: '',
@@ -371,17 +383,24 @@ const Deshboard = ({navigation}) => {
             Recent Request
           </Text>
         </View>
+        {/* {loading ? (
+          <BufferLoader />
+        ) : ( */}
         <FlatList
           contentContainerStyle={{flexGrow: 1}}
           showsVerticalScrollIndicator={false}
-          style={{marginBottom: 55}}
+          style={{marginBottom: 50}}
           data={data}
           renderItem={({item, index}) => (
             <RecentRequestList item={item} index={index} />
           )}
+          ListEmptyComponent={() => {
+            return <BufferLoader />;
+          }}
         />
+        {/* )} */}
       </View>
-      {(loading || loadingDashboard) && <LoaderOrg />}
+      {/* {(loading || loadingDashboard) && <LoaderOrg />} */}
     </SafeAreaView>
   );
 };

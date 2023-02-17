@@ -25,12 +25,13 @@ import {
   responsiveScreenFontSize,
 } from 'react-native-responsive-dimensions';
 import LoaderOrg from '../Componets/LoaderOrg';
+import BufferLoader from '../../Loader/BufferLoader';
 const ForwordedRequest = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [data, setData] = useState([]);
   const [page, setPage] = useState('1');
   const [searchText, setSearchText] = useState('');
-
+  const [isListEmpty, setIsListEmpty] = useState(true);
   const dispatch = useDispatch();
 
   const getAllBillsResponse = useSelector(
@@ -69,6 +70,14 @@ const ForwordedRequest = ({navigation}) => {
       fetchAllBills('1', searchText);
     }
   }, [userData]);
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     setTimeout(() => {
+  //       setIsListEmpty(false);
+  //     }, 6000);
+  //   }, []),
+  // );
 
   const fetchAllBills = (page, searchText) => {
     let request = {
@@ -257,40 +266,55 @@ const ForwordedRequest = ({navigation}) => {
             }}
           />
         </View>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          data={data}
-          contentContainerStyle={{flexGrow: 1, paddingBottom: responsiveScreenHeight(9)}}
-          renderItem={RecentRequestList}
-          style={{height: Platform.OS === 'ios' ? 50 : 50, width: '100%'}}
-          onEndReached={() => {
-            fetchAllBills(page, searchText);
-          }}
-          onEndReachedThreshold={0.1}
-          ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    marginBottom: 120,
-                    alignSelf: 'center',
-                    textAlignVertical: 'center',
-                    fontSize: 24,
-                    color: GREY,
-                  }}>
-                  Result not found
-                </Text>
-              </View>
-            );
-          }}
-        />
+        <View>
+        
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={data}
+              contentContainerStyle={{
+                flexGrow: 1,
+                paddingBottom: responsiveScreenHeight(9),
+              }}
+              renderItem={RecentRequestList}
+              style={{marginBottom: Platform.OS === 'ios' ? 70 : 90}}
+              onEndReached={() => {
+                fetchAllBills(page, searchText);
+              }}
+              onEndReachedThreshold={0.1}
+              ListEmptyComponent={() => {
+                return (
+                  <BufferLoader/>
+                  // <View
+                  // style={{
+                  //   flex: 1,
+                  //   alignItems: 'center',
+                  //   justifyContent: 'center',
+                  // }}
+                  // >
+                  //   {isListEmpty ? (
+                  //     <BufferLoader />
+                  //   ) : (
+                  //     <Text
+                  //       style={{
+                  //         marginBottom: 120,
+                  //         alignSelf: 'center',
+                  //         textAlignVertical: 'center',
+                  //         fontSize: 24,
+                  //         color: GREY,
+                  //       }}>
+                  //       Result not found
+                  //     </Text>
+                  //   {/* )} */}
+                  // </View>
+                );
+              }}
+            />
+        
+       
+        </View>
+        <View style={{width:'100%' ,height:200}}><Text>hello</Text></View>
       </SafeAreaView>
-      {loading && <LoaderOrg />}
+      {/* {loading && <LoaderOrg />} */}
     </>
   );
 };

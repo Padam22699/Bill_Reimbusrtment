@@ -26,19 +26,20 @@ import {
 } from 'react-native-responsive-dimensions';
 import Imagepath from '../../Assets/Images/Imagepath';
 import LoaderOrg from '../Componets/LoaderOrg';
+import BufferLoader from '../../Loader/BufferLoader';
 const PenddingRequsest = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [data, setData] = useState([]);
   const [page, setPage] = useState('1');
   const [searchText, setSearchText] = useState('');
-
+  const [isListEmpty, setIsListEmpty] = useState(true);
+  const [loadMoreListData, setLoadMoreListData] = useState(true);
   const dispatch = useDispatch();
 
   const getAllBillsResponse = useSelector(
     state => state.getAllBillsReducer.data,
   );
   const loading = useSelector(state => state.getAllBillsReducer.loading);
-
 
   const getData = async () => {
     try {
@@ -57,7 +58,13 @@ const PenddingRequsest = ({navigation}) => {
       console.log('storage error', e);
     }
   };
-
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     setTimeout(() => {
+  //       setIsListEmpty(false);
+  //     }, 6000);
+  //   }, []),
+  // );
   useEffect(() => {
     if (userData != null) {
       fetchAllBills('1', searchText);
@@ -260,6 +267,9 @@ const PenddingRequsest = ({navigation}) => {
             }}
           />
         </View>
+        {/* {loading ? (
+          <BufferLoader />
+        ) : ( */}
         <FlatList
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
@@ -267,7 +277,7 @@ const PenddingRequsest = ({navigation}) => {
             paddingBottom: responsiveScreenHeight(2),
           }}
           data={data}
-          style={{marginBottom: Platform.OS === 'ios' ? 70 : 55}}
+          style={{marginBottom: Platform.OS === 'ios' ? 70 : 30}}
           renderItem={RecentRequestList}
           onEndReached={() => {
             fetchAllBills(page, searchText);
@@ -275,28 +285,37 @@ const PenddingRequsest = ({navigation}) => {
           onEndReachedThreshold={0.1}
           ListEmptyComponent={() => {
             return (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    marginBottom: 120,
-                    alignSelf: 'center',
-                    textAlignVertical: 'center',
-                    fontSize: 24,
-                    color: GREY,
-                  }}>
-                  Result not found
-                </Text>
-              </View>
+              <BufferLoader />
+              // <View
+              // // style={{
+              // //   flex: 1,
+              // //   alignItems: 'center',
+              // //   justifyContent: 'center',
+              // // }}
+              // >
+              //   {isListEmpty ? (
+              //     <BufferLoader />
+              //   ) : (
+              //     <Text
+              //       style={{
+              //         marginBottom: 120,
+              //         alignSelf: 'center',
+              //         textAlignVertical: 'center',
+              //         fontSize: 24,
+              //         color: GREY,
+              //       }}>
+              //       Result not found
+              //     </Text>
+              //   )}
+              // </View>
             );
           }}
         />
+        {/* )} */}
+      
       </SafeAreaView>
-      {loading && <LoaderOrg />}
+    
+      {/* {loading && <LoaderOrg />} */}
     </>
   );
 };

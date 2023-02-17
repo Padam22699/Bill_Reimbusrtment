@@ -14,18 +14,28 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import {PRIMARY, WHITE} from './Src/Organization/Colors/Color';
-
+import BufferLoader from './Src/Loader/BufferLoader';
+import NetWorkConnected from './Src/NetWorkConnection/NetWorkConnected';
+import NetInfo from '@react-native-community/netinfo';
 const App = () => {
   const [ready, setReady] = useState(false);
   const [loggedin, setLoggedin] = useState(false);
   const [loggedintype, setLoggedintype] = useState('');
-
+  const [iscoonected, setIsConnected] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     initializeApp();
   }, []);
-
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected);
+      console.log('Connection type', iscoonected);
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
   const initializeApp = async () => {
     dispatch(setToken(null));
     try {
@@ -52,7 +62,6 @@ const App = () => {
     }
     setReady(true);
   };
-
 
 
   if (ready) {
