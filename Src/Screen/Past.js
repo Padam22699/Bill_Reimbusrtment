@@ -27,6 +27,8 @@ import Loader from '../Organization/Componets/Loader';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {DARK, GREY} from '../Organization/Colors/Color';
 import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
+import BufferLoader from '../Loader/BufferLoader';
+import NodataScreen from '../Organization/Componets/NodataScreen';
 
 export default function Past({navigation}) {
   const dispatch = useDispatch();
@@ -34,7 +36,6 @@ export default function Past({navigation}) {
   const [userData, setUserData] = useState(null);
   const [searchText, setSearchText] = useState('');
   const [selectedType, setSelectedType] = useState('');
-
   const [current, setCurrent] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -292,26 +293,7 @@ export default function Past({navigation}) {
         </View>
         <FlatList
           ListEmptyComponent={() => {
-            return (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    marginBottom: 120,
-                    alignSelf: 'center',
-                    textAlignVertical: 'center',
-                    fontSize: 24,
-                    color: GREY,
-                    marginTop: Platform.OS === 'ios' ? 250 : 250,
-                  }}>
-                  Result not found
-                </Text>
-              </View>
-            );
+            return <NodataScreen />;
           }}
           contentContainerStyle={{paddingBottom: 8}}
           style={{marginBottom: 55}}
@@ -321,6 +303,7 @@ export default function Past({navigation}) {
           showsVerticalScrollIndicator={false}
         />
       </View>
+
       {loading && <Loader />}
     </>
   );
@@ -443,7 +426,10 @@ const styles = StyleSheet.create({
   },
   modalView: {
     backgroundColor: theme.colors.white,
-    marginTop:Platform.OS  ==="ios" ? responsiveScreenHeight(17)  : responsiveScreenHeight(12),
+    marginTop:
+      Platform.OS === 'ios'
+        ? responsiveScreenHeight(17)
+        : responsiveScreenHeight(12),
     marginHorizontal: 35,
     padding: 10,
     borderColor: '#454545',

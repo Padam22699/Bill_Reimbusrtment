@@ -10,6 +10,7 @@ import {
   ScrollView,
   Dimensions,
   Platform,
+  TextInput,
 } from 'react-native';
 import {DARK, GREY, PRIMARY, WHITE} from '../Colors/Color';
 import * as Animatable from 'react-native-animatable';
@@ -45,6 +46,8 @@ export default function FullDetailScreen({navigation, route}) {
   const [userData, setUserData] = useState('');
   const [openpicke, setopenpicker] = useState(false);
   const [billDetails, setbillDetails] = useState('');
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [openRejectedModal, setRejecteddModal] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -66,6 +69,11 @@ export default function FullDetailScreen({navigation, route}) {
     }, []),
   );
 
+  useEffect(() => {
+    if (stutes == 'Rejected') {
+      setRejecteddModal(true);
+    }
+  }, [stutes]);
   useEffect(() => {
     if (userData != null) {
       fateBillDetails();
@@ -122,6 +130,7 @@ export default function FullDetailScreen({navigation, route}) {
   };
 
   const submit = () => {
+    setRejecteddModal(false);
     console.log('status', stutes);
     let request = {
       // user_id: userData.user_id,
@@ -171,11 +180,12 @@ export default function FullDetailScreen({navigation, route}) {
             style={{
               borderWidth: 0,
               backgroundColor: WHITE,
-              marginLeft: Platform.OS === 'ios' ? 20 : 0,
+              marginLeft: Platform.OS === 'ios' ? 20 : 10,
               alignItems: 'center',
               justifyContent: 'center',
             }}
-            labelStyle={{}}
+            // labelStyle={{marginLeft: 10}}
+            labelStyle={{marginLeft: stutes == 'Forwarded' ? 15 : 20}}
             value={stutes}
             setValue={item => {
               setstutes(item);
@@ -217,9 +227,9 @@ export default function FullDetailScreen({navigation, route}) {
           style={{
             borderWidth: 0,
             backgroundColor: WHITE,
-            marginLeft: Platform.OS === 'ios' ? 20 : 0,
+            marginLeft: Platform.OS === 'ios' ? 20 : 10,
           }}
-          labelStyle={{}}
+          labelStyle={{marginLeft: stutes == 'Forwarded' ? 15 : 20}}
           value={stutes}
           setValue={item => {
             setstutes(item);
@@ -383,6 +393,26 @@ export default function FullDetailScreen({navigation, route}) {
                     <View style={[styles.pickerContainer, {}]}>{picker()}</View>
                   </View>
                 </View>
+                <View>
+                  {stutes == 'Rejected' && billDetails.status == 'Pending' ? (
+                    <TextInput
+                      style={{
+                        borderWidth: 1,
+                        borderColor: GREY,
+                        color: DARK,
+                        borderRadius: 10,
+                        paddingHorizontal: 10,
+                      }}
+                      value={rejectionReason}
+                      multiline={true}
+                      onChangeText={text => {
+                        setRejectionReason(text);
+                      }}
+                      placeholder="add Resean "
+                      placeholderTextColor={GREY}
+                    />
+                  ) : null}
+                </View>
 
                 <View style={styles.flexview}>
                   <Text style={[styles.textdate, {}]}>Status by</Text>
@@ -420,6 +450,58 @@ export default function FullDetailScreen({navigation, route}) {
             </View>
           </Animatable.View>
         </ScrollView>
+
+        {/* {openRejectedModal && (
+          <Modal
+            visible={openRejectedModal}
+            animationType="fade"
+            transparent={true}>
+            <SafeAreaView
+              style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+              <View
+                style={{
+                  height: 150,
+                  backgroundColor: PRIMARY,
+                  elevation: 10,
+                  width: '90%',
+                  borderRadius: 10,
+                  borderColor: DARK,
+                  marginHorizontal: 10,
+                  alignItems: 'center',
+                }}>
+                <TextInput
+                  style={{
+                    marginTop: 20,
+                    borderWidth: 1,
+                    borderColor: WHITE,
+                    width: '90%',
+                    color: WHITE,
+                    borderRadius: 10,
+                    paddingHorizontal: 10,
+                  }}
+                  value={rejectionReason}
+                  multiline={true}
+                  onChangeText={text => {
+                    setRejectionReason(text);
+                  }}
+                  placeholder="add Resean "
+                  placeholderTextColor={GREY}
+                />
+                <TouchableOpacity
+                  onPress={() => {
+                    submit();
+                  }}
+                  style={{
+                    alignSelf: 'flex-end',
+                    marginHorizontal: 20,
+                    marginTop: '10%',
+                  }}>
+                  <Text style={{color: WHITE, fontWeight: '600'}}>OK</Text>
+                </TouchableOpacity>
+              </View>
+            </SafeAreaView>
+          </Modal>
+        )} */}
 
         {visible && (
           <Modal visible={visible} animationType="fade">
@@ -614,7 +696,8 @@ const styles = StyleSheet.create({
   pickerContainer: {
     alignItems: 'center',
     //  marginBottom:Platform.OS && 180 ,
-    width: '43%',
+
+    width: '50%',
     paddingLeft: 10,
   },
   picker: {

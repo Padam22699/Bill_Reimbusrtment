@@ -27,13 +27,22 @@ import {
   responsiveScreenFontSize,
 } from 'react-native-responsive-dimensions';
 import BufferLoader from '../../Loader/BufferLoader';
+import {useNetInfo} from '@react-native-community/netinfo';
+import NetWorkConnectionModel from '../../NetWorkConnection/NetWorkConnectionModel';
+import NodataScreen from '../Componets/NodataScreen';
+import DateFilter from '../Componets/DateFilter';
+import SearchName from '../../components/SearchName';
+import ShowDate from '../../components/ShowDate';
+import moment from 'moment';
 const CompleteRequest = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [data, setData] = useState([]);
+  const [date, setDate] = useState(null);
   const [page, setPage] = useState('1');
   const [searchText, setSearchText] = useState('');
   const [isListEmpty, setIsListEmpty] = useState(true);
   const dispatch = useDispatch();
+  const NetInfo = useNetInfo();
 
   const getAllBillsResponse = useSelector(
     state => state.getAllBillsReducer.data,
@@ -68,11 +77,11 @@ const CompleteRequest = ({navigation}) => {
 
   useEffect(() => {
     if (userData != null) {
-      fetchAllBills('1', searchText);
+      fetchAllBills('1', searchText, date);
     }
   }, [userData]);
 
-  const fetchAllBills = (page, searchText) => {
+  const fetchAllBills = (page, searchText, date) => {
     let request = {
       // user_id: userData.user_id,
       type: 'organization',
@@ -81,8 +90,8 @@ const CompleteRequest = ({navigation}) => {
       user_status: '',
       search: searchText,
       bill_type: '',
-      from_date: '',
-      to_date: '',
+      from_date: date,
+      to_date: date,
     };
 
     dispatch(getAllBills(request));
@@ -103,10 +112,35 @@ const CompleteRequest = ({navigation}) => {
         getAllBillsResponse.statusCode == 200
       ) {
         let allRequest = getAllBillsResponse.data;
+
         let formatedRequest = allRequest.filter(item => {
           return item.status == 'Approved' || item.status == 'Rejected';
         });
+
         setData([...data, ...formatedRequest]);
+
+        let formateDate = data.filter(item => {
+          return item.amount.amount
+        });
+        console.log('formateDate', formateDate);
+        // let formateDate = formatedRequest.filter(item => {
+        //   let convertDate = moment(item.date).format('DD MMM yyyy');
+        //   console.log('convertDate', convertDate);
+        //   return convertDate == date;
+        // });
+        // console.log("formateDate" ,formateDate)
+
+        // if (date == null) {
+        //   setData([]);
+
+        // } else {
+        //   setData([]);
+        //   setData(formateDate);
+        // }
+        // setData([...data, ...formateDate]);
+        // console.log('ss', formateDate);
+
+        // setData([...data, ...formatedRequest]);
         let pageNum = parseInt(page);
         let incPage = pageNum + 1;
         console.log('pageNum', pageNum, 'incPage', incPage);
@@ -114,7 +148,7 @@ const CompleteRequest = ({navigation}) => {
         dispatch(clearGetAllBills());
       }
     }
-  }, [getAllBillsResponse]);
+  }, [getAllBillsResponse, date]);
 
   const icon = type => {
     switch (type) {
@@ -235,35 +269,52 @@ const CompleteRequest = ({navigation}) => {
 
   return (
     <>
+      <View>
+        {!NetInfo.isConnected && NetInfo.isConnected != null ? (
+          <NetWorkConnectionModel />
+        ) : null}
+      </View>
       <SafeAreaView style={styles.container}>
         <View style={styles.headingContianer}>
           <Text style={styles.heading}>Completed Requests</Text>
         </View>
         <View
           style={{
-            marginHorizontal: 10,
-            elevation: 5,
-            backgroundColor: '#fff',
-            paddingHorizontal: 10,
-            marginVertical: 7,
             flexDirection: 'row',
             alignItems: 'center',
-            borderRadius: 15,
+            justifyContent: 'center',
           }}>
-          <TextInput
-            placeholder="Search"
-            onChangeText={text => {
-              console.log(text);
-              setSearchText(text);
-            }}
-            placeholderTextColor={GREY}
+          {/* <View
+            //sss
             style={{
-              height: Platform.OS === 'ios' ? 50 : 50,
-              width: '100%',
-              color: DARK,
-            }}
-          />
+              marginHorizontal: 10,
+              elevation: 5,
+              backgroundColor: '#fff',
+              paddingHorizontal: 10,
+              marginVertical: 7,
+              flexDirection: 'row',
+              alignItems: 'center',
+              borderRadius: 15,
+            }}>
+            <TextInput
+              placeholder="Search"
+              onChangeText={text => {
+                console.log(text);
+                setSearchText(text);
+              }}
+              placeholderTextColor={GREY}
+              style={{
+                height: Platform.OS === 'ios' ? 50 : 50,
+                width: '90%',
+                color: DARK,
+              }}
+            />
+          </View> */}
+          <SearchName upadteState={setSearchText} />
+          <DateFilter updateDate={setDate} />
         </View>
+        {date ? <ShowDate date={date} updateDate={setDate} /> : null}
+
         <View>
           <FlatList
             contentContainerStyle={{
@@ -271,7 +322,7 @@ const CompleteRequest = ({navigation}) => {
               paddingBottom: responsiveScreenHeight(2),
             }}
             showsVerticalScrollIndicator={false}
-            style={{marginBottom: Platform.OS === 'ios' ? 70 : 55}}
+            style={{marginBottom: Platform.OS === 'ios' ? 70 : '20%'}}
             data={data}
             renderItem={RecentRequestList}
             onEndReached={() => {
@@ -280,35 +331,15 @@ const CompleteRequest = ({navigation}) => {
             onEndReachedThreshold={0.1}
             ListEmptyComponent={() => {
               return (
-                <BufferLoader/>
-                // <View
-                // // style={{
-                // //   flex: 1,
-                // //   alignItems: 'center',
-                // //   justifyContent: 'center',
-                // // }}
-                // >
-                //   {isListEmpty ? (
-                //     <BufferLoader />
-                //   ) : (
-                //     <Text
-                //       style={{
-                //         marginBottom: 120,
-                //         alignSelf: 'center',
-                //         textAlignVertical: 'center',
-                //         fontSize: 24,
-                //         color: GREY,
-                //       }}>
-                //       Result not found
-                //     </Text>
-                //   )}
-                // </View>
+                <View>
+                  <NodataScreen />
+                </View>
               );
             }}
           />
         </View>
       </SafeAreaView>
-      {/* {loading && <LoaderOrg />} */}
+      {loading && <LoaderOrg />}
     </>
   );
 };
@@ -317,7 +348,7 @@ export default CompleteRequest;
 
 const styles = StyleSheet.create({
   headingContianer: {
-    margin: 12,
+    marginHorizontal: 12,
   },
   heading: {
     fontSize: 24,

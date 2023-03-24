@@ -8,6 +8,7 @@ import {
   StatusBar,
   Platform,
   ScrollView,
+  Animated,
 } from 'react-native';
 
 import React, {useCallback, useEffect, useState} from 'react';
@@ -32,19 +33,35 @@ import {
   responsiveScreenFontSize,
 } from 'react-native-responsive-dimensions';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import {useNetInfo} from '@react-native-community/netinfo';
+import NetWorkConnectionModel from '../NetWorkConnection/NetWorkConnectionModel';
 
 const Ehome = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [dashboardData, setDashboardData] = useState(null);
 
   const dispatch = useDispatch();
-
+  const NetInfo = useNetInfo();
   const getDashboardDataResponse = useSelector(
     state => state.getDashboardDataReducer.data,
   );
   const loadingDashboard = useSelector(
     state => state.getDashboardDataReducer.loading,
   );
+
+  function convertNumber(num) {
+    if (num > 999999999) {
+      return (num / 1000000000).toFixed(2) + 'B';
+    } else if (num > 999999) {
+      return (num / 1000000).toFixed(2) + 'M';
+    } else if (num > 999) {
+      return (num / 1000).toFixed(2) + 'k';
+      // return Math.trunc(num / 1000) + 'k';
+      //
+    } else {
+      return num.toString();
+    }
+  }
 
   useFocusEffect(
     useCallback(() => {
@@ -130,7 +147,7 @@ const Ehome = ({navigation}) => {
             }}>
             <Icon
               name="rupee-sign"
-              size={16}
+              size={14}
               color={WHITE}
               style={{alignSelf: 'center'}}
             />
@@ -146,7 +163,7 @@ const Ehome = ({navigation}) => {
                 alignSelf: 'center',
                 fontWeight: 'bold',
               }}>
-              {money}
+              {convertNumber(money)}
             </Text>
           </View>
 
@@ -205,10 +222,13 @@ const Ehome = ({navigation}) => {
     },
   ];
 
-  
-
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: WHITE}}>
+      <View>
+        {!NetInfo.isConnected && NetInfo.isConnected != null ? (
+          <NetWorkConnectionModel color={theme.colors.primary} />
+        ) : null}
+      </View>
       <StatusBar backgroundColor={theme.colors.primary} barStyle="default" />
       <View style={{margin: 12}}>
         <Welogo navigation={navigation} />
@@ -246,7 +266,7 @@ const Ehome = ({navigation}) => {
               radius={100}
               innerRadius={0}
               padAngle={0}
-              cornerRadius={3}
+              cornerRadius={0}
               colorScale={[pi1, pi2, pi3, pi4]}
               style={{marginTop: 20}}
               data={[

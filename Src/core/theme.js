@@ -16,7 +16,7 @@ export const theme = {
   },
 };
 
-export const pi1 = '#439A97';
-export const pi2 = '#62B6B7';
-export const pi3 = '#97DECE';
-export const pi4 = '#678983';
+export const pi1 = '#382191';
+export const pi2 = '#4f2fd0';
+export const pi3 = '#846ede';
+export const pi4 = '#b9acec';

@@ -27,6 +27,8 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 import Loader from '../Organization/Componets/Loader';
 import {DARK, GREY} from '../Organization/Colors/Color';
 import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
+import BufferLoader from '../Loader/BufferLoader';
+import NodataScreen from '../Organization/Componets/NodataScreen';
 
 export default function Current({navigation}) {
   const dispatch = useDispatch();
@@ -110,7 +112,6 @@ export default function Current({navigation}) {
         console.log('responseeee', getAllBillsResponse);
         let allRequest = getAllBillsResponse.data;
         let filteredRequest = allRequest.filter(item => {
-          
           let currentyear = new Date().getFullYear();
           let Currentmonth = new Date().getMonth() + 1;
           let CurrentDate = currentyear + '-' + Currentmonth;
@@ -312,26 +313,13 @@ export default function Current({navigation}) {
             />
           </View> */}
         </View>
+
         <FlatList
           contentContainerStyle={{flexGrow: 1, paddingBottom: 8}}
           ListEmptyComponent={() => {
             return (
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}>
-                <Text
-                  style={{
-                    marginBottom: 120,
-                    alignSelf: 'center',
-                    textAlignVertical: 'center',
-                    fontSize: 24,
-                    color: GREY,
-                  }}>
-                  Result not found
-                </Text>
+              <View>
+                <NodataScreen />
               </View>
             );
           }}
@@ -341,6 +329,7 @@ export default function Current({navigation}) {
           showsVerticalScrollIndicator={false}
         />
       </View>
+
       {loading && <Loader />}
     </>
   );

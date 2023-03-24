@@ -38,7 +38,7 @@ const NotificationLoader = () => {
         <View style={{position: 'absolute', bottom: 0, right: 20}}>
           <ShimmerPlaceholder
             style={{
-              width: 150,
+              width: 100,
               height: 15,
               borderRadius: 20,
               marginTop: 20,

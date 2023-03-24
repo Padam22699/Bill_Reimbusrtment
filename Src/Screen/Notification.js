@@ -26,9 +26,12 @@ import {
   responsiveScreenWidth,
 } from 'react-native-responsive-dimensions';
 import LoaderOrg from '../Organization/Componets/LoaderOrg';
-
+import {useNetInfo} from '@react-native-community/netinfo';
+import NetWorkConnectionModel from '../NetWorkConnection/NetWorkConnectionModel';
+import NotificationLoader from '../Loader/NotificationLoader';
 const Notification = ({navigation}) => {
   const dispatch = useDispatch();
+  const NetInfo = useNetInfo();
   const [notifications, setNotifications] = useState([]);
   const [page, setPage] = useState('1');
   const [visible, setvisible] = useState(false);
@@ -42,7 +45,7 @@ const Notification = ({navigation}) => {
 
   useFocusEffect(
     useCallback(() => {
-      setNotifications([])
+      setNotifications([]);
       fetchNotifications('1');
       setPage('1');
     }, []),
@@ -149,6 +152,11 @@ const Notification = ({navigation}) => {
 
   return (
     <>
+      <View>
+        {!NetInfo.isConnected && NetInfo.isConnected != null ? (
+          <NetWorkConnectionModel color={theme.colors.primary} />
+        ) : null}
+      </View>
       <View style={{backgroundColor: WHITE, flex: 1, paddingHorizontal: 8}}>
         {/* <Heading navigation={navigation} /> */}
         <Text
@@ -163,37 +171,41 @@ const Notification = ({navigation}) => {
           Notifications
         </Text>
         <View style={styles.container}>
-          <FlatList
-            contentContainerStyle={{
-              paddingBottom: responsiveScreenHeight(20),
-              marginTop: responsiveScreenHeight(1),
-            }}
-            data={notifications}
-            // refreshControl={
-            //   <RefreshControl
-            //     refreshing={refresh}
-            //     onRefresh={loadNotification}
-            //   />
-            // }
-            showsVerticalScrollIndicator={false}
-            renderItem={renderNotifications}
-            onEndReached={() => {
-              fetchNotifications(page);
-            }}
-            ListEmptyComponent={() => {
-              return (
-                <View
-                  style={{
-                    flex: 1,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    marginTop: Platform.OS === 'ios' ? 80 : 0,
-                  }}>
-                  <Text style={styles.text}>Notifications</Text>
-                </View>
-              );
-            }}
-          />
+          {notifications != null ? (
+            <FlatList
+              contentContainerStyle={{
+                paddingBottom: responsiveScreenHeight(20),
+                marginTop: responsiveScreenHeight(1),
+              }}
+              data={notifications}
+              // refreshControl={
+              //   <RefreshControl
+              //     refreshing={refresh}
+              //     onRefresh={loadNotification}
+              //   />
+              // }
+              showsVerticalScrollIndicator={false}
+              renderItem={renderNotifications}
+              onEndReached={() => {
+                fetchNotifications(page);
+              }}
+              ListEmptyComponent={() => {
+                return (
+                  <View
+                    style={{
+                      flex: 1,
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      marginTop: Platform.OS === 'ios' ? 80 : 0,
+                    }}>
+                    <Text style={styles.text}>Notifications</Text>
+                  </View>
+                );
+              }}
+            />
+          ) : (
+            <Text>hello</Text>
+          )}
         </View>
         {visible && (
           <Modal visible={visible} animationType="fade">

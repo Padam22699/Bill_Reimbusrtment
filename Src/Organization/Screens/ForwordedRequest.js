@@ -26,6 +26,11 @@ import {
 } from 'react-native-responsive-dimensions';
 import LoaderOrg from '../Componets/LoaderOrg';
 import BufferLoader from '../../Loader/BufferLoader';
+import {useNetInfo} from '@react-native-community/netinfo';
+import NetWorkConnectionModel from '../../NetWorkConnection/NetWorkConnectionModel';
+import NodataScreen from '../Componets/NodataScreen';
+import SearchName from '../../components/SearchName';
+import DateFilter from '../Componets/DateFilter';
 const ForwordedRequest = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [data, setData] = useState([]);
@@ -33,7 +38,7 @@ const ForwordedRequest = ({navigation}) => {
   const [searchText, setSearchText] = useState('');
   const [isListEmpty, setIsListEmpty] = useState(true);
   const dispatch = useDispatch();
-
+  const NetInfo = useNetInfo();
   const getAllBillsResponse = useSelector(
     state => state.getAllBillsReducer.data,
   );
@@ -238,11 +243,25 @@ const ForwordedRequest = ({navigation}) => {
 
   return (
     <>
+      <View style={{}}>
+        {!NetInfo.isConnected && NetInfo.isConnected != null ? (
+          <NetWorkConnectionModel />
+        ) : null}
+      </View>
       <SafeAreaView style={styles.container}>
         <View style={styles.headingContianer}>
           <Text style={styles.heading}>Forwarded Requests </Text>
         </View>
         <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <SearchName upadteState={setSearchText} />
+          <DateFilter />
+        </View>
+        {/* <View
           style={{
             marginHorizontal: 10,
             elevation: 5,
@@ -265,56 +284,32 @@ const ForwordedRequest = ({navigation}) => {
               color: DARK,
             }}
           />
-        </View>
+        </View> */}
         <View>
-        
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              data={data}
-              contentContainerStyle={{
-                flexGrow: 1,
-                paddingBottom: responsiveScreenHeight(9),
-              }}
-              renderItem={RecentRequestList}
-              style={{marginBottom: Platform.OS === 'ios' ? 70 : 90}}
-              onEndReached={() => {
-                fetchAllBills(page, searchText);
-              }}
-              onEndReachedThreshold={0.1}
-              ListEmptyComponent={() => {
-                return (
-                  <BufferLoader/>
-                  // <View
-                  // style={{
-                  //   flex: 1,
-                  //   alignItems: 'center',
-                  //   justifyContent: 'center',
-                  // }}
-                  // >
-                  //   {isListEmpty ? (
-                  //     <BufferLoader />
-                  //   ) : (
-                  //     <Text
-                  //       style={{
-                  //         marginBottom: 120,
-                  //         alignSelf: 'center',
-                  //         textAlignVertical: 'center',
-                  //         fontSize: 24,
-                  //         color: GREY,
-                  //       }}>
-                  //       Result not found
-                  //     </Text>
-                  //   {/* )} */}
-                  // </View>
-                );
-              }}
-            />
-        
-       
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            data={data}
+            contentContainerStyle={{
+              flexGrow: 1,
+              paddingBottom: responsiveScreenHeight(9),
+            }}
+            renderItem={RecentRequestList}
+            style={{marginBottom: Platform.OS === 'ios' ? 70 : 90}}
+            onEndReached={() => {
+              fetchAllBills(page, searchText);
+            }}
+            onEndReachedThreshold={0.1}
+            ListEmptyComponent={() => {
+              return (
+                <View>
+                  <NodataScreen />
+                </View>
+              );
+            }}
+          />
         </View>
-        <View style={{width:'100%' ,height:200}}><Text>hello</Text></View>
       </SafeAreaView>
-      {/* {loading && <LoaderOrg />} */}
+      {loading && <LoaderOrg />}
     </>
   );
 };
@@ -323,7 +318,7 @@ export default ForwordedRequest;
 
 const styles = StyleSheet.create({
   headingContianer: {
-    margin: 12,
+    marginHorizontal: 12,
   },
   heading: {
     fontSize: 24,

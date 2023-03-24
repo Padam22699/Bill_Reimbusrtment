@@ -1,11 +1,17 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {WHITE} from '../Colors/Color';
-
-const Welogo = () => {
+import {theme} from '../../core/theme';
+import * as Animatable from 'react-native-animatable';
+const Welogo = ({COLOR}) => {
   return (
     <View style={styles.logocontainer}>
-      <Text style={styles.logo}>Wedigtech</Text>
+      <Animatable.Text
+        animation="fadeInLeft"
+        duration={2000}
+        style={[styles.logo, {color: COLOR ? COLOR : theme.colors.primary}]}>
+        WEDIGTECH
+      </Animatable.Text>
       {/* <TouchableOpacity onPress={() => logout()}>
         <Icon name="sign-out-alt" size={20} color="#5D3FD3" />
       </TouchableOpacity> */}
@@ -26,7 +32,6 @@ const styles = StyleSheet.create({
   logo: {
     alignSelf: 'center',
     fontSize: 24,
-    color: '#5D3FD3',
     fontWeight: 'bold',
   },
 });

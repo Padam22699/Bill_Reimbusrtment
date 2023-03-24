@@ -69,10 +69,14 @@ export default function OrgSignin({navigation}) {
   };
 
   const getFirebaseToken = async () => {
+    console.log('hi');
     await messaging()
       .getToken()
       .then(token => {
         loginAPI(token);
+      })
+      .catch(err => {
+        console.log(err);
       });
   };
 
@@ -186,7 +190,7 @@ export default function OrgSignin({navigation}) {
           keyboardShouldPersistTaps="always">
           <View
             style={{
-              marginTop: Platform.OS ==="ios" ? responsiveScreenHeight(-3):0,
+              marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(-3) : 0,
               alignItems: 'center',
               justifyContent: 'center',
             }}>

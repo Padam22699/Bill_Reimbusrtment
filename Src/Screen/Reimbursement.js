@@ -32,6 +32,8 @@ import Loader from '../Organization/Componets/Loader';
 import * as permissions from 'react-native-permissions';
 import {DARK, WHITE} from '../Organization/Colors/Color';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import NetWorkConnectionModel from '../NetWorkConnection/NetWorkConnectionModel';
+import {useNetInfo} from '@react-native-community/netinfo';
 import {
   responsiveScreenHeight,
   responsiveScreenWidth,
@@ -40,19 +42,19 @@ import {
 
 export default function Reimbursement({navigation}) {
   const dispatch = useDispatch();
+  const NetInfo = useNetInfo();
 
   const [OpenGallry, setOpenGallry] = useState(false);
   const [userData, setUserData] = useState(null);
   const [date, setDate] = useState('Select a Date');
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
-
-  const [upload, setupload] = useState(false);
+  const [upload, setupload] = useState(null);
   const [select, setSelect] = useState('');
-
   const [amount, setAmount] = useState({value: '', error: ''});
   const [description, setDescription] = useState({value: '', error: ''});
   const [participants, setParticipants] = useState({value: '', error: ''});
-
+  const [checkbook, setcheckbook] = useState(false);
+  const [Clicked, setClicked] = useState(false);
   const addBillResponse = useSelector(state => state.addBillReducer.data);
   const loading = useSelector(state => state.addBillReducer.loading);
   const onSubmitPress = () => {
@@ -70,7 +72,7 @@ export default function Reimbursement({navigation}) {
       alert('Select a Date');
       return;
     }
-    if (!upload) {
+    if (upload.length < 0) {
       alert('Attach your bill');
       return;
     }
@@ -131,9 +133,11 @@ export default function Reimbursement({navigation}) {
         width: 1000,
         height: 1000,
         cropping: true,
+        multiple: true,
+        mediaType: 'photo',
       }).then(image => {
         setOpenGallry(false);
-        setupload(image.path);
+        setupload(image);
       });
     };
     const OpenCamera = () => {
@@ -141,9 +145,14 @@ export default function Reimbursement({navigation}) {
         width: 1000,
         height: 1000,
         cropping: true,
+        multiple: true,
+        mediaType: 'photo',
       }).then(image => {
         setOpenGallry(false);
-        setupload(image.path);
+        setOpenGallry(false);
+        setupload(prevUpload =>
+          prevUpload ? prevUpload.concat(image) : [image],
+        );
       });
     };
   };
@@ -180,9 +189,7 @@ export default function Reimbursement({navigation}) {
       ) {
         console.log('response', addBillResponse);
         dispatch(clearAddBill());
-
         navigation.navigate('Bills', {screen: 'ToptabBar'});
-
         setDate('Select a Date');
         setAmount({value: ''});
         setDescription({value: ''});
@@ -223,6 +230,11 @@ export default function Reimbursement({navigation}) {
           backgroundColor={theme.colors.primary}
           barStyle="dark-content"
         />
+        <View>
+          {!NetInfo.isConnected && NetInfo.isConnected != null ? (
+            <NetWorkConnectionModel color={theme.colors.primary} />
+          ) : null}
+        </View>
         <ScrollView
           style={styles.mainview}
           showsVerticalScrollIndicator={false}>
@@ -231,7 +243,7 @@ export default function Reimbursement({navigation}) {
               textAlign: 'center',
               fontSize: 18,
               fontWeight: '700',
-              marginVertical: 10,
+              // marginVertical: 5,
               marginBottom: Platform.OS === 'ios' ? 30 : 10,
             }}>
             Add Expense
@@ -246,7 +258,9 @@ export default function Reimbursement({navigation}) {
                 maximumDate={new Date()}
                 isVisible={isDatePickerVisible}
                 mode="date"
-                onConfirm={handleConfirm}
+                onConfirm={date => {
+                  handleConfirm(date);
+                }}
                 onCancel={hideDatePicker}
               />
 
@@ -288,6 +302,7 @@ export default function Reimbursement({navigation}) {
             <EmpTextInput
               placeholder="Description"
               value={description.value}
+              multiline={true}
               onChangeText={text => {
                 setDescription({value: text, error: ''});
               }}
@@ -304,6 +319,39 @@ export default function Reimbursement({navigation}) {
               error={!!participants.error}
               errorText={participants.error}
             />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginVertical: 4,
+              }}>
+              <Text style={styles.textbill}>Physically submitted the bill</Text>
+              <TouchableOpacity
+                activeOpacity={0.9}
+                onPress={() => {
+                  setcheckbook(!checkbook);
+                }}>
+                <View
+                  style={{
+                    marginRight: 10,
+                    width: 20,
+                    height: 20,
+                    borderColor: theme.colors.primary,
+                    borderWidth: 2,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: checkbook ? '#5D3FD3' : '#fff',
+                  }}>
+                  {checkbook ? (
+                    <Image
+                      source={Imagepath.check}
+                      style={{width: 15, height: 15, tintColor: WHITE}}
+                    />
+                  ) : null}
+                </View>
+              </TouchableOpacity>
+            </View>
             <View style={styles.attachview}>
               <Text style={styles.textbill}>Attach your bill</Text>
               <TouchableOpacity
@@ -315,18 +363,27 @@ export default function Reimbursement({navigation}) {
                 <Image source={Imagepath.Medical} style={styles.imagecrop} />
               </TouchableOpacity>
             </View>
-            {upload && (
-              <View style={styles.imageflex}>
-                <TouchableOpacity
-                  style={styles.touchablicon}
-                  activeOpacity={0.9}>
-                  <Image
-                    source={upload ? {uri: upload} : Imagepath.file}
-                    style={styles.imagestyle}
-                  />
-                </TouchableOpacity>
-              </View>
-            )}
+            <View>
+              {upload && (
+                <View>
+                  <ScrollView horizontal>
+                    {upload.map((image, index) => (
+                      <View key={index}>
+                        <Image
+                          source={{uri: image.path}}
+                          style={{
+                            width: 100,
+                            height: 100,
+                            marginRight: 10,
+                            borderRadius: 10,
+                          }}
+                        />
+                      </View>
+                    ))}
+                  </ScrollView>
+                </View>
+              )}
+            </View>
             <Text style={styles.textbill}>Select your bill type</Text>
             <View style={{flex: 1}}>
               <FlatList
@@ -475,14 +532,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     elevation: 2,
     marginHorizontal: 16,
-    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(3) : 20,
-    marginBottom: Platform.OS === 'ios' ? responsiveScreenHeight(13) : 85,
+    marginTop: Platform.OS === 'ios' ? responsiveScreenHeight(3) : 15,
+    marginBottom: Platform.OS === 'ios' ? responsiveScreenHeight(13) : 75,
     borderRadius: 15,
   },
   attachview: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5,
+    marginVertical: 10,
   },
   touchacrop: {
     borderWidth: 2,
@@ -598,5 +655,22 @@ const styles = StyleSheet.create({
   textstyle: {
     fontSize: 18,
     color: '#fff',
+  },
+  flexview: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+    paddingVertical: 2,
+  },
+  imagetouchstyle: {
+    height: 20,
+    width: 20,
+    backgroundColor: '#E6E6FA',
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderColor: '#5D3FD3',
+    padding: 2,
   },
 });

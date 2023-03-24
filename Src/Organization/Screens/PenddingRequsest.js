@@ -25,8 +25,13 @@ import {
   responsiveScreenFontSize,
 } from 'react-native-responsive-dimensions';
 import Imagepath from '../../Assets/Images/Imagepath';
+import NodataScreen from '../Componets/NodataScreen';
 import LoaderOrg from '../Componets/LoaderOrg';
 import BufferLoader from '../../Loader/BufferLoader';
+import {useNetInfo} from '@react-native-community/netinfo';
+import NetWorkConnectionModel from '../../NetWorkConnection/NetWorkConnectionModel';
+import SearchName from '../../components/SearchName';
+import DateFilter from '../Componets/DateFilter';
 const PenddingRequsest = ({navigation}) => {
   const [userData, setUserData] = useState(null);
   const [data, setData] = useState([]);
@@ -35,7 +40,7 @@ const PenddingRequsest = ({navigation}) => {
   const [isListEmpty, setIsListEmpty] = useState(true);
   const [loadMoreListData, setLoadMoreListData] = useState(true);
   const dispatch = useDispatch();
-
+  const NetInfo = useNetInfo();
   const getAllBillsResponse = useSelector(
     state => state.getAllBillsReducer.data,
   );
@@ -102,7 +107,11 @@ const PenddingRequsest = ({navigation}) => {
         getAllBillsResponse.statusCode == 200
       ) {
         let allRequest = getAllBillsResponse.data;
-        setData([...data, ...allRequest]);
+
+        let formatedRequest = allRequest.filter(item => {
+          return item.status == 'Pending';
+        });
+        setData([...data, ...formatedRequest]);
         let pageNum = parseInt(page);
         let incPage = pageNum + 1;
         setPage(incPage.toString());
@@ -239,11 +248,26 @@ const PenddingRequsest = ({navigation}) => {
 
   return (
     <>
+      <View>
+        {!NetInfo.isConnected && NetInfo.isConnected != null ? (
+          <NetWorkConnectionModel />
+        ) : null}
+      </View>
       <SafeAreaView style={styles.container}>
         <View style={styles.headingContianer}>
           <Text style={styles.heading}>Pending Requests </Text>
         </View>
+
         <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <SearchName upadteState={setSearchText} />
+          <DateFilter />
+        </View>
+        {/* <View
           style={{
             marginHorizontal: 10,
             elevation: 5,
@@ -266,10 +290,7 @@ const PenddingRequsest = ({navigation}) => {
               color: DARK,
             }}
           />
-        </View>
-        {/* {loading ? (
-          <BufferLoader />
-        ) : ( */}
+        </View> */}
         <FlatList
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
@@ -284,38 +305,12 @@ const PenddingRequsest = ({navigation}) => {
           }}
           onEndReachedThreshold={0.1}
           ListEmptyComponent={() => {
-            return (
-              <BufferLoader />
-              // <View
-              // // style={{
-              // //   flex: 1,
-              // //   alignItems: 'center',
-              // //   justifyContent: 'center',
-              // // }}
-              // >
-              //   {isListEmpty ? (
-              //     <BufferLoader />
-              //   ) : (
-              //     <Text
-              //       style={{
-              //         marginBottom: 120,
-              //         alignSelf: 'center',
-              //         textAlignVertical: 'center',
-              //         fontSize: 24,
-              //         color: GREY,
-              //       }}>
-              //       Result not found
-              //     </Text>
-              //   )}
-              // </View>
-            );
+            return <NodataScreen />;
           }}
         />
-        {/* )} */}
-      
       </SafeAreaView>
-    
-      {/* {loading && <LoaderOrg />} */}
+
+      {loading && <LoaderOrg />}
     </>
   );
 };
@@ -324,7 +319,7 @@ export default PenddingRequsest;
 
 const styles = StyleSheet.create({
   headingContianer: {
-    margin: 12,
+    marginHorizontal: 12,
   },
   heading: {
     fontSize: 24,
