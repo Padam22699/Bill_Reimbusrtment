@@ -256,7 +256,25 @@ export default function FullDetailScreen({navigation, route}) {
 
     return <Text style={styles.textfuel}>{route.params.item.status}</Text>;
   };
-
+  const icon = type => {
+    switch (type) {
+      case 'Medical': {
+        return Imagepath.medicine;
+      }
+      case 'Fuel': {
+        return Imagepath.Fuel;
+      }
+      case 'Food': {
+        return Imagepath.foodfork;
+      }
+      case 'Others': {
+        return Imagepath.Others;
+      }
+      default: {
+        return Imagepath.Others;
+      }
+    }
+  };
   const submitbtnShow = () => {
     if (userData.role_type === 'super_admin') {
       if (route.params.item.status == 'Pending') {
@@ -336,7 +354,10 @@ export default function FullDetailScreen({navigation, route}) {
                 <TouchableOpacity
                   style={styles.imagetouchabl}
                   activeOpacity={0.9}>
-                  <Image source={Imagepath.Fuel} style={styles.imagestyle} />
+                  <Image
+                    source={icon(route.params.item.type)}
+                    style={[styles.imagestyle, {tintColor: PRIMARY}]}
+                  />
                 </TouchableOpacity>
 
                 <View style={styles.fonticon}>
@@ -612,6 +633,7 @@ const styles = StyleSheet.create({
   },
   imagestyle: {
     height: 50,
+    tintColor: PRIMARY,
     width: 50,
     tintColor: DARK,
     resizeMode: 'cover',

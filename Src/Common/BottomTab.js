@@ -1,13 +1,13 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { Image, Platform } from 'react-native';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import {Image, Platform} from 'react-native';
 import Notification from '../Screen/Notification';
-import { theme } from '../core/theme';
+import {theme} from '../core/theme';
 import Reimbursement from '../Screen/Reimbursement';
-import { DARK } from '../Organization/Colors/Color';
+import {DARK} from '../Organization/Colors/Color';
 import Ehome from '../Screen/Ehome';
 import Icon from 'react-native-vector-icons/FontAwesome5';
-import { Transactions } from '../Navigation/Auth';
-import { responsiveScreenHeight } from 'react-native-responsive-dimensions';
+import {AddBillsScreen, Transactions} from '../Navigation/Auth';
+import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
 
 const Tab = createBottomTabNavigator();
 
@@ -18,15 +18,15 @@ function BottomTab() {
         tabBarActiveTintColor: theme.colors.primary,
         tabBarInactiveTintColor: 'black',
         tabBarStyle: {
-          height:  Platform.OS === 'ios' ? responsiveScreenHeight(12) : 60,
+          height: Platform.OS === 'ios' ? responsiveScreenHeight(12) : 60,
           position: 'absolute',
-          backgroundColor: "#E6E6FA",
+          backgroundColor: '#E6E6FA',
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
         },
         tabBarLabelStyle: {
           paddingVertical: 5,
-          fontSize:12
+          fontSize: 12,
         },
       }}>
       <Tab.Screen
@@ -34,7 +34,7 @@ function BottomTab() {
         component={Ehome}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <Icon
                 name="home"
@@ -48,15 +48,15 @@ function BottomTab() {
       <Tab.Screen
         name="Bills"
         component={Transactions}
-        listeners={({ navigation }) => ({
+        listeners={({navigation}) => ({
           tabPress: e => {
             e.preventDefault();
-            navigation.navigate('Bills', { screen: 'ToptabBar' });
-          }
+            navigation.navigate('Bills', {screen: 'ToptabBar'});
+          },
         })}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <Image
                 source={require('../Assets/Images/T.png')}
@@ -72,10 +72,10 @@ function BottomTab() {
       />
       <Tab.Screen
         name="Add"
-        component={Reimbursement}
+        component={AddBillsScreen}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <Image
                 source={require('../Assets/Images/A.png')}
@@ -94,7 +94,7 @@ function BottomTab() {
         component={Notification}
         options={{
           headerShown: false,
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <Image
                 source={require('../Assets/Images/N.png')}
@@ -111,14 +111,14 @@ function BottomTab() {
       <Tab.Screen
         name="Menu"
         component={BottomTab}
-        listeners={({ navigation }) => ({
+        listeners={({navigation}) => ({
           tabPress: e => {
             e.preventDefault();
             navigation.openDrawer();
-          }
+          },
         })}
         options={{
-          tabBarIcon: ({ focused }) => {
+          tabBarIcon: ({focused}) => {
             return (
               <Image
                 source={require('../Assets/Images/m.png')}

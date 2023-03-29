@@ -242,11 +242,7 @@ export default function DetailScreen({navigation}) {
                   style={styles.imagetouchabl}
                   activeOpacity={0.9}>
                   <Image
-                    source={
-                      billDetail != null
-                        ? icon(billDetail.type)
-                        : Imagepath.Fuel
-                    }
+                    source={icon(billDetail.type)}
                     style={styles.imagestyle}
                   />
                 </TouchableOpacity>

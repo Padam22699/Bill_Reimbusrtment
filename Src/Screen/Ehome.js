@@ -13,6 +13,7 @@ import {
 
 import React, {useCallback, useEffect, useState} from 'react';
 import {DARK, WHITE, A, B, C, GREY} from '../Organization/Colors/Color';
+import Icons from 'react-native-vector-icons/Entypo';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {theme} from '../core/theme';
 import Welogo from '../Organization/Componets/Welogo';
@@ -35,6 +36,8 @@ import {
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {useNetInfo} from '@react-native-community/netinfo';
 import NetWorkConnectionModel from '../NetWorkConnection/NetWorkConnectionModel';
+import PieChart from '../Charts/PieChart';
+import InputAmount from '../InputModel/InputAmount';
 
 const Ehome = ({navigation}) => {
   const [userData, setUserData] = useState(null);
@@ -132,14 +135,33 @@ const Ehome = ({navigation}) => {
   }) => {
     return (
       <TouchableOpacity activeOpacity={0.9} onPress={onpress}>
-        <View style={styles.Container}>
+        <View
+          style={{
+            marginTop: 0,
+            backgroundColor: WHITE,
+            height: deviceWidth / 2.5,
+            width: deviceWidth / 3,
+            borderRadius: 20,
+            shadowColor: DARK,
+            shadowOffset: {
+              width: 3,
+              height: 3,
+            },
+            elevation: 2,
+            shadowRadius: 5,
+            shadowOpacity: 0.25,
+            marginBottom: 20,
+            alignItems: 'center',
+            justifyContent: 'center',
+            alignContent: 'center',
+          }}>
           <View
             style={{
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
               alignContent: 'center',
-              width: deviceWidth / 3 - 14,
+              width: deviceWidth / 3,
               backgroundColor: backGround,
               height: 90,
               borderTopLeftRadius: 20,
@@ -229,42 +251,90 @@ const Ehome = ({navigation}) => {
           <NetWorkConnectionModel color={theme.colors.primary} />
         ) : null}
       </View>
-      <StatusBar backgroundColor={theme.colors.primary} barStyle="default" />
+      <StatusBar
+        backgroundColor={theme.colors.primary}
+        barStyle="light-content"
+      />
       <View style={{margin: 12}}>
-        <Welogo navigation={navigation} />
-
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <Welogo navigation={navigation} />
           <View
             style={{
               flexDirection: 'row',
+              alignSelf: 'flex-end',
+              flex: 1,
+
+              justifyContent: 'flex-end',
+            }}>
+            <TouchableOpacity>
+              <Icon
+                name="bell"
+                size={24}
+                color={theme.colors.primary}
+                style={{marginRight: 10}}
+              />
+            </TouchableOpacity>
+
+            <TouchableOpacity>
+              <Icons
+                name="dots-three-vertical"
+                size={24}
+                color={theme.colors.primary}
+              />
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{marginBottom: 10}}>
+          <View
+            style={{
               justifyContent: 'space-between',
             }}>
-            <MiddleContent
-              money={dashboardData != null && dashboardData.one_month_data}
-              heading="This Month"
-              backGround={A}
-              fontSize={16}
-            />
-            <MiddleContent
-              money={dashboardData != null && dashboardData.six_month_data}
-              heading="Last 6 Months"
-              backGround={B}
-              fontSize={16}
-            />
-            <MiddleContent
-              money={dashboardData != null && dashboardData.one_year_data}
-              heading="This Year"
-              backGround={C}
-              fontSize={16}
-            />
+            <View
+              style={{
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                marginTop: 20,
+              }}>
+              <MiddleContent
+                money={dashboardData != null && dashboardData.one_month_data}
+                heading="This Month"
+                backGround={A}
+                fontSize={16}
+              />
+              <MiddleContent
+                money={dashboardData != null && dashboardData.six_month_data}
+                heading="Last 3 Months"
+                backGround={B}
+                fontSize={16}
+              />
+            </View>
+            <View
+              style={{flexDirection: 'row', justifyContent: 'space-evenly'}}>
+              <MiddleContent
+                money={dashboardData != null && dashboardData.six_month_data}
+                heading="Last 6 Months"
+                backGround={B}
+                fontSize={16}
+              />
+              <MiddleContent
+                money={dashboardData != null && dashboardData.one_year_data}
+                heading="This Year"
+                backGround={C}
+                fontSize={16}
+              />
+            </View>
           </View>
 
           <View style={styles.pieDesboard}>
-            <VictoryPie
+            {/* <VictoryPie
               height={responsiveScreenHeight(46)}
               width={400}
               radius={100}
-              innerRadius={0}
+              animate={{easing: 'circle'}}
+              innerRadius={50}
               padAngle={0}
               cornerRadius={0}
               colorScale={[pi1, pi2, pi3, pi4]}
@@ -275,12 +345,14 @@ const Ehome = ({navigation}) => {
                 {x: 3, y: 6, label: '30%'},
                 {x: 4, y: 5, label: '60%'},
               ]}
-            />
+            /> */}
+            <PieChart />
           </View>
           <View
             style={{
               width: '100%',
-              // marginBottom: responsiveScreenHeight(16)
+            marginBottom: responsiveScreenHeight(10)
+
             }}>
             <View
               style={{
@@ -378,25 +450,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: theme.colors.primary,
   },
-  Container: {
-    marginTop: 20,
-    backgroundColor: WHITE,
-    height: 140,
-    width: deviceWidth / 3 - 14,
-    borderRadius: 20,
-    shadowColor: DARK,
-    shadowOffset: {
-      width: 3,
-      height: 3,
-    },
-    elevation: 2,
-    shadowRadius: 5,
-    shadowOpacity: 0.25,
-    marginBottom: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
+  Container: {},
   RecordContainer: {},
   recentList: {
     backgroundColor: WHITE,

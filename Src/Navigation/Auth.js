@@ -17,6 +17,8 @@ import ImageViwers from '../components/ImageViwers';
 import DetailScreen from '../Screen/DetailScreen';
 
 import ToptabBar from '../Common/ToptabBar';
+import PDFviwer from '../components/PDFviwer';
+import Reimbursement from '../Screen/Reimbursement';
 const Stack = createNativeStackNavigator();
 
 function AuthStack() {
@@ -57,6 +59,7 @@ function AuthStack() {
         component={ImageViwers}
         options={{headerShown: false}}
       />
+
       <Stack.Screen
         name="OrganizationLoginScreen"
         component={OrganizationLoginScreen}
@@ -103,11 +106,29 @@ export const Organization = () => {
     </Stack.Navigator>
   );
 };
+export const AddBillsScreen = () => {
+  return (
+    <Stack.Navigator initialRouteName="Add">
+      <Stack.Screen
+        name="AddBills"
+        component={Reimbursement}
+        options={{
+          headerShown: false,
+        }}
+      />
+      <Stack.Screen
+        name="PDFviwer"
+        component={PDFviwer}
+        options={{
+          headerShown: false,
+        }}
+      />
+    </Stack.Navigator>
+  );
+};
 export const Transactions = () => {
   return (
-    <Stack.Navigator
-    initialRouteName='ToptabBar'
-    >
+    <Stack.Navigator initialRouteName="ToptabBar">
       <Stack.Screen
         name="ToptabBar"
         component={ToptabBar}
@@ -126,5 +147,3 @@ export const Transactions = () => {
     </Stack.Navigator>
   );
 };
-
-
