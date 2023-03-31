@@ -351,8 +351,7 @@ const Ehome = ({navigation}) => {
           <View
             style={{
               width: '100%',
-            marginBottom: responsiveScreenHeight(10)
-
+              marginBottom: responsiveScreenHeight(10),
             }}>
             <View
               style={{

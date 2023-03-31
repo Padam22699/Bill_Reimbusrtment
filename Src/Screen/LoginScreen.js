@@ -195,6 +195,7 @@ export default function LoginScreen({navigation}) {
           </View>
           <EmpTextInput
             placeholder="Email id"
+            // label="Email id"
             returnKeyType="next"
             value={email.value}
             onChangeText={text => setEmail({value: text, error: ''})}
@@ -208,11 +209,13 @@ export default function LoginScreen({navigation}) {
           />
           <EmpTextInput
             placeholder="Password"
+            // label="Password"
             returnKeyType="done"
             value={password.value}
             onChangeText={text => setPassword({value: text, error: ''})}
             error={!!password.error}
             errorText={password.error}
+            
             password={true}
             // style={{color:DARK}}
           />

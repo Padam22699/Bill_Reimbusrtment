@@ -44,24 +44,36 @@ import {
 import InputAmount from '../InputModel/InputAmount';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import DocumentPicker from 'react-native-document-picker';
+import SelecteDateRange from '../components/SelecteDateRange';
+import {TextInput as MeterialInput} from '@react-native-material/core';
+import InputAmountAndDate from '../components/InputAmountAndDate';
 export default function Reimbursement({navigation}) {
   const dispatch = useDispatch();
   const NetInfo = useNetInfo();
 
   const [OpenGallry, setOpenGallry] = useState(false);
   const [userData, setUserData] = useState(null);
-  const [date, setDate] = useState('Select a Date');
+  const [date, setDate] = useState([]);
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [upload, setupload] = useState([]);
   const [billDocumnet, setBillDOcumnt] = useState([]);
   const [select, setSelect] = useState('');
-  const [amount, setAmount] = useState({value: '', error: ''});
+  const [amount, setAmount] = useState({value: [], erros: false});
   const [description, setDescription] = useState({value: '', error: ''});
   const [participants, setParticipants] = useState({value: '', error: ''});
   const [checkbook, setcheckbook] = useState(false);
-  const [Clicked, setClicked] = useState(false);
+  const [OpenAmountAndDateMOdal, setOpenAmountAndDateMOdal] = useState(false);
   const [OpenModal, setOpenModal] = useState(false);
+  const [openDateRangeModal, setDateRangeModal] = useState(false);
+  const [startDate, setstartDate] = useState('');
+  const [endDate, setendDate] = useState('');
+  // const[amount ,setAmount] = useState([])
+
+  const [openDatePicker, setDatePicker] = useState(false);
+  const [error, setError] = useState(true);
+  console.log('startDate', startDate, 'endDate', endDate);
   const addBillResponse = useSelector(state => state.addBillReducer.data);
+
   const loading = useSelector(state => state.addBillReducer.loading);
   const onSubmitPress = () => {
     const amountError = amountValidator(amount.value);
@@ -121,9 +133,11 @@ export default function Reimbursement({navigation}) {
     setDatePickerVisibility(false);
   };
   const handleConfirm = date => {
-    setDate(moment(date).format('DD MMM yyyy'));
+    const dates = moment(date).format('DD MMM yyyy');
+    setDate([...date, ...dates]);
     hideDatePicker();
   };
+
   const OpenGallery = () => {
     setOpenModal(false);
     const currPhotos = [];
@@ -144,7 +158,7 @@ export default function Reimbursement({navigation}) {
         }
       }
       setOpenGallry(false);
-
+      setOpenAmountAndDateMOdal(true);
       setupload([...upload, ...currPhotos]);
     });
   };
@@ -173,6 +187,7 @@ export default function Reimbursement({navigation}) {
       });
       console.log('BillDocumnetPicker', result);
       currtDocument.push(result);
+
       setBillDOcumnt([...billDocumnet, ...currtDocument]);
     } catch (error) {
       console.log('DocumetPIcker Error =>', error);
@@ -293,6 +308,168 @@ export default function Reimbursement({navigation}) {
     }
   }, [addBillResponse]);
 
+  // sssss
+  const handleSubmit = value => {
+    console.log('value', value);
+    if (value === '') {
+      setAmount({erros: true});
+    } else {
+      setAmount({erros: false});
+      setOpenAmountAndDateMOdal(false);
+      // submit form data
+    }
+  };
+
+  const openAmount = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0, 0, 0, 0.7)',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        <Modal
+          visible={OpenAmountAndDateMOdal}
+          animationType="fade"
+          transparent>
+          <View
+            style={{
+              flex: 1,
+              backgroundColor: WHITE,
+              position: 'absolute',
+              top: '15%',
+              right: '5%',
+              left: '5%',
+              borderRadius: 10,
+              elevation: 10,
+              paddingTop: 10,
+              paddingHorizontal: 10,
+            }}>
+            <View style={{alignItems: 'center', marginVertical: 10}}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  marginBottom: 10,
+                  color: GREY,
+                  fontSize: 17,
+                  fontWeight: '700',
+                }}>
+                Fill Details
+              </Text>
+
+              <View style={{width: '100%'}}>
+                <MeterialInput
+                  onFocus={() => {
+                    setAmount({erros: false});
+                  }}
+                  placeholderTextColor={GREY}
+                  placeholder={'Enter Amount'}
+                  label={'Enter Amount'}
+                  variant="outlined"
+                  outlineColor="red"
+                  value={amount.value}
+                  keyboardType="phone-pad"
+                  onChangeText={text => setAmount({value: text, error: ''})}
+                  labelStyle={{fontSize: 40, colors: GREY}}
+                  color={theme.colors.primary}
+                  labelColor={GREY}
+                  inputContainerStyle={{
+                    labelColor: GREY,
+                    color: GREY,
+                  }}
+                  // secureTextEntry={hidePassword}
+                  floatingPlaceholder={true}
+                  style={{marginHorizontal: 5, marginTop: 10, marginBottom: 10}}
+                />
+                {amount.erros && (
+                  <View>
+                    <Text
+                      style={{
+                        color: 'red',
+                        marginHorizontal: 5,
+                        marginBottom: 10,
+                        marginTop: -10,
+                      }}>
+                      Plz Enter Amount
+                    </Text>
+                  </View>
+                )}
+                <TouchableOpacity
+                  onPress={() => setDatePicker(true)}
+                  activeOpacity={0.9}>
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      paddingVertical: 13,
+                      paddingHorizontal: 10,
+                      marginHorizontal: 5,
+                      borderWidth: 1,
+                      borderColor: GREY,
+                      marginBottom: 20,
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                    <Text>Select a date</Text>
+                    <Text>{date}</Text>
+                    <Entypo
+                      name="calendar"
+                      size={25}
+                      color={theme.colors.primary}
+                      style={{alignSelf: 'flex-end'}}
+                    />
+                  </View>
+
+                  <View style={{marginBottom: 20}}>
+                    <TouchableOpacity
+                      activeOpacity={0.9}
+                      onPress={() => {
+                        handleSubmit(amount.value);
+                      }}>
+                      <View
+                        style={{
+                          alignSelf: 'flex-end',
+                          backgroundColor: theme.colors.primary,
+                          borderRadius: 12,
+                          elevation: 10,
+                        }}>
+                        <Text
+                          style={{
+                            color: WHITE,
+                            fontWeight: '600',
+                            paddingHorizontal: 20,
+                            paddingVertical: 5,
+                          }}>
+                          Ok
+                        </Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+                <DateTimePickerModal
+                  maximumDate={new Date()}
+                  isVisible={openDatePicker}
+                  mode="date"
+                  onConfirm={date => {
+                    handleConfirm(date);
+                  }}
+                  onCancel={hideDatePicker}
+                />
+              </View>
+
+              <TouchableOpacity></TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    );
+  };
+
   const renderItem = ({item}) => {
     return (
       <View style={styles.antDesign}>
@@ -341,7 +518,7 @@ export default function Reimbursement({navigation}) {
               // marginVertical: 5,
               marginBottom: Platform.OS === 'ios' ? 30 : 0,
             }}>
-            Add Expense
+            Add Bills
           </Text>
           <TouchableOpacity
             onPress={() => {
@@ -380,7 +557,7 @@ export default function Reimbursement({navigation}) {
                 errorText={description.error}
               />
               <EmpTextInput
-                placeholder="Participants Names"
+                placeholder="Participants"
                 value={participants.value}
                 multiline={true}
                 onChangeText={text => {
@@ -400,7 +577,7 @@ export default function Reimbursement({navigation}) {
                 />
               </View>
               <View style={styles.datetimestyle}>
-                <DateTimePickerModal
+                {/* <DateTimePickerModal
                   maximumDate={new Date()}
                   isVisible={isDatePickerVisible}
                   mode="date"
@@ -408,15 +585,37 @@ export default function Reimbursement({navigation}) {
                     handleConfirm(date);
                   }}
                   onCancel={hideDatePicker}
-                />
-
-                <Text style={styles.textdate}>{date}</Text>
+                /> */}
 
                 <TouchableOpacity
+                  style={{
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    flex: 1,
+                  }}
                   onPress={() => {
-                    showDatePicker();
+                    setDateRangeModal(true);
                   }}
                   activeOpacity={0.8}>
+                  {startDate || endDate ? (
+                    <View style={{flexDirection: 'row'}}>
+                      {startDate || endDate ? (
+                        <Text style={{color: DARK, fontWeight: '700'}}>
+                          {moment(startDate).format('DD/MM/YYYY')} -{' '}
+                          {moment(endDate).format('DD/MM/YYYY')}
+                        </Text>
+                      ) : (
+                        <Text>Select a Date</Text>
+                      )}
+                      {/* <Text style > -</Text>
+                      <Text style={{color: DARK, fontWeight: '700'}}>
+                        {endDate}
+                      </Text> */}
+                    </View>
+                  ) : (
+                    <Text style={styles.textdate}>{date}</Text>
+                  )}
+
                   <Entypo
                     name="calendar"
                     size={25}
@@ -425,64 +624,108 @@ export default function Reimbursement({navigation}) {
                 </TouchableOpacity>
               </View>
             </View>
-            {/* <View
-              style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginVertical: 4,
-              }}>
-              <Text style={styles.textbill}>Physically submitted the bill</Text>
-              <TouchableOpacity
-                activeOpacity={0.9}
-                onPress={() => {
-                  setcheckbook(!checkbook);
-                }}>
-                <View
-                  style={{
-                    marginRight: 10,
-                    width: 20,
-                    height: 20,
-                    borderColor: theme.colors.primary,
-                    borderWidth: 2,
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    backgroundColor: checkbook ? '#5D3FD3' : '#fff',
-                  }}>
-                  {checkbook ? (
-                    <Image
-                      source={Imagepath.check}
-                      style={{width: 15, height: 15, tintColor: WHITE}}
-                    />
-                  ) : null}
-                </View>
-              </TouchableOpacity>
-            </View> */}
+            <Text
+              style={[
+                styles.textbill,
+                {
+                  fontSize: 20,
+                  marginBottom: 0,
+                  marginTop: 10,
+                  color: DARK,
+                  fontWeight: '600',
+                  marginHorizontal: 30,
+                },
+              ]}>
+              Attach your bill
+            </Text>
             <View style={styles.mainview}>
-              <View style={styles.attachview}>
-                <Text style={styles.textbill}>Attach your bill</Text>
-                <TouchableOpacity
-                  style={styles.touchacrop}
-                  onPress={() => {
-                    setOpenModal(true);
-                    // imageCrop();
-                    // setOpenGallry(true);
-                  }}>
-                  <Image source={Imagepath.Medical} style={styles.imagecrop} />
-                </TouchableOpacity>
-              </View>
+              {upload.length > 0 || billDocumnet > 0 ? (
+                <View
+                // style={styles.attachview}
+                >
+                  {/* <Text
+                    style={[
+                      styles.textbill,
+                      {
+                        alignSelf: 'flex-start',
+                        fontSize: 20,
+                        marginBottom: 10,
+                        color: DARK,
+                        fontWeight: '700',
+                        marginBottom: -10,
+                        marginTop: -10,
+                      },
+                    ]}>
+                    Selected Bills
+                  </Text> */}
+                </View>
+              ) : (
+                <View style={styles.attachview}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: ['#CF9FFF', '#5D3FD3'],
+                      paddingHorizontal: 30,
+                      paddingVertical: 5,
+                      borderRadius: 15,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                    activeOpacity={0.9}
+                    onPress={() => {
+                      setOpenModal(true);
+                      // imageCrop();
+                      // setOpenGallry(true);
+                    }}>
+                    <LinearGradient
+                      colors={['#CF9FFF', '#5D3FD3']}
+                      useAngle={true}
+                      angle={10}
+                      style={{
+                        justifyContent: 'center',
+                        paddingHorizontal: 20,
+                        paddingVertical: 3,
+                        borderRadius: 15,
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      }}>
+                      {/* <Image
+                      source={Imagepath.Medical}
+                      style={styles.imagecrop}
+                    /> */}
+                      <Text
+                        style={{
+                          color: WHITE,
+                          fontSize: 25,
+                          fontWeight: '400',
+                          marginLeft: 8,
+                        }}>
+                        +
+                      </Text>
+                      <Text
+                        style={{
+                          color: WHITE,
+                          fontSize: 20,
+                          fontWeight: '400',
+                          marginLeft: 8,
+                          elevation: 10,
+                        }}>
+                        Add
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+              )}
 
-              {/* //ssss */}
               <View style={{}}>
                 {upload && (
                   <View
                     style={{
                       backgroundColor: '#fff',
                       shadowColor: GREY,
-                      shadowOffset: {width: 1, height: 1},
-                      shadowOpacity: 0.4,
-                      shadowRadius: 3,
-                      elevation: 5,
+                      // shadowOffset: {width: 1, height: 1},
+                      // shadowOpacity: 0.4,
+                      // shadowRadius: 3,
+                      // elevation: 5,
                     }}>
                     {upload.map((image, index) => (
                       <View>
@@ -509,13 +752,17 @@ export default function Reimbursement({navigation}) {
                             }}>
                             <TouchableOpacity
                               onPress={() => {
-                                HandelBillRemoves(index);
+                                HandelBillRemoveIMages(index);
                               }}>
                               <Icon
                                 name="trash"
                                 size={18}
                                 color={theme.colors.primary}
-                                style={{alignSelf: 'flex-end'}}
+                                style={{
+                                  alignSelf: 'flex-end',
+                                  paddingRight: 10,
+                                  marginBottom: 10,
+                                }}
                               />
                             </TouchableOpacity>
                           </View>
@@ -547,10 +794,15 @@ export default function Reimbursement({navigation}) {
                             <View style={{flex: 2}}>
                               <TextInput placeholder="Enter Amount" />
                             </View>
-                            <Text>02/jan/2023</Text>
+                            {date.map((date, index) => {
+                              <Text key={index}>hello</Text>;
+                            })}
                           </View>
                         </View>
-                        <View style={{height: 1, backgroundColor: GREY}}></View>
+                        {upload.length > 1 || billDocumnet.length > 0 ? (
+                          <View
+                            style={{height: 1, backgroundColor: GREY}}></View>
+                        ) : null}
                       </View>
                     ))}
                   </View>
@@ -570,10 +822,10 @@ export default function Reimbursement({navigation}) {
                           backgroundColor: WHITE,
                           marginBottom: 8,
                           shadowColor: '#000',
-                          shadowOffset: {width: 0, height: 1},
-                          shadowOpacity: 0.8,
-                          shadowRadius: 2,
-                          elevation: 5,
+                          // shadowOffset: {width: 0, height: 1},
+                          // shadowOpacity: 0.8,
+                          // shadowRadius: 2,
+                          // elevation: 5,
                           borderRadius: 10,
                         }}>
                         <View
@@ -599,7 +851,11 @@ export default function Reimbursement({navigation}) {
                                 name="trash"
                                 size={18}
                                 color={theme.colors.primary}
-                                style={{alignSelf: 'flex-end', paddingRight: 10,marginBottom:10}}
+                                style={{
+                                  alignSelf: 'flex-end',
+                                  paddingRight: 10,
+                                  marginBottom: 10,
+                                }}
                               />
                             </TouchableOpacity>
                           </View>
@@ -636,13 +892,79 @@ export default function Reimbursement({navigation}) {
                             <Text>02/jan/2023</Text>
                           </View>
                         </View>
-                        {/* <View style={{height: 1, backgroundColor: GREY}}></View> */}
+                        {upload.length > 0 || billDocumnet.length > 1 ? (
+                          <View
+                            style={{height: 1, backgroundColor: GREY}}></View>
+                        ) : null}
                       </View>
                     ))}
                   </View>
                 )}
               </View>
+              {upload.length > 0 || billDocumnet.length > 0 ? (
+                <View
+                  style={{
+                    marginTop: 15,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}>
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: ['#CF9FFF', '#5D3FD3'],
+                      paddingHorizontal: 30,
+                      paddingVertical: 5,
+                      borderRadius: 15,
+                      flexDirection: 'row',
+                      alignItems: 'center',
+                    }}
+                    activeOpacity={0.9}
+                    onPress={() => {
+                      setOpenModal(true);
+                      // imageCrop();
+                      // setOpenGallry(true);
+                    }}>
+                    <LinearGradient
+                      colors={['#CF9FFF', '#5D3FD3']}
+                      useAngle={true}
+                      angle={10}
+                      style={{
+                        justifyContent: 'center',
+                        paddingHorizontal: 20,
+                        paddingVertical: 3,
+                        borderRadius: 15,
+                        alignItems: 'center',
+                        flexDirection: 'row',
+                      }}>
+                      {/* <Image
+                      source={Imagepath.Medical}
+                      style={styles.imagecrop}
+                    /> */}
+                      {/* <Text
+                        style={{
+                          color: WHITE,
+                          fontSize: 25,
+                          fontWeight: '400',
+                          marginLeft: 8,
+                        }}>
+                        +
+                      </Text> */}
+                      <Text
+                        style={{
+                          color: WHITE,
+                          fontSize: 18,
+                          fontWeight: '400',
+                          marginLeft: 8,
+                          elevation: 10,
+                          paddingVertical: 2,
+                        }}>
+                        Add More
+                      </Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+              ) : null}
             </View>
+
             <View>
               <View
                 style={{
@@ -736,32 +1058,46 @@ export default function Reimbursement({navigation}) {
           </Modal>
         </View>
       )}
-      {loading && <Loader />}
-
-      {/* {OpenModal && (
-        <View style={{marginTop: 10}}>
-          <Modal visible={true}>
+      {/* ssss */}
+      {openDateRangeModal && (
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          }}>
+          <Modal visible={openDateRangeModal} animationType="fade" transparent>
             <View
               style={{
-                alignItems: 'center',
-                justifyContent: 'center',
+                flex: 1,
+                alignSelf: 'center',
+                backgroundColor: WHITE,
+                width: '90%',
+                height: '65%',
+                position: 'absolute',
+                top: '13%',
+                borderRadius: 10,
+                elevation: 5,
+                paddingTop: 10,
+                paddingHorizontal: 10,
               }}>
-              <View
-                style={{
-                  backgroundColor: theme.colors.primary,
-                  width: '95%',
-                  height: 100,
-                  elevation: 10,
-                  borderRadius: 10,
-                }}>
-                <TouchableOpacity>
-                  <View></View>
-                </TouchableOpacity>
+              <View style={{height: '100%', width: '100%'}}>
+                <SelecteDateRange
+                  setDateRangeModal={setDateRangeModal}
+                  setstartDate={setstartDate}
+                  setendDate={setendDate}
+                />
               </View>
             </View>
           </Modal>
         </View>
-      )} */}
+      )}
+      {loading && <Loader />}
+      {OpenAmountAndDateMOdal && openAmount()}
     </>
   );
 }
@@ -797,23 +1133,14 @@ const styles = StyleSheet.create({
     borderRadius: 15,
   },
   attachview: {
-    flexDirection: 'row',
     alignItems: 'center',
     marginVertical: 10,
   },
-  touchacrop: {
-    borderWidth: 2,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderColor: theme.colors.primary,
-    marginHorizontal: 10,
-    padding: 2,
-  },
+  touchacrop: {},
   imagecrop: {
-    height: 10,
-    width: 10,
-    tintColor: theme.colors.primary,
+    height: 18,
+    width: 18,
+    tintColor: WHITE,
   },
   textdate: {
     fontSize: 16,
