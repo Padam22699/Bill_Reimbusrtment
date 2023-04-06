@@ -70,8 +70,8 @@ const App = () => {
 
   if (ready) {
     return (
-      <MultiSelectFilter />
-      // // <NetWorkConnectionModel />
+      // <MultiSelectFilter />
+
       <NavigationContainer>
         <Routes loggedin={loggedin} loggedIntype={loggedintype} />
       </NavigationContainer>
