@@ -18,6 +18,7 @@ import BufferLoader from './Src/Loader/BufferLoader';
 
 import NetInfo from '@react-native-community/netinfo';
 import NetWorkConnectionModel from './Src/NetWorkConnection/NetWorkConnectionModel';
+import MultiSelectFilter from './Src/Filter/MultiSelectFilter';
 const App = () => {
   const [ready, setReady] = useState(false);
   const [loggedin, setLoggedin] = useState(false);
@@ -69,7 +70,8 @@ const App = () => {
 
   if (ready) {
     return (
-      // <NetWorkConnectionModel />
+      <MultiSelectFilter />
+      // // <NetWorkConnectionModel />
       <NavigationContainer>
         <Routes loggedin={loggedin} loggedIntype={loggedintype} />
       </NavigationContainer>

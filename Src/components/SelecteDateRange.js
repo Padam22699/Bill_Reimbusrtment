@@ -102,8 +102,9 @@ const SelecteDateRange = ({setDateRangeModal, setstartDate, setendDate}) => {
           activeOpacity={1}
           onPress={() => {
             setDateRangeModal(false);
-            setstartDate(startDate);
-            setendDate(endDate);
+            setstartDate(moment(startDate).format('DD/MM/YYYY'));
+
+            setendDate(moment(endDate).format('DD/MM/YYYY'));
           }}>
           <View
             style={{
