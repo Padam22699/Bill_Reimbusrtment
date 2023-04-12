@@ -2,10 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { View, StyleSheet, Text, TouchableOpacity, ScrollView, Animated } from 'react-native'
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment'
-import Entypo from "react-native-vector-icons/Entypo"
-import TextInput from '../components/TextInput';
-import RNPickerSelect from 'react-native-picker-select';
-import { Button } from 'react-native-paper';
+
 import { theme } from '../core/theme';
 import * as Animatable from 'react-native-animatable';
 

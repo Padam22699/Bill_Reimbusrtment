@@ -3,11 +3,13 @@ import {Image, Platform} from 'react-native';
 import Notification from '../Screen/Notification';
 import {theme} from '../core/theme';
 import Reimbursement from '../Screen/Reimbursement';
-import {DARK} from '../Organization/Colors/Color';
+import {DARK, WHITE} from '../Organization/Colors/Color';
 import Ehome from '../Screen/Ehome';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import {AddBillsScreen, Transactions} from '../Navigation/Auth';
 import {responsiveScreenHeight} from 'react-native-responsive-dimensions';
+import UserProfile from '../Screen/UserProfile';
+import Bills from '../Screen/Bills';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,18 +17,18 @@ function BottomTab() {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: 'black',
+        tabBarActiveTintColor: WHITE,
+        tabBarInactiveTintColor: WHITE,
         tabBarStyle: {
           height: Platform.OS === 'ios' ? responsiveScreenHeight(12) : 60,
           position: 'absolute',
-          backgroundColor: '#E6E6FA',
+          backgroundColor: theme.colors.PRIMARY,
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
         },
         tabBarLabelStyle: {
           paddingVertical: 5,
-          fontSize: 12,
+          fontSize: 15,
         },
       }}>
       <Tab.Screen
@@ -39,7 +41,8 @@ function BottomTab() {
               <Icon
                 name="home"
                 size={25}
-                color={focused ? theme.colors.primary : 'black'}
+                color={focused ? WHITE : 'black'}
+                style={{marginTop: 5}}
               />
             );
           },
@@ -47,7 +50,7 @@ function BottomTab() {
       />
       <Tab.Screen
         name="Bills"
-        component={Transactions}
+        component={Bills}
         listeners={({navigation}) => ({
           tabPress: e => {
             e.preventDefault();
@@ -61,9 +64,10 @@ function BottomTab() {
               <Image
                 source={require('../Assets/Images/T.png')}
                 style={{
+                  marginTop: 5,
                   width: 25,
                   height: 25,
-                  tintColor: focused ? theme.colors.primary : DARK,
+                  tintColor: focused ? WHITE : DARK,
                 }}
               />
             );
@@ -80,9 +84,10 @@ function BottomTab() {
               <Image
                 source={require('../Assets/Images/A.png')}
                 style={{
+                  marginTop: 5,
                   width: 25,
                   height: 25,
-                  tintColor: focused ? theme.colors.primary : DARK,
+                  tintColor: focused ? WHITE : DARK,
                 }}
               />
             );
@@ -90,25 +95,26 @@ function BottomTab() {
         }}
       />
       <Tab.Screen
-        name="Notification"
-        component={Notification}
+        name="Profile"
+        component={UserProfile}
         options={{
           headerShown: false,
           tabBarIcon: ({focused}) => {
             return (
               <Image
-                source={require('../Assets/Images/N.png')}
+                source={require('../Assets/Images/user-Profile.png')}
                 style={{
+                  marginTop: 5,
                   width: 25,
                   height: 25,
-                  tintColor: focused ? theme.colors.primary : DARK,
+                  tintColor: focused ? WHITE : DARK,
                 }}
               />
             );
           },
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Menu"
         component={BottomTab}
         listeners={({navigation}) => ({
@@ -131,7 +137,7 @@ function BottomTab() {
             );
           },
         }}
-      />
+      /> */}
     </Tab.Navigator>
   );
 }

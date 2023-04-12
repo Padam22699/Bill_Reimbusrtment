@@ -1,5 +1,5 @@
 const Imagepath = {
-  user: require('../Images/User.png'),
+  user: require('../User.png'),
   google: require('../Images/google.png'),
   // facebook: require('../Images/facebook.png'),
   user3: require('../Images/Discussion.png'),

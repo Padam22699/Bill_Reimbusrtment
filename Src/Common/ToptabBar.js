@@ -1,7 +1,7 @@
 import React from 'react';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {View, StyleSheet, StatusBar, Platform, Text} from 'react-native';
-import Current from '../Screen/Current';
+// import Current from '../Screen/Current';
 import Past from '../Screen/Past';
 import {theme} from '../core/theme';
 import {useNetInfo} from '@react-native-community/netinfo';
@@ -22,19 +22,41 @@ function ToptabBar() {
       <Tab.Navigator
         initialRouteName="Current"
         screenOptions={{
+          indicatorStyle: null,
           tabBarInactiveTintColor: '#000',
-          tabBarActiveTintColor: theme.colors.primary,
+          // tabBarActiveTintColor: theme.colors.primary,
           tabBarLabelStyle: {fontSize: 14, fontWeight: '700'},
-          tabBarStyle: {backgroundColor: theme.colors.white},
+          tabBarStyle: {
+            indicatorStyle: null,
+            backgroundColor: theme.colors.white,
+            marginTop: 10,
+            marginHorizontal: 10,
+            borderRadius: 20,
+            height: 50,
+          },
         }}>
-        <Tab.Screen
+        {/* <Tab.Screen
           name="Current"
           component={Current}
           options={{tabBarLabel: 'This month'}}
-        />
+        /> */}
 
         <Tab.Screen
           name="Past"
+          component={Past}
+          options={{
+            tabBarLabel: 'All',
+          }}
+        />
+        <Tab.Screen
+          name="Pasts"
+          component={Past}
+          options={{
+            tabBarLabel: 'All',
+          }}
+        />
+        <Tab.Screen
+          name="Pastss"
           component={Past}
           options={{
             tabBarLabel: 'All',

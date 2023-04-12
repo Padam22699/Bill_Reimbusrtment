@@ -93,7 +93,7 @@ const CompleteRequest = ({navigation}) => {
       from_date: date,
       to_date: date,
     };
-
+    console.log('request', request);
     dispatch(getAllBills(request));
   };
 
@@ -120,7 +120,7 @@ const CompleteRequest = ({navigation}) => {
         setData([...data, ...formatedRequest]);
 
         let formateDate = data.filter(item => {
-          return item.amount.amount
+          return item.amount.amount;
         });
         console.log('formateDate', formateDate);
         // let formateDate = formatedRequest.filter(item => {
